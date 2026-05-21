@@ -1,22 +1,40 @@
+import { getRollerland } from "@/lib/wordpress";
+
 export const revalidate = 60;
 
-const SCHEDULE = [
-  { day: "Lundi", short: "LUN", hours: null, activities: [], note: "Sur réservation groupes" },
-  { day: "Mardi", short: "MAR", hours: null, activities: [], note: "Sur réservation groupes" },
-  { day: "Mercredi", short: "MER", hours: "12h00 – 20h00", activities: ["Cours enfants 16h–17h", "Cours adultes 17h30–19h", "Accès libre"], note: null },
-  { day: "Jeudi", short: "JEU", hours: null, activities: [], note: "Sur réservation groupes" },
+const SCHEDULE_FALLBACK = [
+  { day: "Lundi", short: "LUN", hours: null as string | null, activities: [] as string[], note: "Sur réservation groupes", disco: false },
+  { day: "Mardi", short: "MAR", hours: null, activities: [], note: "Sur réservation groupes", disco: false },
+  { day: "Mercredi", short: "MER", hours: "12h00 – 20h00", activities: ["Cours enfants 16h–17h", "Cours adultes 17h30–19h", "Accès libre"], note: null, disco: false },
+  { day: "Jeudi", short: "JEU", hours: null, activities: [], note: "Sur réservation groupes", disco: false },
   { day: "Vendredi", short: "VEN", hours: "17h00 – 00h00", activities: ["Disco Roller"], note: null, disco: true },
   { day: "Samedi", short: "SAM", hours: "12h00 – 00h00", activities: ["Cours enfants 16h–17h", "Cours adultes 17h30–19h", "Disco Roller"], note: null, disco: true },
-  { day: "Dimanche", short: "DIM", hours: "16h00 – 20h00", activities: ["Accès libre"], note: "Juin–Octobre : 12h–20h" },
+  { day: "Dimanche", short: "DIM", hours: "16h00 – 20h00", activities: ["Accès libre"], note: "Juin–Octobre : 12h–20h", disco: false },
 ];
 
-const CLOSURES = [
+const CLOSURES_FALLBACK = [
   { period: "16 – 24 mai 2026", reason: "Brocante / Événement spécial" },
   { period: "29 – 31 mai 2026", reason: "Fermeture exceptionnelle" },
   { period: "13 juin 2026", reason: "Fermé avant 19h" },
 ];
 
-export default function HorairesPage() {
+export default async function HorairesPage() {
+  const acf = await getRollerland();
+
+  const SCHEDULE = [
+    { day: "Lundi", short: "LUN", hours: null as string | null, activities: [] as string[], note: "Sur réservation groupes", disco: false },
+    { day: "Mardi", short: "MAR", hours: null, activities: [], note: "Sur réservation groupes", disco: false },
+    { day: "Mercredi", short: "MER", hours: acf.horaire_mercredi || "12h00 – 20h00", activities: ["Cours enfants 16h–17h", "Cours adultes 17h30–19h", "Accès libre"], note: null, disco: false },
+    { day: "Jeudi", short: "JEU", hours: null, activities: [], note: "Sur réservation groupes", disco: false },
+    { day: "Vendredi", short: "VEN", hours: acf.horaire_vendredi || "17h00 – 00h00", activities: ["Disco Roller"], note: null, disco: true },
+    { day: "Samedi", short: "SAM", hours: acf.horaire_samedi || "12h00 – 00h00", activities: ["Cours enfants 16h–17h", "Cours adultes 17h30–19h", "Disco Roller"], note: null, disco: true },
+    { day: "Dimanche", short: "DIM", hours: acf.horaire_dimanche || "16h00 – 20h00", activities: ["Accès libre"], note: acf.horaire_note_dimanche || "Juin–Octobre : 12h–20h", disco: false },
+  ];
+
+  const CLOSURES = acf.fermetures_exceptionnelles?.length
+    ? acf.fermetures_exceptionnelles.map((f) => ({ period: f.periode, reason: f.raison }))
+    : CLOSURES_FALLBACK;
+
   return (
     <div className="max-w-7xl mx-auto px-6 py-20">
       {/* Header */}
@@ -48,7 +66,6 @@ export default function HorairesPage() {
                 minHeight: 200,
               }}
             >
-              {/* Day header */}
               <div
                 className="px-3 py-3 text-center"
                 style={{ borderBottom: "0.5px solid rgba(127,119,221,0.15)" }}
@@ -65,7 +82,6 @@ export default function HorairesPage() {
                 </p>
               </div>
 
-              {/* Content */}
               <div className="px-2 py-4 flex flex-col gap-2 flex-1">
                 {slot.hours ? (
                   <>
@@ -186,7 +202,7 @@ export default function HorairesPage() {
           </p>
         </div>
         <a
-          href="https://wa.me/32484772593"
+          href={`https://wa.me/${acf.whatsapp_number || "32484772593"}`}
           target="_blank"
           rel="noopener noreferrer"
           className="btn-primary flex-shrink-0 animate-pulse-glow"

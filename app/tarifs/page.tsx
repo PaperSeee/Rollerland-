@@ -1,8 +1,9 @@
 import Link from "next/link";
+import { getRollerland } from "@/lib/wordpress";
 
 export const revalidate = 60;
 
-const INDIVIDUAL = [
+const INDIVIDUAL_FALLBACK = [
   { label: "Enfant (−16 ans)", price: "6€", desc: "Location de patins incluse" },
   { label: "Adulte", price: "8€", desc: "Location de patins incluse" },
   { label: "Protection", price: "1€/paire", desc: "Genouillères, coudières, poignets" },
@@ -24,7 +25,7 @@ const OPTIONS = [
   { label: "Karaoké", price: "75€/heure" },
 ];
 
-const DRINKS = [
+const DRINKS_FALLBACK = [
   { name: "Eau (bouteille)", price: "2€" },
   { name: "Boissons chaudes", price: "2,50€" },
   { name: "Soft drinks", price: "3€" },
@@ -41,7 +42,7 @@ const DRINKS = [
   { name: "Cocktails", price: "8€" },
 ];
 
-const FOOD = [
+const FOOD_FALLBACK = [
   { name: "Mini bar de chocolat", price: "0,50€" },
   { name: "Snacks variés", price: "2€" },
   { name: "Gâteau au chocolat (part)", price: "3,50€" },
@@ -65,7 +66,34 @@ function Row({ label, price, desc, last }: { label: string; price: string; desc?
   );
 }
 
-export default function TarifsPage() {
+export default async function TarifsPage() {
+  const acf = await getRollerland();
+
+  const INDIVIDUAL = [
+    { label: "Enfant (−16 ans)", price: acf.tarif_enfant || "6€", desc: "Location de patins incluse" },
+    { label: "Adulte", price: acf.tarif_adulte || "8€", desc: "Location de patins incluse" },
+    { label: "Protection", price: acf.tarif_protection || "1€/paire", desc: "Genouillères, coudières, poignets" },
+    { label: "Vestiaire", price: acf.tarif_vestiaire || "1€", desc: "Casier sécurisé" },
+  ];
+
+  const DRINKS = acf.menu_boissons?.length
+    ? acf.menu_boissons.map((d) => ({ name: d.nom, price: d.prix }))
+    : DRINKS_FALLBACK;
+
+  const FOOD = acf.menu_nourriture?.length
+    ? acf.menu_nourriture.map((f) => ({ name: f.nom, price: f.prix }))
+    : FOOD_FALLBACK;
+
+  const groupRows = acf.forfaits_groupe?.length
+    ? acf.forfaits_groupe.map((g, i) => ({
+        name: g.nom,
+        desc: g.description,
+        kids: g.prix_enfant,
+        adults: g.prix_adulte,
+        highlight: i === 2 || i === 3,
+      }))
+    : GROUPS;
+
   return (
     <div className="max-w-7xl mx-auto px-6 py-20">
       {/* Header */}
@@ -116,7 +144,6 @@ export default function TarifsPage() {
           </Link>
         </div>
         <div style={{ border: "0.5px solid rgba(127,119,221,0.25)" }}>
-          {/* Table header */}
           <div
             className="grid grid-cols-4 px-5 py-3"
             style={{ borderBottom: "0.5px solid rgba(127,119,221,0.2)", background: "rgba(127,119,221,0.05)" }}
@@ -125,12 +152,12 @@ export default function TarifsPage() {
             <p className="label-tag text-center">Enfant</p>
             <p className="label-tag text-center">Adulte</p>
           </div>
-          {GROUPS.map((g, i) => (
+          {groupRows.map((g, i) => (
             <div
               key={g.name}
               className="grid grid-cols-4 px-5 py-4 items-center hover-lift transition-all"
               style={{
-                borderBottom: i < GROUPS.length - 1 ? "0.5px solid rgba(127,119,221,0.1)" : "none",
+                borderBottom: i < groupRows.length - 1 ? "0.5px solid rgba(127,119,221,0.1)" : "none",
                 background: g.highlight ? "rgba(127,119,221,0.04)" : "rgba(255,255,255,0.01)",
               }}
             >

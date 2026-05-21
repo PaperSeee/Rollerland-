@@ -55,7 +55,7 @@ export interface WPAcf {
 export async function getRollerland(): Promise<WPAcf> {
   try {
     const res = await fetch(
-      `${WP_BASE}/pages?slug=rollerland-brussels&_fields=id,slug,acf`,
+      `${WP_BASE}/pages?slug=rollerland-brussels&_fields=id,slug,acf&_=${Date.now()}`,
       { cache: "no-store" }
     );
     if (!res.ok) {

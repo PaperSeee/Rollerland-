@@ -1,6 +1,6 @@
 import { getRollerland } from "@/lib/wordpress";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 const CLOSURES_FALLBACK = [
   { period: "16 – 24 mai 2026", reason: "Brocante / Événement spécial" },

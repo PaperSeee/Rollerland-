@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getRollerland } from "@/lib/wordpress";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 const GROUPS = [
   { name: "Wheels Deal", desc: "Location de patins uniquement", kids: "5€", adults: "7€", highlight: false },

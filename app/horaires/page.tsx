@@ -2,16 +2,6 @@ import { getRollerland } from "@/lib/wordpress";
 
 export const revalidate = 60;
 
-const SCHEDULE_FALLBACK = [
-  { day: "Lundi", short: "LUN", hours: null as string | null, activities: [] as string[], note: "Sur réservation groupes", disco: false },
-  { day: "Mardi", short: "MAR", hours: null, activities: [], note: "Sur réservation groupes", disco: false },
-  { day: "Mercredi", short: "MER", hours: "12h00 – 20h00", activities: ["Cours enfants 16h–17h", "Cours adultes 17h30–19h", "Accès libre"], note: null, disco: false },
-  { day: "Jeudi", short: "JEU", hours: null, activities: [], note: "Sur réservation groupes", disco: false },
-  { day: "Vendredi", short: "VEN", hours: "17h00 – 00h00", activities: ["Disco Roller"], note: null, disco: true },
-  { day: "Samedi", short: "SAM", hours: "12h00 – 00h00", activities: ["Cours enfants 16h–17h", "Cours adultes 17h30–19h", "Disco Roller"], note: null, disco: true },
-  { day: "Dimanche", short: "DIM", hours: "16h00 – 20h00", activities: ["Accès libre"], note: "Juin–Octobre : 12h–20h", disco: false },
-];
-
 const CLOSURES_FALLBACK = [
   { period: "16 – 24 mai 2026", reason: "Brocante / Événement spécial" },
   { period: "29 – 31 mai 2026", reason: "Fermeture exceptionnelle" },

@@ -3,13 +3,6 @@ import { getRollerland } from "@/lib/wordpress";
 
 export const revalidate = 60;
 
-const INDIVIDUAL_FALLBACK = [
-  { label: "Enfant (−16 ans)", price: "6€", desc: "Location de patins incluse" },
-  { label: "Adulte", price: "8€", desc: "Location de patins incluse" },
-  { label: "Protection", price: "1€/paire", desc: "Genouillères, coudières, poignets" },
-  { label: "Vestiaire", price: "1€", desc: "Casier sécurisé" },
-];
-
 const GROUPS = [
   { name: "Wheels Deal", desc: "Location de patins uniquement", kids: "5€", adults: "7€", highlight: false },
   { name: "Refresh Yourself", desc: "Patins + 2 boissons au choix", kids: "10€", adults: "14€", highlight: false },

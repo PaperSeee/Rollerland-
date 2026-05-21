@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getRollerland } from "@/lib/wordpress";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 const GROUPS = [

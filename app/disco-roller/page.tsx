@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { getRollerland } from "@/lib/wordpress";
 
 export const revalidate = 60;
 
@@ -103,9 +104,27 @@ async function getDiscoEvents(): Promise<typeof FALLBACK_EVENTS> {
   }
 }
 
+const FALLBACK_HERO_DISCO = "https://retro.brussels/wp-content/uploads/2025/01/roller-party2-scaled.jpg";
+
 export default async function DiscoRollerPage() {
-  const events = await getDiscoEvents();
-  const nextEvent = events[0];
+  const [events, acf] = await Promise.all([getDiscoEvents(), getRollerland()]);
+  const heroImage = acf.disco_hero_image || FALLBACK_HERO_DISCO;
+
+  // Merge WP ACF events over fallback if available
+  const discoEvents = acf.disco_evenements?.length
+    ? acf.disco_evenements.map((e, i) => ({
+        id: i + 1,
+        date: e.date,
+        day: e.jour,
+        theme: e.theme,
+        dj: e.dj || "",
+        time: e.horaire,
+        special: Boolean(e.special),
+        desc: e.description,
+        image: e.image || null,
+      }))
+    : events;
+  const nextEvent = discoEvents[0];
 
   return (
     <>
@@ -113,7 +132,7 @@ export default async function DiscoRollerPage() {
       <section className="relative min-h-[70vh] flex flex-col justify-end overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
-            src="https://retro.brussels/wp-content/uploads/2025/01/roller-party2-scaled.jpg"
+            src={heroImage}
             alt="Disco Roller Bruxelles"
             fill
             priority
@@ -208,12 +227,12 @@ export default async function DiscoRollerPage() {
 
           {/* Event list */}
           <div style={{ border: "0.5px solid rgba(127,119,221,0.2)" }}>
-            {events.slice(1).map((event, i) => (
+            {discoEvents.slice(1).map((event, i) => (
               <div
                 key={event.id}
                 className="group grid grid-cols-1 md:grid-cols-4 gap-4 px-6 py-5 hover-lift transition-all"
                 style={{
-                  borderBottom: i < events.length - 2 ? "0.5px solid rgba(127,119,221,0.12)" : "none",
+                  borderBottom: i < discoEvents.length - 2 ? "0.5px solid rgba(127,119,221,0.12)" : "none",
                   background: "rgba(255,255,255,0.01)",
                 }}
               >

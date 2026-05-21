@@ -1,8 +1,9 @@
 import Image from "next/image";
+import { getRollerland } from "@/lib/wordpress";
 
 export const revalidate = 60;
 
-const SERVICES = [
+const SERVICES_FALLBACK = [
   {
     tag: "01",
     title: "Disco Roller",
@@ -53,7 +54,20 @@ const SERVICES = [
   },
 ];
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const acf = await getRollerland();
+
+  const SERVICES = acf.services_liste?.length
+    ? acf.services_liste.map((s, i) => ({
+        tag: String(i + 1).padStart(2, "0"),
+        title: s.titre,
+        schedule: s.horaire,
+        desc: s.description,
+        image: s.image || null,
+        cta: { label: "En savoir plus", href: "/contact" },
+      }))
+    : SERVICES_FALLBACK;
+
   return (
     <div className="max-w-7xl mx-auto px-6 py-20">
       {/* Header */}

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Ticker from "@/components/Ticker";
+import { getRollerland } from "@/lib/wordpress";
 
 const STATS = [
   { label: "Mercredi", value: "12h–20h", sub: "Cours + accès libre" },
@@ -18,7 +19,9 @@ const SERVICES = [
   { tag: "06", title: "Groupes Scolaires", desc: "School Deal à 5€/élève avec accompagnement pédagogique.", href: "/services", accent: false },
 ];
 
-const GALLERY = [
+
+const FALLBACK_HERO = "https://retro.brussels/wp-content/uploads/2025/01/roller-party2-scaled.jpg";
+const FALLBACK_GALLERY = [
   { src: "https://retro.brussels/wp-content/uploads/2025/01/roller-party2-scaled.jpg", label: "Soirée Disco" },
   { src: "https://retro.brussels/wp-content/uploads/2023/10/WhatsApp-Image-2023-09-12-at-09.22.51.jpeg", label: "Sur la piste" },
   { src: "https://retro.brussels/wp-content/uploads/2023/10/WhatsApp-Image-2023-09-12-at-09.22.29.jpeg", label: "Rollerland" },
@@ -27,7 +30,13 @@ const GALLERY = [
   { src: "https://retro.brussels/wp-content/uploads/2023/10/WhatsApp-Image-2023-09-12-at-09.22.25.jpeg", label: "Anniversaire" },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const acf = await getRollerland();
+  const heroImage = acf.hero_image || FALLBACK_HERO;
+  const galleryImages = acf.gallery_images?.length
+    ? acf.gallery_images.map((src, i) => ({ src, label: `Photo ${i + 1}` }))
+    : FALLBACK_GALLERY;
+
   return (
     <>
       {/* ── Hero ── */}
@@ -35,7 +44,7 @@ export default function HomePage() {
         {/* BG image */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="https://retro.brussels/wp-content/uploads/2025/01/roller-party2-scaled.jpg"
+            src={heroImage}
             alt="Disco Roller Bruxelles"
             fill
             priority
@@ -248,7 +257,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {GALLERY.map((g, i) => (
+            {galleryImages.map((g, i) => (
               <div
                 key={i}
                 className="group relative overflow-hidden hover-lift"

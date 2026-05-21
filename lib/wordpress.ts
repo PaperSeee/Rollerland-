@@ -1,71 +1,67 @@
 const WP_BASE = "https://retro.brussels/wp-json/wp/v2";
 
-export interface WPPage {
-  id: number;
-  slug: string;
-  title: { rendered: string };
-  content: { rendered: string };
-  acf?: Record<string, unknown>;
+export interface WPAcf {
+  // Général
+  hero_tagline?: string;
+  hero_image?: string;
+  gallery_images?: string[];
+  whatsapp_number?: string;
+  reservation_url?: string;
+  // Horaires
+  horaire_mercredi?: string;
+  horaire_vendredi?: string;
+  horaire_samedi?: string;
+  horaire_dimanche?: string;
+  horaire_note_dimanche?: string;
+  fermetures_exceptionnelles?: Array<{ periode: string; raison: string }>;
+  // Tarifs
+  tarif_enfant?: string;
+  tarif_adulte?: string;
+  tarif_protection?: string;
+  tarif_vestiaire?: string;
+  forfaits_groupe?: Array<{ nom: string; description: string; prix_enfant: string; prix_adulte: string }>;
+  menu_boissons?: Array<{ nom: string; prix: string }>;
+  menu_nourriture?: Array<{ nom: string; prix: string }>;
+  // Disco Roller
+  disco_hero_image?: string;
+  disco_evenements?: Array<{
+    date: string;
+    jour: string;
+    theme: string;
+    description: string;
+    dj?: string;
+    horaire: string;
+    special: boolean;
+    image?: string;
+  }>;
+  // Services
+  services_liste?: Array<{ titre: string; horaire: string; description: string; image?: string }>;
+  // Cours
+  cours_image?: string;
+  cours_enfants_prix?: string;
+  cours_enfants_horaire?: string;
+  cours_adultes_prix?: string;
+  cours_adultes_horaire?: string;
+  cours_tickettailor_url?: string;
+  start2ride_actif?: boolean;
+  start2ride_date?: string;
+  start2ride_image?: string;
+  start2ride_url?: string;
+  // Pratique
+  reglement_image?: string;
+  parking_url?: string;
 }
 
-export interface WPMedia {
-  id: number;
-  source_url: string;
-  alt_text: string;
-  title: { rendered: string };
-  media_details?: {
-    width: number;
-    height: number;
-  };
-}
-
-export async function getPageBySlug(slug: string): Promise<WPPage | null> {
-  try {
-    const res = await fetch(`${WP_BASE}/pages?slug=${slug}&_fields=id,slug,title,content,acf`, {
-      next: { revalidate: 60 },
-    });
-    if (!res.ok) return null;
-    const pages: WPPage[] = await res.json();
-    return pages[0] ?? null;
-  } catch {
-    return null;
-  }
-}
-
-export async function getMediaById(id: number): Promise<WPMedia | null> {
-  try {
-    const res = await fetch(`${WP_BASE}/media/${id}?_fields=id,source_url,alt_text,title,media_details`, {
-      next: { revalidate: 3600 },
-    });
-    if (!res.ok) return null;
-    return res.json();
-  } catch {
-    return null;
-  }
-}
-
-export async function getMediaBySearch(search: string, perPage = 10): Promise<WPMedia[]> {
-  try {
-    const res = await fetch(
-      `${WP_BASE}/media?search=${encodeURIComponent(search)}&per_page=${perPage}&_fields=id,source_url,alt_text,title,media_details`,
-      { next: { revalidate: 3600 } }
-    );
-    if (!res.ok) return [];
-    return res.json();
-  } catch {
-    return [];
-  }
-}
-
-export async function getAllMedia(perPage = 100): Promise<WPMedia[]> {
+export async function getRollerland(): Promise<WPAcf> {
   try {
     const res = await fetch(
-      `${WP_BASE}/media?per_page=${perPage}&_fields=id,source_url,alt_text,title,media_details`,
-      { next: { revalidate: 3600 } }
+      `${WP_BASE}/pages?slug=rollerland-brussels&_fields=id,slug,acf`,
+      { next: { revalidate: 60 } }
     );
-    if (!res.ok) return [];
-    return res.json();
+    if (!res.ok) return {};
+    const pages: Array<{ acf?: WPAcf }> = await res.json();
+    return pages[0]?.acf ?? {};
   } catch {
-    return [];
+    return {};
   }
 }

@@ -8,13 +8,12 @@
         "label": "Tagline (sous le titre)",
         "name": "hero_tagline",
         "type": "text",
-        "instructions": "Texte court sous le grand titre. Ex: La piste de roller au cœur de Bruxelles.",
-        "default_value": "La piste de roller au cœur de Bruxelles. Disco, cours, anniversaires & team building.",
-        "placeholder": "La piste de roller au cœur de Bruxelles."
+        "instructions": "Texte court sous le grand titre.",
+        "default_value": "La piste de roller au cœur de Bruxelles. Disco, cours, anniversaires & team building."
       },
       {
         "key": "field_hero_image",
-        "label": "Image Hero (page d'accueil)",
+        "label": "📸 Image Hero (page d'accueil)",
         "name": "hero_image",
         "type": "image",
         "instructions": "Image plein écran de la page d'accueil. Format paysage recommandé (min 1920x1080).",
@@ -22,11 +21,22 @@
         "preview_size": "medium"
       },
       {
+        "key": "field_gallery_images",
+        "label": "📸 Galerie photos (page d'accueil)",
+        "name": "gallery_images",
+        "type": "gallery",
+        "instructions": "Ajoutez, retirez ou réordonnez les photos de la galerie. Glissez pour changer l'ordre.",
+        "return_format": "url",
+        "preview_size": "medium",
+        "min": 1,
+        "max": 12
+      },
+      {
         "key": "field_whatsapp_number",
         "label": "Numéro WhatsApp",
         "name": "whatsapp_number",
         "type": "text",
-        "instructions": "Format international sans espaces. Ex: 32484772593",
+        "instructions": "Format international sans espaces ni +. Ex: 32484772593",
         "default_value": "32484772593"
       },
       {
@@ -34,154 +44,56 @@
         "label": "Lien formulaire de réservation",
         "name": "reservation_url",
         "type": "url",
-        "instructions": "URL du Google Form ou autre formulaire de réservation.",
         "default_value": "https://docs.google.com/forms/d/e/1FAIpQLScMq5Q5slrGQ-F_TX8hcWAV93R2pKOhk-cTWFo-QbaXGTjRCg/viewform"
       }
     ],
-    "location": [
-      [{ "param": "page_template", "operator": "==", "value": "default" }]
-    ],
+    "location": [[{ "param": "page", "operator": "==", "value": "42" }]],
     "active": true
   },
   {
     "key": "group_rollerland_horaires",
     "title": "Rollerland — Horaires",
     "fields": [
-      {
-        "key": "field_horaire_mercredi",
-        "label": "Mercredi — Horaires",
-        "name": "horaire_mercredi",
-        "type": "text",
-        "default_value": "12h00 – 20h00",
-        "instructions": "Ex: 12h00 – 20h00 ou Fermé"
-      },
-      {
-        "key": "field_horaire_vendredi",
-        "label": "Vendredi — Horaires",
-        "name": "horaire_vendredi",
-        "type": "text",
-        "default_value": "17h00 – 00h00"
-      },
-      {
-        "key": "field_horaire_samedi",
-        "label": "Samedi — Horaires",
-        "name": "horaire_samedi",
-        "type": "text",
-        "default_value": "12h00 – 00h00"
-      },
-      {
-        "key": "field_horaire_dimanche",
-        "label": "Dimanche — Horaires",
-        "name": "horaire_dimanche",
-        "type": "text",
-        "default_value": "16h00 – 20h00",
-        "instructions": "Note: Juin–Octobre 12h–20h"
-      },
-      {
-        "key": "field_horaire_note_dimanche",
-        "label": "Dimanche — Note",
-        "name": "horaire_note_dimanche",
-        "type": "text",
-        "default_value": "Juin–Octobre : 12h–20h",
-        "instructions": "Note affichée sous les horaires du dimanche"
-      },
+      { "key": "field_horaire_mercredi", "label": "Mercredi — Horaires", "name": "horaire_mercredi", "type": "text", "default_value": "12h00 – 20h00", "instructions": "Ex: 12h00 – 20h00 ou Fermé" },
+      { "key": "field_horaire_vendredi", "label": "Vendredi — Horaires", "name": "horaire_vendredi", "type": "text", "default_value": "17h00 – 00h00" },
+      { "key": "field_horaire_samedi", "label": "Samedi — Horaires", "name": "horaire_samedi", "type": "text", "default_value": "12h00 – 00h00" },
+      { "key": "field_horaire_dimanche", "label": "Dimanche — Horaires", "name": "horaire_dimanche", "type": "text", "default_value": "16h00 – 20h00" },
+      { "key": "field_horaire_note_dimanche", "label": "Dimanche — Note", "name": "horaire_note_dimanche", "type": "text", "default_value": "Juin–Octobre : 12h–20h" },
       {
         "key": "field_fermetures_exceptionnelles",
         "label": "Fermetures exceptionnelles",
         "name": "fermetures_exceptionnelles",
         "type": "repeater",
-        "instructions": "Ajoutez ici les dates de fermeture exceptionnelle. Elles s'affichent sur la page Horaires.",
-        "button_label": "Ajouter une fermeture",
+        "instructions": "Ajoutez les dates de fermeture. Supprimez les dates passées.",
+        "button_label": "➕ Ajouter une fermeture",
         "sub_fields": [
-          {
-            "key": "field_fermeture_periode",
-            "label": "Période",
-            "name": "periode",
-            "type": "text",
-            "instructions": "Ex: 16 – 24 mai 2026"
-          },
-          {
-            "key": "field_fermeture_raison",
-            "label": "Raison",
-            "name": "raison",
-            "type": "text",
-            "instructions": "Ex: Brocante / Événement spécial"
-          }
+          { "key": "field_fermeture_periode", "label": "Période", "name": "periode", "type": "text", "instructions": "Ex: 16 – 24 mai 2026" },
+          { "key": "field_fermeture_raison", "label": "Raison", "name": "raison", "type": "text" }
         ]
       }
     ],
-    "location": [
-      [{ "param": "page", "operator": "==", "value": "42" }]
-    ],
+    "location": [[{ "param": "page", "operator": "==", "value": "42" }]],
     "active": true
   },
   {
     "key": "group_rollerland_tarifs",
     "title": "Rollerland — Tarifs",
     "fields": [
-      {
-        "key": "field_tarif_enfant",
-        "label": "Tarif enfant (−16 ans)",
-        "name": "tarif_enfant",
-        "type": "text",
-        "default_value": "6€",
-        "instructions": "Prix de location des patins pour les enfants"
-      },
-      {
-        "key": "field_tarif_adulte",
-        "label": "Tarif adulte",
-        "name": "tarif_adulte",
-        "type": "text",
-        "default_value": "8€"
-      },
-      {
-        "key": "field_tarif_protection",
-        "label": "Tarif protection",
-        "name": "tarif_protection",
-        "type": "text",
-        "default_value": "1€/paire"
-      },
-      {
-        "key": "field_tarif_vestiaire",
-        "label": "Tarif vestiaire",
-        "name": "tarif_vestiaire",
-        "type": "text",
-        "default_value": "1€"
-      },
+      { "key": "field_tarif_enfant", "label": "Tarif enfant (−16 ans)", "name": "tarif_enfant", "type": "text", "default_value": "6€" },
+      { "key": "field_tarif_adulte", "label": "Tarif adulte", "name": "tarif_adulte", "type": "text", "default_value": "8€" },
+      { "key": "field_tarif_protection", "label": "Tarif protection", "name": "tarif_protection", "type": "text", "default_value": "1€/paire" },
+      { "key": "field_tarif_vestiaire", "label": "Tarif vestiaire", "name": "tarif_vestiaire", "type": "text", "default_value": "1€" },
       {
         "key": "field_forfaits_groupe",
         "label": "Forfaits groupe",
         "name": "forfaits_groupe",
         "type": "repeater",
-        "instructions": "Gérez les forfaits groupe ici. Chaque ligne = une formule.",
-        "button_label": "Ajouter un forfait",
+        "button_label": "➕ Ajouter un forfait",
         "sub_fields": [
-          {
-            "key": "field_forfait_nom",
-            "label": "Nom de la formule",
-            "name": "nom",
-            "type": "text",
-            "instructions": "Ex: Wheels Deal, Birthday Party..."
-          },
-          {
-            "key": "field_forfait_desc",
-            "label": "Description courte",
-            "name": "description",
-            "type": "text"
-          },
-          {
-            "key": "field_forfait_prix_enfant",
-            "label": "Prix enfant",
-            "name": "prix_enfant",
-            "type": "text",
-            "instructions": "Ex: 5€ ou — si non disponible"
-          },
-          {
-            "key": "field_forfait_prix_adulte",
-            "label": "Prix adulte",
-            "name": "prix_adulte",
-            "type": "text"
-          }
+          { "key": "field_forfait_nom", "label": "Nom", "name": "nom", "type": "text" },
+          { "key": "field_forfait_desc", "label": "Description", "name": "description", "type": "text" },
+          { "key": "field_forfait_prix_enfant", "label": "Prix enfant", "name": "prix_enfant", "type": "text" },
+          { "key": "field_forfait_prix_adulte", "label": "Prix adulte", "name": "prix_adulte", "type": "text" }
         ]
       },
       {
@@ -189,7 +101,7 @@
         "label": "Menu boissons",
         "name": "menu_boissons",
         "type": "repeater",
-        "button_label": "Ajouter une boisson",
+        "button_label": "➕ Ajouter une boisson",
         "sub_fields": [
           { "key": "field_boisson_nom", "label": "Boisson", "name": "nom", "type": "text" },
           { "key": "field_boisson_prix", "label": "Prix", "name": "prix", "type": "text" }
@@ -200,16 +112,14 @@
         "label": "Menu nourriture",
         "name": "menu_nourriture",
         "type": "repeater",
-        "button_label": "Ajouter un plat",
+        "button_label": "➕ Ajouter un plat",
         "sub_fields": [
           { "key": "field_plat_nom", "label": "Article", "name": "nom", "type": "text" },
           { "key": "field_plat_prix", "label": "Prix", "name": "prix", "type": "text" }
         ]
       }
     ],
-    "location": [
-      [{ "param": "page", "operator": "==", "value": "42" }]
-    ],
+    "location": [[{ "param": "page", "operator": "==", "value": "42" }]],
     "active": true
   },
   {
@@ -217,155 +127,86 @@
     "title": "Rollerland — Événements Disco Roller",
     "fields": [
       {
+        "key": "field_disco_hero_image",
+        "label": "📸 Image Hero Disco Roller",
+        "name": "disco_hero_image",
+        "type": "image",
+        "instructions": "Image de fond de la page Disco Roller. Format paysage (min 1920x1080).",
+        "return_format": "url",
+        "preview_size": "medium"
+      },
+      {
         "key": "field_disco_evenements",
         "label": "Événements Disco Roller",
         "name": "disco_evenements",
         "type": "repeater",
-        "instructions": "Ajoutez les prochaines soirées Disco Roller. Le premier événement sera mis en avant sur la page.",
-        "button_label": "Ajouter une soirée",
+        "instructions": "Ajoutez les prochaines soirées. Le PREMIER de la liste sera mis en avant. Supprimez les dates passées.",
+        "button_label": "➕ Ajouter une soirée",
         "layout": "block",
         "sub_fields": [
-          {
-            "key": "field_disco_date",
-            "label": "Date",
-            "name": "date",
-            "type": "date_picker",
-            "display_format": "d/m/Y",
-            "return_format": "Y-m-d",
-            "instructions": "Date de la soirée"
-          },
-          {
-            "key": "field_disco_jour",
-            "label": "Jour",
-            "name": "jour",
-            "type": "select",
-            "choices": {
-              "Vendredi": "Vendredi",
-              "Samedi": "Samedi"
-            },
-            "default_value": "Vendredi"
-          },
-          {
-            "key": "field_disco_theme",
-            "label": "Thème de la soirée",
-            "name": "theme",
-            "type": "text",
-            "instructions": "Ex: Disco Night, 80s Party, Latin Fever..."
-          },
-          {
-            "key": "field_disco_description",
-            "label": "Description",
-            "name": "description",
-            "type": "textarea",
-            "rows": 2,
-            "instructions": "Courte description de la soirée (1-2 phrases)"
-          },
-          {
-            "key": "field_disco_dj",
-            "label": "DJ / Artiste",
-            "name": "dj",
-            "type": "text",
-            "instructions": "Nom du DJ ou artiste (optionnel)"
-          },
-          {
-            "key": "field_disco_horaire",
-            "label": "Horaire",
-            "name": "horaire",
-            "type": "text",
-            "default_value": "17h00 – 00h00"
-          },
-          {
-            "key": "field_disco_special",
-            "label": "Soirée spéciale ?",
-            "name": "special",
-            "type": "true_false",
-            "instructions": "Cochez si c'est une soirée spéciale (affiche un badge)",
-            "default_value": 0,
-            "ui": 1
-          },
-          {
-            "key": "field_disco_image",
-            "label": "Image de la soirée (optionnel)",
-            "name": "image",
-            "type": "image",
-            "return_format": "url",
-            "preview_size": "medium",
-            "instructions": "Image optionnelle pour illustrer la soirée"
-          }
+          { "key": "field_disco_date", "label": "Date", "name": "date", "type": "date_picker", "display_format": "d/m/Y", "return_format": "Y-m-d" },
+          { "key": "field_disco_jour", "label": "Jour", "name": "jour", "type": "select", "choices": { "Vendredi": "Vendredi", "Samedi": "Samedi" }, "default_value": "Vendredi" },
+          { "key": "field_disco_theme", "label": "Thème de la soirée", "name": "theme", "type": "text", "instructions": "Ex: Disco Night, 80s Party, Latin Fever..." },
+          { "key": "field_disco_description", "label": "Description", "name": "description", "type": "textarea", "rows": 2 },
+          { "key": "field_disco_dj", "label": "DJ / Artiste (optionnel)", "name": "dj", "type": "text" },
+          { "key": "field_disco_horaire", "label": "Horaire", "name": "horaire", "type": "text", "default_value": "17h00 – 00h00" },
+          { "key": "field_disco_special", "label": "Soirée spéciale ?", "name": "special", "type": "true_false", "instructions": "Cochez pour afficher un badge 'Spécial'", "default_value": 0, "ui": 1 },
+          { "key": "field_disco_image", "label": "📸 Image de la soirée (optionnel)", "name": "image", "type": "image", "return_format": "url", "preview_size": "medium" }
         ]
       }
     ],
-    "location": [
-      [{ "param": "page", "operator": "==", "value": "42" }]
+    "location": [[{ "param": "page", "operator": "==", "value": "42" }]],
+    "active": true
+  },
+  {
+    "key": "group_rollerland_services",
+    "title": "Rollerland — Services",
+    "fields": [
+      {
+        "key": "field_services_liste",
+        "label": "Services",
+        "name": "services_liste",
+        "type": "repeater",
+        "instructions": "Modifiez les services affichés sur la page /services. Chaque service peut avoir sa propre photo.",
+        "button_label": "➕ Ajouter un service",
+        "layout": "block",
+        "sub_fields": [
+          { "key": "field_service_titre", "label": "Titre", "name": "titre", "type": "text" },
+          { "key": "field_service_horaire", "label": "Horaire / disponibilité", "name": "horaire", "type": "text" },
+          { "key": "field_service_description", "label": "Description", "name": "description", "type": "textarea", "rows": 3 },
+          { "key": "field_service_image", "label": "📸 Photo du service", "name": "image", "type": "image", "return_format": "url", "preview_size": "medium" }
+        ]
+      }
     ],
+    "location": [[{ "param": "page", "operator": "==", "value": "42" }]],
     "active": true
   },
   {
     "key": "group_rollerland_cours",
     "title": "Rollerland — Cours",
     "fields": [
-      {
-        "key": "field_cours_enfants_prix",
-        "label": "Prix cours enfants",
-        "name": "cours_enfants_prix",
-        "type": "text",
-        "default_value": "10€"
-      },
-      {
-        "key": "field_cours_enfants_horaire",
-        "label": "Horaire cours enfants",
-        "name": "cours_enfants_horaire",
-        "type": "text",
-        "default_value": "16h00 – 17h00"
-      },
-      {
-        "key": "field_cours_adultes_prix",
-        "label": "Prix cours adultes",
-        "name": "cours_adultes_prix",
-        "type": "text",
-        "default_value": "15€"
-      },
-      {
-        "key": "field_cours_adultes_horaire",
-        "label": "Horaire cours adultes",
-        "name": "cours_adultes_horaire",
-        "type": "text",
-        "default_value": "17h30 – 19h00"
-      },
-      {
-        "key": "field_cours_tickettailor_url",
-        "label": "Lien TicketTailor réservation",
-        "name": "cours_tickettailor_url",
-        "type": "url",
-        "default_value": "https://www.tickettailor.com/events/retrobrusselsasbl/2140456"
-      },
-      {
-        "key": "field_start2ride_actif",
-        "label": "Start2Ride — Afficher ?",
-        "name": "start2ride_actif",
-        "type": "true_false",
-        "instructions": "Affiche ou masque la section Start2Ride outdoor",
-        "default_value": 1,
-        "ui": 1
-      },
-      {
-        "key": "field_start2ride_date",
-        "label": "Start2Ride — Date",
-        "name": "start2ride_date",
-        "type": "text",
-        "default_value": "Samedi 30 mai"
-      },
-      {
-        "key": "field_start2ride_url",
-        "label": "Start2Ride — Lien TicketTailor",
-        "name": "start2ride_url",
-        "type": "url",
-        "default_value": "https://www.tickettailor.com/events/retrobrusselsasbl/2211764"
-      }
+      { "key": "field_cours_image", "label": "📸 Image principale cours", "name": "cours_image", "type": "image", "return_format": "url", "preview_size": "medium" },
+      { "key": "field_cours_enfants_prix", "label": "Prix cours enfants", "name": "cours_enfants_prix", "type": "text", "default_value": "10€" },
+      { "key": "field_cours_enfants_horaire", "label": "Horaire cours enfants", "name": "cours_enfants_horaire", "type": "text", "default_value": "16h00 – 17h00" },
+      { "key": "field_cours_adultes_prix", "label": "Prix cours adultes", "name": "cours_adultes_prix", "type": "text", "default_value": "15€" },
+      { "key": "field_cours_adultes_horaire", "label": "Horaire cours adultes", "name": "cours_adultes_horaire", "type": "text", "default_value": "17h30 – 19h00" },
+      { "key": "field_cours_tickettailor_url", "label": "Lien TicketTailor", "name": "cours_tickettailor_url", "type": "url", "default_value": "https://www.tickettailor.com/events/retrobrusselsasbl/2140456" },
+      { "key": "field_start2ride_actif", "label": "Start2Ride — Afficher ?", "name": "start2ride_actif", "type": "true_false", "default_value": 1, "ui": 1 },
+      { "key": "field_start2ride_date", "label": "Start2Ride — Date", "name": "start2ride_date", "type": "text", "default_value": "Samedi 30 mai" },
+      { "key": "field_start2ride_image", "label": "📸 Start2Ride — Image", "name": "start2ride_image", "type": "image", "return_format": "url", "preview_size": "medium" },
+      { "key": "field_start2ride_url", "label": "Start2Ride — Lien TicketTailor", "name": "start2ride_url", "type": "url", "default_value": "https://www.tickettailor.com/events/retrobrusselsasbl/2211764" }
     ],
-    "location": [
-      [{ "param": "page", "operator": "==", "value": "42" }]
+    "location": [[{ "param": "page", "operator": "==", "value": "42" }]],
+    "active": true
+  },
+  {
+    "key": "group_rollerland_pratique",
+    "title": "Rollerland — Infos Pratiques",
+    "fields": [
+      { "key": "field_reglement_image", "label": "📸 Image règlement (page Pratique)", "name": "reglement_image", "type": "image", "return_format": "url", "preview_size": "medium", "instructions": "Affiche de règles visuelles sur la page /pratique" },
+      { "key": "field_parking_url", "label": "Lien réservation parking", "name": "parking_url", "type": "url", "default_value": "https://go.parkbee.net/start-booking/24763" }
     ],
+    "location": [[{ "param": "page", "operator": "==", "value": "42" }]],
     "active": true
   }
 ]

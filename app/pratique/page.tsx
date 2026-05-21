@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { getRollerland } from "@/lib/wordpress";
 
 export const revalidate = 60;
 
@@ -27,7 +28,13 @@ const RULES = [
   "L'équipe se réserve le droit d'exclure tout comportement dangereux.",
 ];
 
-export default function PratiquePage() {
+const FALLBACK_REGLEMENT = "https://retro.brussels/wp-content/uploads/2024/04/roller-rules-Aida-724x1024.jpeg";
+
+export default async function PratiquePage() {
+  const acf = await getRollerland();
+  const reglementImage = acf.reglement_image || FALLBACK_REGLEMENT;
+  const parkingUrl = acf.parking_url || "https://go.parkbee.net/start-booking/24763";
+
   return (
     <div className="max-w-7xl mx-auto px-6 py-20">
       {/* Header */}
@@ -178,7 +185,7 @@ export default function PratiquePage() {
               Parking sécurisé disponible au numéro 160. Réservez votre place en ligne via ParkBee.
             </p>
             <a
-              href="https://go.parkbee.net/start-booking/24763?utm_source=QR"
+              href={parkingUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-outline"
@@ -228,7 +235,7 @@ export default function PratiquePage() {
             }}
           >
             <Image
-              src="https://retro.brussels/wp-content/uploads/2024/04/roller-rules-Aida-724x1024.jpeg"
+              src={reglementImage}
               alt="Règlement Rollerland Brussels"
               fill
               className="object-contain"

@@ -56,7 +56,7 @@ export async function getRollerland(): Promise<WPAcf> {
   try {
     const res = await fetch(
       `${WP_BASE}/pages?slug=rollerland-brussels&_fields=id,slug,acf`,
-      { next: { revalidate: 60 } }
+      { cache: "no-store" }
     );
     if (!res.ok) return {};
     const pages: Array<{ acf?: WPAcf }> = await res.json();

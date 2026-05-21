@@ -158,21 +158,11 @@ export default async function DiscoRollerPage() {
       {/* ── Prochains événements ── */}
       <section className="py-24 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-end justify-between mb-12">
-            <div>
-              <p className="label-tag mb-3">Agenda</p>
-              <h2 className="text-3xl md:text-4xl text-white" style={{ fontWeight: 300, letterSpacing: "-0.02em" }}>
-                Prochains événements
-              </h2>
-            </div>
-            <a
-              href="https://docs.google.com/forms/d/e/1FAIpQLScMq5Q5slrGQ-F_TX8hcWAV93R2pKOhk-cTWFo-QbaXGTjRCg/viewform"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden md:block btn-primary"
-            >
-              Réserver
-            </a>
+          <div className="mb-12">
+            <p className="label-tag mb-3">Agenda</p>
+            <h2 className="text-3xl md:text-4xl text-white" style={{ fontWeight: 300, letterSpacing: "-0.02em" }}>
+              Prochains événements
+            </h2>
           </div>
 
           {/* Featured next event */}
@@ -205,14 +195,13 @@ export default async function DiscoRollerPage() {
                 </div>
               </div>
               <div className="flex-shrink-0">
-                <a
-                  href="https://docs.google.com/forms/d/e/1FAIpQLScMq5Q5slrGQ-F_TX8hcWAV93R2pKOhk-cTWFo-QbaXGTjRCg/viewform"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-primary animate-pulse-glow"
+                <div
+                  className="px-6 py-4 text-center animate-pulse-glow"
+                  style={{ border: "0.5px solid rgba(127,119,221,0.5)", background: "rgba(127,119,221,0.08)" }}
                 >
-                  Réserver →
-                </a>
+                  <p className="label-tag mb-1">Entrée</p>
+                  <p className="text-xl font-light" style={{ color: "#7F77DD" }}>Gratuite</p>
+                </div>
               </div>
             </div>
           </div>
@@ -306,20 +295,13 @@ export default async function DiscoRollerPage() {
       <section className="py-20 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
           <div>
-            <p className="label-tag mb-2">Chaque vendredi &amp; samedi</p>
+            <p className="label-tag mb-2">Chaque vendredi &amp; samedi · Sans réservation</p>
             <h3 className="text-2xl text-white" style={{ fontWeight: 300 }}>
-              On vous attend sur la piste.
+              Venez comme vous êtes —<br />
+              <span style={{ color: "#7F77DD" }}>la piste vous attend.</span>
             </h3>
           </div>
           <div className="flex gap-4">
-            <a
-              href="https://docs.google.com/forms/d/e/1FAIpQLScMq5Q5slrGQ-F_TX8hcWAV93R2pKOhk-cTWFo-QbaXGTjRCg/viewform"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary"
-            >
-              Réserver
-            </a>
             <a href="https://wa.me/32484772593" target="_blank" rel="noopener noreferrer" className="btn-outline">
               WhatsApp
             </a>

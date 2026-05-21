@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import Ticker from "@/components/Ticker";
 
 const STATS = [
   { label: "Mercredi", value: "12h–20h", sub: "Cours + accès libre" },
@@ -24,16 +25,6 @@ const GALLERY = [
   { src: "https://retro.brussels/wp-content/uploads/2023/10/WhatsApp-Image-2023-09-12-at-09.22.20.jpeg", label: "Session libre" },
   { src: "https://retro.brussels/wp-content/uploads/2024/10/IMG_20231112_111005-scaled.jpg", label: "La piste" },
   { src: "https://retro.brussels/wp-content/uploads/2023/10/WhatsApp-Image-2023-09-12-at-09.22.25.jpeg", label: "Anniversaire" },
-];
-
-const TICKER_ITEMS = [
-  "Disco Roller — Vendredi & Samedi",
-  "Entrée Gratuite",
-  "Cours Enfants & Adultes",
-  "Anniversaires sur la piste",
-  "Team Building",
-  "After Work",
-  "Rue Dieudonné Lefèvre 4 · 1020 Bruxelles",
 ];
 
 export default function HomePage() {
@@ -126,21 +117,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Ticker tape ── */}
-      <div
-        className="overflow-hidden py-3"
-        style={{ borderBottom: "0.5px solid rgba(127,119,221,0.15)", background: "rgba(127,119,221,0.04)" }}
-      >
-        <div className="flex animate-marquee whitespace-nowrap">
-          {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
-            <span key={i} className="inline-flex items-center gap-6 px-6">
-              <span className="text-xs uppercase tracking-widest" style={{ color: "rgba(127,119,221,0.7)", letterSpacing: "0.14em" }}>
-                {item}
-              </span>
-              <span style={{ color: "rgba(127,119,221,0.3)", fontSize: "0.4rem" }}>◆</span>
-            </span>
-          ))}
-        </div>
-      </div>
+      <Ticker />
 
       {/* ── Disco CTA Feature ── */}
       <section className="py-24 px-6">
@@ -171,7 +148,7 @@ export default function HomePage() {
                 </h2>
                 <p className="text-sm mb-6" style={{ color: "rgba(255,255,255,0.5)", lineHeight: "1.8" }}>
                   Musique, lumières et piste ouverte jusqu&apos;à minuit.<br />
-                  <strong style={{ color: "#7F77DD", fontWeight: 500 }}>Entrée gratuite.</strong>
+                  <strong style={{ color: "#7F77DD", fontWeight: 500 }}>Entrée gratuite · Sans réservation.</strong>
                 </p>
                 <span className="btn-primary group-hover:bg-white group-hover:text-black transition-all">
                   Voir les événements →

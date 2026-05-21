@@ -1,15 +1,21 @@
 import { NextResponse } from "next/server";
+import { getRollerland } from "@/lib/wordpress";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const res = await fetch(
+    const acf = await getRollerland();
+    const rawRes = await fetch(
       "https://retro.brussels/wp-json/wp/v2/pages?slug=rollerland-brussels&_fields=acf",
       { cache: "no-store" }
     );
-    const data = await res.json();
-    return NextResponse.json({ ok: res.ok, status: res.status, data });
+    const rawData = await rawRes.json();
+    return NextResponse.json({
+      getRollerland_result: acf,
+      tarif_vestiaire: acf.tarif_vestiaire,
+      raw: rawData,
+    });
   } catch (e) {
     return NextResponse.json({ error: String(e) }, { status: 500 });
   }

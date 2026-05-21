@@ -58,10 +58,17 @@ export async function getRollerland(): Promise<WPAcf> {
       `${WP_BASE}/pages?slug=rollerland-brussels&_fields=id,slug,acf`,
       { cache: "no-store" }
     );
-    if (!res.ok) return {};
-    const pages: Array<{ acf?: WPAcf }> = await res.json();
+    if (!res.ok) {
+      console.error("WP fetch failed:", res.status, res.statusText);
+      return {};
+    }
+    const text = await res.text();
+    console.log("WP raw response (first 500):", text.slice(0, 500));
+    const pages: Array<{ acf?: WPAcf }> = JSON.parse(text);
+    console.log("WP pages length:", pages.length, "acf keys:", Object.keys(pages[0]?.acf ?? {}));
     return pages[0]?.acf ?? {};
-  } catch {
+  } catch (e) {
+    console.error("WP fetch error:", e);
     return {};
   }
 }

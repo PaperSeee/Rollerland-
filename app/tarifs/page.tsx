@@ -1,19 +1,21 @@
 import Link from "next/link";
 import { getRollerland } from "@/lib/wordpress";
 import { SITE } from "@/lib/site";
+import { FORMULES } from "@/lib/formules";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-const GROUPS = [
-  { name: "Wheels Deal", desc: "Location de patins uniquement", kids: "5€", adults: "7€", highlight: false },
-  { name: "Refresh Yourself", desc: "Patins + 2 boissons au choix", kids: "10€", adults: "14€", highlight: false },
-  { name: "Birthday Party", desc: "Formule anniversaire standard", kids: "14€", adults: "18€", highlight: true },
-  { name: "Birthday Party Plus", desc: "Formule anniversaire premium", kids: "20€", adults: "24€", highlight: true },
-  { name: "Team Building", desc: "Patins + animation + encadrement", kids: "16€", adults: "23€", highlight: false },
-  { name: "After Work", desc: "Soirée afterwork tout inclus", kids: "—", adults: "30€", highlight: false },
-  { name: "School Deal", desc: "Groupes scolaires (16+ : 7€)", kids: "5€", adults: "—", highlight: false },
-];
+// Derive the group table from the shared FORMULES source so rows can link to
+// their detail page at /tarifs/[slug].
+const GROUPS = FORMULES.map((f) => ({
+  name: f.name,
+  desc: f.includes.join(" · "),
+  kids: f.priceKids,
+  adults: f.priceAdults,
+  highlight: f.highlight,
+  slug: f.slug,
+}));
 
 const OPTIONS = [
   { label: "Cours / animation privé(e)", price: "75€/heure" },
@@ -86,6 +88,8 @@ export default async function TarifsPage() {
         kids: g.prix_enfant,
         adults: g.prix_adulte,
         highlight: i === 2 || i === 3,
+        // Link to a detail page only if this formule has one (matched by name).
+        slug: FORMULES.find((f) => f.name === g.nom)?.slug ?? null,
       }))
     : GROUPS;
 
@@ -159,7 +163,18 @@ export default async function TarifsPage() {
               <div className="col-span-2 flex items-center gap-3">
                 {g.highlight && <span className="w-1 h-1 rounded-full flex-shrink-0" style={{ background: "#9B92F0" }} />}
                 <div>
-                  <p className="text-sm text-white" style={{ fontWeight: 400 }}>{g.name}</p>
+                  {g.slug ? (
+                    <Link
+                      href={`/tarifs/${g.slug}`}
+                      className="text-sm text-white hover:text-purple-300 transition-colors inline-flex items-center gap-1.5"
+                      style={{ fontWeight: 400 }}
+                    >
+                      {g.name}
+                      <span style={{ color: "#9B92F0", fontSize: "0.7rem" }}>→</span>
+                    </Link>
+                  ) : (
+                    <p className="text-sm text-white" style={{ fontWeight: 400 }}>{g.name}</p>
+                  )}
                   <p className="text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>{g.desc}</p>
                 </div>
               </div>

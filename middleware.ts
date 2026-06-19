@@ -1,25 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
+import createMiddleware from "next-intl/middleware";
+import { routing } from "./i18n/routing";
 import { ADMIN_COOKIE, isValidSessionValue } from "@/lib/auth";
 
-// Gate the /admin area behind the session cookie. /admin/login stays public so
-// users can authenticate. Phase 5 (next-intl) will compose its locale routing
-// alongside this — admin paths are intentionally excluded from locale prefixing.
+const intlMiddleware = createMiddleware(routing);
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname === "/admin/login") return NextResponse.next();
-
+  // Admin area: gated by the session cookie, NOT subject to locale routing.
   if (pathname === "/admin" || pathname.startsWith("/admin/")) {
+    if (pathname === "/admin/login") return NextResponse.next();
     const cookie = request.cookies.get(ADMIN_COOKIE)?.value;
     if (!(await isValidSessionValue(cookie))) {
-      const loginUrl = new URL("/admin/login", request.url);
-      return NextResponse.redirect(loginUrl);
+      return NextResponse.redirect(new URL("/admin/login", request.url));
     }
+    return NextResponse.next();
   }
 
-  return NextResponse.next();
+  // Everything else goes through next-intl locale routing.
+  return intlMiddleware(request);
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  // Run on app routes; skip api, next internals, and files with an extension.
+  matcher: ["/((?!api|_next|_vercel|.*\\..*).*)"],
 };

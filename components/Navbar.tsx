@@ -1,27 +1,29 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { Link, usePathname } from "@/i18n/navigation";
 import { SITE } from "@/lib/site";
+import LocaleSwitcher from "@/components/LocaleSwitcher";
 
 // Menu order per spec: Horaires · Pratique · Tarifs · Contact · Cours ·
 // Private Events · Disco Roller (kept furthest right, highlighted).
-const NAV_LINKS = [
-  { label: "Horaires", href: "/horaires" },
-  { label: "Pratique", href: "/pratique" },
-  { label: "Tarifs", href: "/tarifs" },
-  { label: "Contact", href: "/contact" },
-  { label: "Cours", href: "/cours" },
-  { label: "Private Events", href: "/private-events" },
-  { label: "Disco Roller", href: "/disco-roller", hot: true },
+const NAV_LINKS: { key: string; href: string; hot?: boolean }[] = [
+  { key: "horaires", href: "/horaires" },
+  { key: "pratique", href: "/pratique" },
+  { key: "tarifs", href: "/tarifs" },
+  { key: "contact", href: "/contact" },
+  { key: "cours", href: "/cours" },
+  { key: "privateEvents", href: "/private-events" },
+  { key: "discoRoller", href: "/disco-roller", hot: true },
 ];
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const t = useTranslations("nav");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -70,7 +72,7 @@ export default function Navbar() {
                 letterSpacing: "0.12em",
               }}
             >
-              {link.label}
+              {t(link.key)}
               {link.hot && (
                 <span
                   className="absolute -top-1.5 -right-2.5 w-1 h-1 rounded-full animate-pulse-glow"
@@ -88,16 +90,19 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* CTA */}
-        <a
-          href={SITE.reservationUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hidden lg:inline-flex btn-primary text-xs"
-          style={{ padding: "0.5rem 1.25rem" }}
-        >
-          Réserver
-        </a>
+        {/* CTA + locale switcher */}
+        <div className="hidden lg:flex items-center gap-5">
+          <LocaleSwitcher />
+          <a
+            href={SITE.reservationUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex btn-primary text-xs"
+            style={{ padding: "0.5rem 1.25rem" }}
+          >
+            {t("reserve")}
+          </a>
+        </div>
 
         {/* Mobile hamburger */}
         <button
@@ -152,17 +157,20 @@ export default function Navbar() {
                 letterSpacing: "0.14em",
               }}
             >
-              {link.label}
+              {t(link.key)}
               {link.hot && <span className="w-1 h-1 rounded-full bg-purple-400 animate-pulse" />}
             </Link>
           ))}
+          <div className="mt-2">
+            <LocaleSwitcher />
+          </div>
           <a
             href={SITE.reservationUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-primary w-fit mt-2"
           >
-            Réserver
+            {t("reserve")}
           </a>
         </div>
       </div>

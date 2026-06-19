@@ -1,7 +1,10 @@
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { SITE } from "@/lib/site";
 
 export default function Footer() {
+  const t = useTranslations("footer");
+  const tn = useTranslations("nav");
   return (
     <footer
       className="mt-0 py-16 px-6"
@@ -16,8 +19,8 @@ export default function Footer() {
               Rollerland<span style={{ color: "#9B92F0" }}>Brussels</span>
             </p>
             <p className="text-xs mb-6" style={{ color: "rgba(255,255,255,0.45)", lineHeight: "1.9" }}>
-              La piste de roller au cœur de Bruxelles.<br />
-              Disco, cours, anniversaires &amp; team building.
+              {t("tagline")}<br />
+              {t("subtitle")}
             </p>
             <p className="text-xs mb-2" style={{ color: "rgba(255,255,255,0.35)" }}>
               {SITE.address.line1} · {SITE.address.line2}
@@ -53,16 +56,16 @@ export default function Footer() {
 
           {/* Nav */}
           <div>
-            <p className="label-tag mb-4">Pages</p>
+            <p className="label-tag mb-4">{t("pages")}</p>
             <div className="flex flex-col gap-2.5">
               {[
-                { label: "Horaires", href: "/horaires" },
-                { label: "Pratique", href: "/pratique" },
-                { label: "Tarifs", href: "/tarifs" },
-                { label: "Contact", href: "/contact" },
-                { label: "Cours", href: "/cours" },
-                { label: "Private Events", href: "/private-events" },
-                { label: "Disco Roller", href: "/disco-roller" },
+                { key: "horaires", href: "/horaires" },
+                { key: "pratique", href: "/pratique" },
+                { key: "tarifs", href: "/tarifs" },
+                { key: "contact", href: "/contact" },
+                { key: "cours", href: "/cours" },
+                { key: "privateEvents", href: "/private-events" },
+                { key: "discoRoller", href: "/disco-roller" },
               ].map((link) => (
                 <Link
                   key={link.href}
@@ -70,7 +73,7 @@ export default function Footer() {
                   className="text-xs uppercase tracking-wide transition-colors hover:text-white"
                   style={{ color: "rgba(255,255,255,0.35)", letterSpacing: "0.1em" }}
                 >
-                  {link.label}
+                  {tn(link.key)}
                 </Link>
               ))}
             </div>
@@ -78,7 +81,7 @@ export default function Footer() {
 
           {/* Hours */}
           <div>
-            <p className="label-tag mb-4">Horaires</p>
+            <p className="label-tag mb-4">{t("hours")}</p>
             <div className="flex flex-col gap-2">
               {[
                 { day: "Mercredi", h: "12h–20h" },
@@ -92,7 +95,7 @@ export default function Footer() {
                 </div>
               ))}
               <p className="text-xs mt-2" style={{ color: "rgba(255,255,255,0.2)" }}>
-                Lun–Mar–Jeu sur réservation
+                {t("closedNote")}
               </p>
             </div>
           </div>
@@ -104,7 +107,7 @@ export default function Footer() {
           style={{ borderTop: "0.5px solid rgba(127,119,221,0.12)" }}
         >
           <p className="text-xs" style={{ color: "rgba(255,255,255,0.2)", letterSpacing: "0.05em" }}>
-            © {new Date().getFullYear()} Rollerland Brussels · Retro Brussels asbl
+            © {new Date().getFullYear()} {t("rights")}
           </p>
           <a
             href="https://retro.brussels/privacy-policy/"
@@ -113,7 +116,7 @@ export default function Footer() {
             className="text-xs uppercase transition-colors hover:text-white"
             style={{ color: "rgba(255,255,255,0.2)", letterSpacing: "0.1em" }}
           >
-            Politique de confidentialité
+            {t("privacy")}
           </a>
         </div>
       </div>

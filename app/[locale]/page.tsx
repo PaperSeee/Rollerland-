@@ -1,5 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import Ticker from "@/components/Ticker";
 import { getRollerland } from "@/lib/wordpress";
 import { SITE } from "@/lib/site";
@@ -43,7 +44,9 @@ const FALLBACK_GALLERY = [
   { src: "https://retro.brussels/wp-content/uploads/2023/10/WhatsApp-Image-2023-09-12-at-09.22.25.jpeg", label: "Anniversaire" },
 ];
 
-export default async function HomePage() {
+export default async function HomePage({ params }: { params: { locale: string } }) {
+  setRequestLocale(params.locale);
+  const t = await getTranslations("home");
   const acf = await getRollerland();
   const heroImage = acf.hero_image || FALLBACK_HERO;
   const galleryImages = acf.gallery_images?.length
@@ -74,13 +77,13 @@ export default async function HomePage() {
         {/* Floating badge top-right */}
         <div className="absolute top-24 right-6 z-10 hidden md:flex flex-col items-end gap-2 animate-fade-in delay-600">
           <div className="glass-card px-4 py-2 animate-pulse-glow">
-            <p className="text-xs" style={{ color: "#9B92F0", letterSpacing: "0.12em" }}>OUVERT CE SOIR</p>
+            <p className="text-xs" style={{ color: "#9B92F0", letterSpacing: "0.12em" }}>{t("openTonight")}</p>
           </div>
         </div>
 
         {/* Hero content */}
         <div className="relative z-10 max-w-7xl mx-auto px-6 pb-0 w-full">
-          <p className="label-tag mb-5 animate-fade-up">Bruxelles · 1020 Laeken</p>
+          <p className="label-tag mb-5 animate-fade-up">{t("location")}</p>
 
           <h1
             className="animate-fade-up delay-100"
@@ -101,8 +104,8 @@ export default async function HomePage() {
             className="mt-6 mb-10 max-w-md text-base animate-fade-up delay-200"
             style={{ color: "rgba(255,255,255,0.55)", lineHeight: "1.75" }}
           >
-            La piste de roller au cœur de Bruxelles.<br />
-            Disco, cours, anniversaires &amp; team building.
+            {t("heroLead")}<br />
+            {t("heroLead2")}
           </p>
 
           <div className="flex flex-wrap gap-3 animate-fade-up delay-300">
@@ -112,7 +115,7 @@ export default async function HomePage() {
               rel="noopener noreferrer"
               className="btn-primary animate-pulse-glow"
             >
-              Réserver
+              {t("reserve")}
             </a>
             <Link href="/disco-roller" className="btn-outline">
               Disco Roller ↗
@@ -165,20 +168,18 @@ export default async function HomePage() {
 
             {/* Text */}
             <div className="p-10 md:p-14 flex flex-col justify-center">
-              <p className="label-tag mb-4">Hommage</p>
+              <p className="label-tag mb-4">{t("tributeKicker")}</p>
               <h2
                 className="text-3xl md:text-4xl text-white mb-5"
                 style={{ fontWeight: 300, letterSpacing: "-0.02em", lineHeight: "1.1" }}
               >
-                Tribute à<br />
+                {t("tributeTitle")}<br />
                 <span style={{ color: "#9B92F0" }}>Rollerland Aalst</span>
               </h2>
               {/* TODO(client): remplacer ce texte par la présentation officielle de
-                  Rollerland Aalst qui sera fournie. */}
+                  Rollerland Aalst qui sera fournie (clé home.tributeBody). */}
               <p className="text-sm mb-6" style={{ color: "rgba(255,255,255,0.5)", lineHeight: "1.85" }}>
-                Rollerland Brussels s&apos;inscrit dans l&apos;héritage de Rollerland Aalst,
-                institution du roller en Belgique. Un texte de présentation officiel viendra
-                bientôt enrichir cette section.
+                {t("tributeBody")}
               </p>
               <a
                 href="https://www.rollerland.be/"
@@ -186,7 +187,7 @@ export default async function HomePage() {
                 rel="noopener noreferrer"
                 className="btn-outline w-fit"
               >
-                Découvrir Rollerland Aalst →
+                {t("tributeCta")}
               </a>
             </div>
           </div>
@@ -213,7 +214,7 @@ export default async function HomePage() {
             </div>
             <div className="relative z-10 p-10 md:p-16 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div>
-                <p className="label-tag mb-4">Chaque vendredi &amp; samedi</p>
+                <p className="label-tag mb-4">{t("discoEvery")}</p>
                 <h2
                   className="text-4xl md:text-5xl text-white mb-4"
                   style={{ fontWeight: 300, letterSpacing: "-0.02em", lineHeight: "1.1" }}
@@ -221,11 +222,11 @@ export default async function HomePage() {
                   Disco<br />Roller
                 </h2>
                 <p className="text-sm mb-6" style={{ color: "rgba(255,255,255,0.5)", lineHeight: "1.8" }}>
-                  Musique, lumières et piste ouverte jusqu&apos;à minuit.<br />
-                  <strong style={{ color: "#9B92F0", fontWeight: 500 }}>Entrée gratuite · Sans réservation.</strong>
+                  {t("heroLead")}<br />
+                  <strong style={{ color: "#9B92F0", fontWeight: 500 }}>{t("discoFree")} · {t("discoEntry")}</strong>
                 </p>
                 <span className="btn-primary group-hover:bg-white group-hover:text-black transition-all">
-                  Voir les événements →
+                  {t("discoSeeEvents")}
                 </span>
               </div>
               <div className="hidden md:flex flex-col gap-3 items-end">
@@ -243,8 +244,8 @@ export default async function HomePage() {
                   </div>
                 ))}
                 <div className="glass-card px-6 py-4 text-right animate-pulse-glow">
-                  <p className="label-tag mb-1">Entrée</p>
-                  <p className="text-sm font-medium" style={{ color: "#9B92F0" }}>Gratuite</p>
+                  <p className="label-tag mb-1">{t("discoEntry")}</p>
+                  <p className="text-sm font-medium" style={{ color: "#9B92F0" }}>{t("discoFree")}</p>
                 </div>
               </div>
             </div>
@@ -257,13 +258,13 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-10">
             <div>
-              <p className="label-tag mb-3">Ce qu&apos;on propose</p>
+              <p className="label-tag mb-3">{t("servicesKicker")}</p>
               <h2 className="text-3xl md:text-4xl text-white" style={{ fontWeight: 300, letterSpacing: "-0.02em" }}>
-                Services &amp; Activités
+                {t("servicesTitle")}
               </h2>
             </div>
-            <Link href="/services" className="hidden md:block text-xs uppercase tracking-widest hover:text-white transition-colors" style={{ color: "rgba(127,119,221,0.6)", letterSpacing: "0.14em" }}>
-              Tout voir →
+            <Link href="/private-events" className="hidden md:block text-xs uppercase tracking-widest hover:text-white transition-colors" style={{ color: "rgba(127,119,221,0.6)", letterSpacing: "0.14em" }}>
+              {t("seeAll")}
             </Link>
           </div>
 
@@ -282,7 +283,7 @@ export default async function HomePage() {
                 {s.accent && (
                   <div className="absolute top-3 right-3">
                     <span className="text-xs px-2 py-0.5" style={{ background: "#9B92F0", color: "#150E28", fontSize: "0.6rem", letterSpacing: "0.1em", textTransform: "uppercase" }}>
-                      Ce soir
+                      {t("tonight")}
                     </span>
                   </div>
                 )}
@@ -297,7 +298,7 @@ export default async function HomePage() {
                   className="text-xs uppercase tracking-wide transition-all"
                   style={{ color: "rgba(127,119,221,0.5)", letterSpacing: "0.1em" }}
                 >
-                  Découvrir →
+                  {t("discover")}
                 </span>
                 {/* Hover line */}
                 <div
@@ -315,9 +316,9 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-8">
             <div>
-              <p className="label-tag mb-3">Photos</p>
+              <p className="label-tag mb-3">{t("photosKicker")}</p>
               <h2 className="text-2xl text-white" style={{ fontWeight: 300, letterSpacing: "-0.01em" }}>
-                Sur la piste
+                {t("photosTitle")}
               </h2>
             </div>
           </div>
@@ -357,8 +358,8 @@ export default async function HomePage() {
       >
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 items-center">
           <div className="md:col-span-1">
-            <p className="label-tag mb-2">Tarifs individuels</p>
-            <h3 className="text-xl text-white" style={{ fontWeight: 300 }}>Location de patins</h3>
+            <p className="label-tag mb-2">{t("tarifsKicker")}</p>
+            <h3 className="text-xl text-white" style={{ fontWeight: 300 }}>{t("tarifsTitle")}</h3>
           </div>
           <div className="md:col-span-2 grid grid-cols-2 gap-4">
             {[
@@ -378,14 +379,14 @@ export default async function HomePage() {
             ))}
           </div>
           <div className="flex flex-col gap-3">
-            <Link href="/tarifs" className="btn-outline text-center">Tous les tarifs</Link>
+            <Link href="/tarifs" className="btn-outline text-center">{t("allTarifs")}</Link>
             <a
               href={SITE.reservationUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-primary text-center"
             >
-              Réserver
+              {t("reserve")}
             </a>
           </div>
         </div>
@@ -395,9 +396,9 @@ export default async function HomePage() {
       <section className="py-20 px-6" style={{ borderTop: "0.5px solid rgba(127,119,221,0.15)" }}>
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <p className="label-tag mb-3 justify-center flex">Ils nous soutiennent</p>
+            <p className="label-tag mb-3 justify-center flex">{t("partnersKicker")}</p>
             <h2 className="text-3xl md:text-4xl text-white" style={{ fontWeight: 300, letterSpacing: "-0.02em" }}>
-              Nos partenaires
+              {t("partnersTitle")}
             </h2>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-px" style={{ background: "rgba(127,119,221,0.15)", border: "0.5px solid rgba(127,119,221,0.2)" }}>
@@ -438,9 +439,9 @@ export default async function HomePage() {
       <section className="py-24 px-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
-            <p className="label-tag mb-4">Nous trouver</p>
+            <p className="label-tag mb-4">{t("findUs")}</p>
             <h2 className="text-3xl md:text-4xl text-white mb-8" style={{ fontWeight: 300, letterSpacing: "-0.02em" }}>
-              Rue Dieudonné<br />Lefèvre 4, Bruxelles
+              {t("addressTitle")}
             </h2>
             <div className="grid grid-cols-1 gap-4 mb-8">
               {[
@@ -462,12 +463,12 @@ export default async function HomePage() {
               ))}
             </div>
             <a
-              href="https://maps.app.goo.gl/wUYExjkrJLUSWEf88"
+              href={SITE.address.mapsUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-outline"
             >
-              Ouvrir dans Google Maps
+              {t("openMaps")}
             </a>
           </div>
 
@@ -495,16 +496,16 @@ export default async function HomePage() {
           <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 60% 80% at 50% 100%, rgba(127,119,221,0.08) 0%, transparent 70%)" }} />
         </div>
         <div className="relative z-10 max-w-7xl mx-auto text-center">
-          <p className="label-tag mb-4 justify-center flex">Prêt ?</p>
+          <p className="label-tag mb-4 justify-center flex">{t("ctaReady")}</p>
           <h2
             className="mb-6 text-white"
             style={{ fontSize: "clamp(2rem, 5vw, 4rem)", fontWeight: 300, letterSpacing: "-0.02em", lineHeight: "1.1" }}
           >
-            Chaussez les patins,<br />
-            <span style={{ color: "#9B92F0" }}>la piste vous attend.</span>
+            {t("ctaTitle1")}<br />
+            <span style={{ color: "#9B92F0" }}>{t("ctaTitle2")}</span>
           </h2>
           <p className="text-sm mb-10 max-w-md mx-auto" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }}>
-            Réservation en ligne ou par e-mail à {SITE.email}. Réponse rapide garantie.
+            {t("ctaLead", { email: SITE.email })}
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <a
@@ -514,14 +515,14 @@ export default async function HomePage() {
               className="btn-primary animate-pulse-glow"
               style={{ padding: "0.9rem 2.5rem" }}
             >
-              Réserver maintenant
+              {t("ctaReserve")}
             </a>
             <a
               href={`mailto:${SITE.email}`}
               className="btn-outline"
               style={{ padding: "0.9rem 2.5rem" }}
             >
-              Nous écrire
+              {t("ctaWrite")}
             </a>
           </div>
         </div>

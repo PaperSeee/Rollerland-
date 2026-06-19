@@ -1,4 +1,5 @@
 import { SITE } from "@/lib/site";
+import ReservationForm from "@/components/ReservationForm";
 
 export const revalidate = 60;
 
@@ -154,23 +155,7 @@ export default function ContactPage() {
         {/* Google Form */}
         <div className="lg:col-span-2 animate-fade-up delay-200">
           <p className="label-tag mb-5">Formulaire de réservation &amp; contact</p>
-          <div
-            className="overflow-hidden"
-            style={{ border: "0.5px solid rgba(127,119,221,0.3)", background: "rgba(255,255,255,0.02)" }}
-          >
-            <iframe
-              src={SITE.reservationEmbedUrl}
-              width="100%"
-              height="720"
-              style={{ border: 0, display: "block" }}
-              title="Formulaire de réservation Rollerland Brussels"
-            >
-              Chargement…
-            </iframe>
-          </div>
-          <p className="text-xs mt-3" style={{ color: "rgba(255,255,255,0.2)" }}>
-            Réponse sous 24h · Vous pouvez aussi nous écrire à {SITE.email}
-          </p>
+          <ReservationForm />
         </div>
       </div>
     </div>

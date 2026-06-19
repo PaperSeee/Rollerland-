@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Ticker from "@/components/Ticker";
 import { getRollerland } from "@/lib/wordpress";
+import { SITE } from "@/lib/site";
 
 const STATS = [
   { label: "Mercredi", value: "12h–20h", sub: "Cours + accès libre" },
@@ -13,10 +14,22 @@ const STATS = [
 const SERVICES = [
   { tag: "01", title: "Disco Roller", desc: "Vendredi & samedi — musique, lumières, piste ouverte jusqu'à minuit.", href: "/disco-roller", accent: true },
   { tag: "02", title: "Cours de Roller", desc: "Enfants & adultes, mercredi et samedi. Patins inclus.", href: "/cours", accent: false },
-  { tag: "03", title: "Anniversaires", desc: "Formules Birthday Party sur mesure pour petits et grands.", href: "/services", accent: false },
-  { tag: "04", title: "Team Building", desc: "Activité cohésion d'équipe originale avec animation.", href: "/services", accent: false },
-  { tag: "05", title: "After Work", desc: "Décompressez en patins avec vos collègues le vendredi.", href: "/services", accent: false },
-  { tag: "06", title: "Groupes Scolaires", desc: "School Deal à 5€/élève avec accompagnement pédagogique.", href: "/services", accent: false },
+  { tag: "03", title: "Anniversaires", desc: "Formules Birthday Party sur mesure pour petits et grands.", href: "/private-events", accent: false },
+  { tag: "04", title: "Team Building", desc: "Activité cohésion d'équipe originale avec animation.", href: "/private-events", accent: false },
+  { tag: "05", title: "After Work", desc: "Décompressez en patins avec vos collègues le vendredi.", href: "/private-events", accent: false },
+  { tag: "06", title: "Groupes Scolaires", desc: "School Deal à 5€/élève avec accompagnement pédagogique.", href: "/private-events", accent: false },
+];
+
+// Partners shown prominently on the homepage. TODO(client): drop the real
+// logo files into /public/partners/ and set `logo` to e.g. "/partners/be-here.svg".
+// Until then we render a styled text placeholder for each partner.
+const PARTNERS = [
+  { name: "Be Here", url: "https://www.behere.brussels/", logo: null as string | null },
+  { name: "Kinepolis", url: "https://kinepolis.be/", logo: null as string | null },
+  { name: "Brussels Airlines", url: "https://www.brusselsairlines.com/", logo: null as string | null },
+  { name: "VGC", url: "https://www.vgc.be/", logo: null as string | null },
+  { name: "Rollerland Aalst", url: "https://www.rollerland.be/", logo: null as string | null },
+  { name: "Skate Vlaanderen", url: "https://www.skate.vlaanderen/", logo: null as string | null },
 ];
 
 
@@ -52,8 +65,8 @@ export default async function HomePage() {
             style={{ objectPosition: "center 40%" }}
           />
           {/* Multi-layer overlay */}
-          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(13,10,26,0.92) 0%, rgba(83,74,183,0.15) 50%, rgba(13,10,26,0.85) 100%)" }} />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(to top, #0D0A1A 0%, rgba(13,10,26,0.3) 60%, transparent 100%)" }} />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(21,14,40,0.92) 0%, rgba(83,74,183,0.15) 50%, rgba(21,14,40,0.85) 100%)" }} />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(to top, #150E28 0%, rgba(21,14,40,0.3) 60%, transparent 100%)" }} />
           {/* Noise texture */}
           <div className="absolute inset-0 opacity-5" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")" }} />
         </div>
@@ -61,7 +74,7 @@ export default async function HomePage() {
         {/* Floating badge top-right */}
         <div className="absolute top-24 right-6 z-10 hidden md:flex flex-col items-end gap-2 animate-fade-in delay-600">
           <div className="glass-card px-4 py-2 animate-pulse-glow">
-            <p className="text-xs" style={{ color: "#7F77DD", letterSpacing: "0.12em" }}>OUVERT CE SOIR</p>
+            <p className="text-xs" style={{ color: "#9B92F0", letterSpacing: "0.12em" }}>OUVERT CE SOIR</p>
           </div>
         </div>
 
@@ -80,7 +93,7 @@ export default async function HomePage() {
             }}
           >
             Roller<br />
-            <span style={{ color: "#7F77DD" }}>land</span>
+            <span style={{ color: "#9B92F0" }}>land</span>
             <span style={{ color: "rgba(255,255,255,0.15)" }}>.</span>
           </h1>
 
@@ -94,7 +107,7 @@ export default async function HomePage() {
 
           <div className="flex flex-wrap gap-3 animate-fade-up delay-300">
             <a
-              href="https://docs.google.com/forms/d/e/1FAIpQLScMq5Q5slrGQ-F_TX8hcWAV93R2pKOhk-cTWFo-QbaXGTjRCg/viewform"
+              href={SITE.reservationUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-primary animate-pulse-glow"
@@ -108,7 +121,7 @@ export default async function HomePage() {
         </div>
 
         {/* Stats bar */}
-        <div className="relative z-10 mt-16 w-full" style={{ borderTop: "0.5px solid rgba(127,119,221,0.2)", background: "rgba(13,10,26,0.85)", backdropFilter: "blur(12px)" }}>
+        <div className="relative z-10 mt-16 w-full" style={{ borderTop: "0.5px solid rgba(127,119,221,0.2)", background: "rgba(21,14,40,0.85)", backdropFilter: "blur(12px)" }}>
           <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4">
             {STATS.map((s, i) => (
               <div
@@ -128,6 +141,58 @@ export default async function HomePage() {
       {/* ── Ticker tape ── */}
       <Ticker />
 
+      {/* ── Tribute: Rollerland Aalst ── */}
+      <section className="py-24 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div
+            className="grid grid-cols-1 lg:grid-cols-2 overflow-hidden"
+            style={{ border: "0.5px solid rgba(127,119,221,0.25)" }}
+          >
+            {/* Image — TODO(client): replace with a real Rollerland Aalst photo */}
+            <div
+              className="relative min-h-[280px]"
+              style={{ background: "rgba(127,119,221,0.05)" }}
+            >
+              <Image
+                src="https://retro.brussels/wp-content/uploads/2024/10/IMG_20231112_111005-scaled.jpg"
+                alt="Hommage à Rollerland Aalst"
+                fill
+                className="object-cover"
+                style={{ opacity: 0.85 }}
+              />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to right, transparent 40%, rgba(21,14,40,0.5) 100%)" }} />
+            </div>
+
+            {/* Text */}
+            <div className="p-10 md:p-14 flex flex-col justify-center">
+              <p className="label-tag mb-4">Hommage</p>
+              <h2
+                className="text-3xl md:text-4xl text-white mb-5"
+                style={{ fontWeight: 300, letterSpacing: "-0.02em", lineHeight: "1.1" }}
+              >
+                Tribute à<br />
+                <span style={{ color: "#9B92F0" }}>Rollerland Aalst</span>
+              </h2>
+              {/* TODO(client): remplacer ce texte par la présentation officielle de
+                  Rollerland Aalst qui sera fournie. */}
+              <p className="text-sm mb-6" style={{ color: "rgba(255,255,255,0.5)", lineHeight: "1.85" }}>
+                Rollerland Brussels s&apos;inscrit dans l&apos;héritage de Rollerland Aalst,
+                institution du roller en Belgique. Un texte de présentation officiel viendra
+                bientôt enrichir cette section.
+              </p>
+              <a
+                href="https://www.rollerland.be/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-outline w-fit"
+              >
+                Découvrir Rollerland Aalst →
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── Disco CTA Feature ── */}
       <section className="py-24 px-6">
         <div className="max-w-7xl mx-auto">
@@ -144,7 +209,7 @@ export default async function HomePage() {
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
                 style={{ objectPosition: "center" }}
               />
-              <div className="absolute inset-0" style={{ background: "linear-gradient(to right, rgba(13,10,26,0.97) 40%, rgba(13,10,26,0.5) 100%)" }} />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to right, rgba(21,14,40,0.97) 40%, rgba(21,14,40,0.5) 100%)" }} />
             </div>
             <div className="relative z-10 p-10 md:p-16 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div>
@@ -157,7 +222,7 @@ export default async function HomePage() {
                 </h2>
                 <p className="text-sm mb-6" style={{ color: "rgba(255,255,255,0.5)", lineHeight: "1.8" }}>
                   Musique, lumières et piste ouverte jusqu&apos;à minuit.<br />
-                  <strong style={{ color: "#7F77DD", fontWeight: 500 }}>Entrée gratuite · Sans réservation.</strong>
+                  <strong style={{ color: "#9B92F0", fontWeight: 500 }}>Entrée gratuite · Sans réservation.</strong>
                 </p>
                 <span className="btn-primary group-hover:bg-white group-hover:text-black transition-all">
                   Voir les événements →
@@ -179,7 +244,7 @@ export default async function HomePage() {
                 ))}
                 <div className="glass-card px-6 py-4 text-right animate-pulse-glow">
                   <p className="label-tag mb-1">Entrée</p>
-                  <p className="text-sm font-medium" style={{ color: "#7F77DD" }}>Gratuite</p>
+                  <p className="text-sm font-medium" style={{ color: "#9B92F0" }}>Gratuite</p>
                 </div>
               </div>
             </div>
@@ -216,7 +281,7 @@ export default async function HomePage() {
               >
                 {s.accent && (
                   <div className="absolute top-3 right-3">
-                    <span className="text-xs px-2 py-0.5" style={{ background: "#7F77DD", color: "#0D0A1A", fontSize: "0.6rem", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+                    <span className="text-xs px-2 py-0.5" style={{ background: "#9B92F0", color: "#150E28", fontSize: "0.6rem", letterSpacing: "0.1em", textTransform: "uppercase" }}>
                       Ce soir
                     </span>
                   </div>
@@ -237,7 +302,7 @@ export default async function HomePage() {
                 {/* Hover line */}
                 <div
                   className="absolute bottom-0 left-0 h-px transition-all duration-500 group-hover:w-full"
-                  style={{ width: "0%", background: "#7F77DD" }}
+                  style={{ width: "0%", background: "#9B92F0" }}
                 />
               </Link>
             ))}
@@ -275,7 +340,7 @@ export default async function HomePage() {
                 />
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4"
-                  style={{ background: "linear-gradient(to top, rgba(13,10,26,0.8) 0%, transparent 60%)" }}
+                  style={{ background: "linear-gradient(to top, rgba(21,14,40,0.8) 0%, transparent 60%)" }}
                 >
                   <p className="label-tag">{g.label}</p>
                 </div>
@@ -308,20 +373,63 @@ export default async function HomePage() {
                 style={{ border: "0.5px solid rgba(127,119,221,0.2)", background: "rgba(255,255,255,0.02)" }}
               >
                 <p className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>{t.label}</p>
-                <p className="text-sm font-medium" style={{ color: "#7F77DD" }}>{t.price}</p>
+                <p className="text-sm font-medium" style={{ color: "#9B92F0" }}>{t.price}</p>
               </div>
             ))}
           </div>
           <div className="flex flex-col gap-3">
             <Link href="/tarifs" className="btn-outline text-center">Tous les tarifs</Link>
             <a
-              href="https://docs.google.com/forms/d/e/1FAIpQLScMq5Q5slrGQ-F_TX8hcWAV93R2pKOhk-cTWFo-QbaXGTjRCg/viewform"
+              href={SITE.reservationUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-primary text-center"
             >
               Réserver
             </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Partners ── */}
+      <section className="py-20 px-6" style={{ borderTop: "0.5px solid rgba(127,119,221,0.15)" }}>
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <p className="label-tag mb-3 justify-center flex">Ils nous soutiennent</p>
+            <h2 className="text-3xl md:text-4xl text-white" style={{ fontWeight: 300, letterSpacing: "-0.02em" }}>
+              Nos partenaires
+            </h2>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-px" style={{ background: "rgba(127,119,221,0.15)", border: "0.5px solid rgba(127,119,221,0.2)" }}>
+            {PARTNERS.map((p) => (
+              <a
+                key={p.name}
+                href={p.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-center px-6 py-12 hover-lift transition-all"
+                style={{ background: "rgba(21,14,40,0.6)" }}
+              >
+                {p.logo ? (
+                  <Image
+                    src={p.logo}
+                    alt={p.name}
+                    width={180}
+                    height={64}
+                    className="object-contain transition-opacity opacity-70 group-hover:opacity-100"
+                    style={{ maxHeight: 64, width: "auto" }}
+                  />
+                ) : (
+                  // TODO(client): swap this text placeholder for the real logo image.
+                  <span
+                    className="text-xl md:text-2xl font-light text-center transition-colors"
+                    style={{ color: "rgba(255,255,255,0.55)", letterSpacing: "0.02em" }}
+                  >
+                    {p.name}
+                  </span>
+                )}
+              </a>
+            ))}
           </div>
         </div>
       </section>
@@ -393,14 +501,14 @@ export default async function HomePage() {
             style={{ fontSize: "clamp(2rem, 5vw, 4rem)", fontWeight: 300, letterSpacing: "-0.02em", lineHeight: "1.1" }}
           >
             Chaussez les patins,<br />
-            <span style={{ color: "#7F77DD" }}>la piste vous attend.</span>
+            <span style={{ color: "#9B92F0" }}>la piste vous attend.</span>
           </h2>
           <p className="text-sm mb-10 max-w-md mx-auto" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }}>
-            Réservation en ligne ou via WhatsApp. Réponse rapide garantie.
+            Réservation en ligne ou par e-mail à {SITE.email}. Réponse rapide garantie.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <a
-              href="https://docs.google.com/forms/d/e/1FAIpQLScMq5Q5slrGQ-F_TX8hcWAV93R2pKOhk-cTWFo-QbaXGTjRCg/viewform"
+              href={SITE.reservationUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-primary animate-pulse-glow"
@@ -409,13 +517,11 @@ export default async function HomePage() {
               Réserver maintenant
             </a>
             <a
-              href="https://wa.me/32484772593"
-              target="_blank"
-              rel="noopener noreferrer"
+              href={`mailto:${SITE.email}`}
               className="btn-outline"
               style={{ padding: "0.9rem 2.5rem" }}
             >
-              WhatsApp
+              Nous écrire
             </a>
           </div>
         </div>

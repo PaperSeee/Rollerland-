@@ -9,6 +9,12 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      // "Services" was renamed to "Private Events".
+      { source: "/services", destination: "/private-events", permanent: true },
+    ];
+  },
 };
 
 module.exports = nextConfig;

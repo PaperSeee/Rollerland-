@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { getRollerland } from "@/lib/wordpress";
+import { SITE } from "@/lib/site";
 
 export const revalidate = 60;
 
@@ -139,8 +140,8 @@ export default async function DiscoRollerPage() {
             className="object-cover"
             style={{ objectPosition: "center 35%" }}
           />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(13,10,26,0.95) 0%, rgba(83,74,183,0.2) 60%, rgba(13,10,26,0.9) 100%)" }} />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(to top, #0D0A1A 0%, transparent 60%)" }} />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(21,14,40,0.95) 0%, rgba(83,74,183,0.2) 60%, rgba(21,14,40,0.9) 100%)" }} />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(to top, #150E28 0%, transparent 60%)" }} />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 pb-16 w-full">
@@ -150,7 +151,7 @@ export default async function DiscoRollerPage() {
             style={{ fontWeight: 300, lineHeight: "0.95", letterSpacing: "-0.03em" }}
           >
             Disco<br />
-            <span style={{ color: "#7F77DD" }}>Roller</span>
+            <span style={{ color: "#9B92F0" }}>Roller</span>
           </h1>
           <p className="mt-6 text-base max-w-lg animate-fade-up delay-200" style={{ color: "rgba(255,255,255,0.5)", lineHeight: "1.75" }}>
             Musique, lumières stroboscopiques et piste ouverte jusqu&apos;à minuit.
@@ -168,7 +169,7 @@ export default async function DiscoRollerPage() {
             </div>
             <div className="glass-card px-6 py-3">
               <p className="label-tag mb-0.5">Entrée</p>
-              <p className="text-sm font-medium" style={{ color: "#7F77DD" }}>Gratuite</p>
+              <p className="text-sm font-medium" style={{ color: "#9B92F0" }}>Gratuite</p>
             </div>
           </div>
         </div>
@@ -189,13 +190,13 @@ export default async function DiscoRollerPage() {
             className="p-8 md:p-10 mb-6 relative overflow-hidden hover-lift"
             style={{ border: "0.5px solid rgba(127,119,221,0.4)", background: "rgba(127,119,221,0.07)" }}
           >
-            <div className="absolute top-0 left-0 h-full w-1" style={{ background: "linear-gradient(to bottom, #7F77DD, transparent)" }} />
+            <div className="absolute top-0 left-0 h-full w-1" style={{ background: "linear-gradient(to bottom, #9B92F0, transparent)" }} />
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div>
                 <div className="flex items-center gap-3 mb-4">
                   <span className="label-tag">Prochain</span>
                   {nextEvent.special && (
-                    <span className="text-xs px-2 py-0.5 uppercase" style={{ background: "#7F77DD", color: "#0D0A1A", fontSize: "0.6rem", letterSpacing: "0.1em" }}>
+                    <span className="text-xs px-2 py-0.5 uppercase" style={{ background: "#9B92F0", color: "#150E28", fontSize: "0.6rem", letterSpacing: "0.1em" }}>
                       Spécial
                     </span>
                   )}
@@ -219,7 +220,7 @@ export default async function DiscoRollerPage() {
                   style={{ border: "0.5px solid rgba(127,119,221,0.5)", background: "rgba(127,119,221,0.08)" }}
                 >
                   <p className="label-tag mb-1">Entrée</p>
-                  <p className="text-xl font-light" style={{ color: "#7F77DD" }}>Gratuite</p>
+                  <p className="text-xl font-light" style={{ color: "#9B92F0" }}>Gratuite</p>
                 </div>
               </div>
             </div>
@@ -248,7 +249,7 @@ export default async function DiscoRollerPage() {
                     {event.theme}
                   </h4>
                   {event.special && (
-                    <span className="text-xs px-2 py-0.5" style={{ border: "0.5px solid rgba(127,119,221,0.5)", color: "#7F77DD", fontSize: "0.6rem", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+                    <span className="text-xs px-2 py-0.5" style={{ border: "0.5px solid rgba(127,119,221,0.5)", color: "#9B92F0", fontSize: "0.6rem", letterSpacing: "0.1em", textTransform: "uppercase" }}>
                       Spécial
                     </span>
                   )}
@@ -257,7 +258,7 @@ export default async function DiscoRollerPage() {
                 {/* Time + DJ */}
                 <div className="flex items-center justify-between md:justify-end gap-4">
                   <div className="text-right">
-                    <p className="text-xs" style={{ color: "#7F77DD" }}>{event.time}</p>
+                    <p className="text-xs" style={{ color: "#9B92F0" }}>{event.time}</p>
                     {event.dj && <p className="text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>{event.dj}</p>}
                   </div>
                 </div>
@@ -300,7 +301,7 @@ export default async function DiscoRollerPage() {
               <ul className="flex flex-col gap-2">
                 {block.items.map((item) => (
                   <li key={item} className="flex gap-2 items-start">
-                    <span style={{ color: "#7F77DD", fontSize: "0.5rem", marginTop: "0.35rem" }}>◆</span>
+                    <span style={{ color: "#9B92F0", fontSize: "0.5rem", marginTop: "0.35rem" }}>◆</span>
                     <span className="text-xs" style={{ color: "rgba(255,255,255,0.5)", lineHeight: "1.7" }}>{item}</span>
                   </li>
                 ))}
@@ -317,12 +318,12 @@ export default async function DiscoRollerPage() {
             <p className="label-tag mb-2">Chaque vendredi &amp; samedi · Sans réservation</p>
             <h3 className="text-2xl text-white" style={{ fontWeight: 300 }}>
               Venez comme vous êtes —<br />
-              <span style={{ color: "#7F77DD" }}>la piste vous attend.</span>
+              <span style={{ color: "#9B92F0" }}>la piste vous attend.</span>
             </h3>
           </div>
           <div className="flex gap-4">
-            <a href="https://wa.me/32484772593" target="_blank" rel="noopener noreferrer" className="btn-outline">
-              WhatsApp
+            <a href={SITE.socials.instagram} target="_blank" rel="noopener noreferrer" className="btn-outline">
+              Suivre sur Instagram
             </a>
           </div>
         </div>

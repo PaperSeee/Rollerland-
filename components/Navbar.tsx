@@ -4,15 +4,18 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { SITE } from "@/lib/site";
 
+// Menu order per spec: Horaires · Pratique · Tarifs · Contact · Cours ·
+// Private Events · Disco Roller (kept furthest right, highlighted).
 const NAV_LINKS = [
-  { label: "Disco Roller", href: "/disco-roller", hot: true },
   { label: "Horaires", href: "/horaires" },
-  { label: "Tarifs", href: "/tarifs" },
-  { label: "Cours", href: "/cours" },
-  { label: "Services", href: "/services" },
   { label: "Pratique", href: "/pratique" },
+  { label: "Tarifs", href: "/tarifs" },
   { label: "Contact", href: "/contact" },
+  { label: "Cours", href: "/cours" },
+  { label: "Private Events", href: "/private-events" },
+  { label: "Disco Roller", href: "/disco-roller", hot: true },
 ];
 
 export default function Navbar() {
@@ -31,7 +34,7 @@ export default function Navbar() {
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
       style={{
         borderBottom: scrolled ? "0.5px solid rgba(127,119,221,0.25)" : "0.5px solid rgba(127,119,221,0.1)",
-        backgroundColor: scrolled ? "rgba(13,10,26,0.97)" : "rgba(13,10,26,0.7)",
+        backgroundColor: scrolled ? "rgba(21,14,40,0.97)" : "rgba(21,14,40,0.7)",
         backdropFilter: "blur(16px)",
         WebkitBackdropFilter: "blur(16px)",
       }}
@@ -48,10 +51,10 @@ export default function Navbar() {
             />
           </div>
           <span
-            className="text-white font-medium transition-colors group-hover:text-purple-400"
-            style={{ letterSpacing: "0.18em", fontSize: "0.7rem", textTransform: "uppercase" }}
+            className="text-white font-semibold transition-colors group-hover:text-purple-400"
+            style={{ letterSpacing: "0.14em", fontSize: "0.85rem", textTransform: "uppercase" }}
           >
-            Rollerland
+            Rollerland<span style={{ color: "#9B92F0" }}>Brussels</span>
           </span>
         </Link>
 
@@ -63,7 +66,7 @@ export default function Navbar() {
               href={link.href}
               className="relative text-xs uppercase tracking-widest transition-colors group"
               style={{
-                color: pathname === link.href ? "#7F77DD" : link.hot ? "rgba(127,119,221,0.9)" : "rgba(255,255,255,0.5)",
+                color: pathname === link.href ? "#9B92F0" : link.hot ? "rgba(127,119,221,0.9)" : "rgba(255,255,255,0.5)",
                 letterSpacing: "0.12em",
               }}
             >
@@ -71,14 +74,14 @@ export default function Navbar() {
               {link.hot && (
                 <span
                   className="absolute -top-1.5 -right-2.5 w-1 h-1 rounded-full animate-pulse-glow"
-                  style={{ background: "#7F77DD" }}
+                  style={{ background: "#9B92F0" }}
                 />
               )}
               {/* Active underline */}
               {pathname === link.href && (
                 <span
                   className="absolute -bottom-1 left-0 right-0 h-px"
-                  style={{ background: "#7F77DD" }}
+                  style={{ background: "#9B92F0" }}
                 />
               )}
             </Link>
@@ -87,7 +90,7 @@ export default function Navbar() {
 
         {/* CTA */}
         <a
-          href="https://docs.google.com/forms/d/e/1FAIpQLScMq5Q5slrGQ-F_TX8hcWAV93R2pKOhk-cTWFo-QbaXGTjRCg/viewform"
+          href={SITE.reservationUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="hidden lg:inline-flex btn-primary text-xs"
@@ -106,7 +109,7 @@ export default function Navbar() {
             className="block h-px transition-all duration-300"
             style={{
               width: 22,
-              background: open ? "#7F77DD" : "white",
+              background: open ? "#9B92F0" : "white",
               transform: open ? "rotate(45deg) translate(4px, 4px)" : "none",
             }}
           />
@@ -114,7 +117,7 @@ export default function Navbar() {
             className="block h-px transition-all duration-300"
             style={{
               width: 22,
-              background: open ? "#7F77DD" : "white",
+              background: open ? "#9B92F0" : "white",
               opacity: open ? 0 : 1,
             }}
           />
@@ -122,7 +125,7 @@ export default function Navbar() {
             className="block h-px transition-all duration-300"
             style={{
               width: 22,
-              background: open ? "#7F77DD" : "white",
+              background: open ? "#9B92F0" : "white",
               transform: open ? "rotate(-45deg) translate(4px, -4px)" : "none",
             }}
           />
@@ -137,7 +140,7 @@ export default function Navbar() {
           borderTop: open ? "0.5px solid rgba(127,119,221,0.2)" : "none",
         }}
       >
-        <div className="px-6 pb-8 pt-6 flex flex-col gap-5 bg-[#0D0A1A]">
+        <div className="px-6 pb-8 pt-6 flex flex-col gap-5 bg-[#150E28]">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
@@ -145,7 +148,7 @@ export default function Navbar() {
               onClick={() => setOpen(false)}
               className="text-xs uppercase tracking-widest flex items-center gap-3"
               style={{
-                color: pathname === link.href ? "#7F77DD" : link.hot ? "rgba(127,119,221,0.9)" : "rgba(255,255,255,0.5)",
+                color: pathname === link.href ? "#9B92F0" : link.hot ? "rgba(127,119,221,0.9)" : "rgba(255,255,255,0.5)",
                 letterSpacing: "0.14em",
               }}
             >
@@ -154,7 +157,7 @@ export default function Navbar() {
             </Link>
           ))}
           <a
-            href="https://docs.google.com/forms/d/e/1FAIpQLScMq5Q5slrGQ-F_TX8hcWAV93R2pKOhk-cTWFo-QbaXGTjRCg/viewform"
+            href={SITE.reservationUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-primary w-fit mt-2"

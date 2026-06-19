@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getRollerland } from "@/lib/wordpress";
+import { SITE } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -16,7 +17,7 @@ const GROUPS = [
 
 const OPTIONS = [
   { label: "Cours / animation privé(e)", price: "75€/heure" },
-  { label: "Karaoké", price: "75€/heure" },
+  { label: "Karaoké", price: "50€/heure" },
 ];
 
 const DRINKS_FALLBACK = [
@@ -55,7 +56,7 @@ function Row({ label, price, desc, last }: { label: string; price: string; desc?
         <p className="text-sm text-white" style={{ fontWeight: 400 }}>{label}</p>
         {desc && <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.3)" }}>{desc}</p>}
       </div>
-      <p className="text-sm font-medium flex-shrink-0 ml-4" style={{ color: "#7F77DD" }}>{price}</p>
+      <p className="text-sm font-medium flex-shrink-0 ml-4" style={{ color: "#9B92F0" }}>{price}</p>
     </div>
   );
 }
@@ -156,20 +157,20 @@ export default async function TarifsPage() {
               }}
             >
               <div className="col-span-2 flex items-center gap-3">
-                {g.highlight && <span className="w-1 h-1 rounded-full flex-shrink-0" style={{ background: "#7F77DD" }} />}
+                {g.highlight && <span className="w-1 h-1 rounded-full flex-shrink-0" style={{ background: "#9B92F0" }} />}
                 <div>
                   <p className="text-sm text-white" style={{ fontWeight: 400 }}>{g.name}</p>
                   <p className="text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>{g.desc}</p>
                 </div>
               </div>
-              <p className="text-sm text-center font-medium" style={{ color: g.kids === "—" ? "rgba(255,255,255,0.15)" : "#7F77DD" }}>{g.kids}</p>
-              <p className="text-sm text-center font-medium" style={{ color: g.adults === "—" ? "rgba(255,255,255,0.15)" : "#7F77DD" }}>{g.adults}</p>
+              <p className="text-sm text-center font-medium" style={{ color: g.kids === "—" ? "rgba(255,255,255,0.15)" : "#9B92F0" }}>{g.kids}</p>
+              <p className="text-sm text-center font-medium" style={{ color: g.adults === "—" ? "rgba(255,255,255,0.15)" : "#9B92F0" }}>{g.adults}</p>
             </div>
           ))}
         </div>
         <div className="mt-5">
           <a
-            href="https://docs.google.com/forms/d/e/1FAIpQLScMq5Q5slrGQ-F_TX8hcWAV93R2pKOhk-cTWFo-QbaXGTjRCg/viewform"
+            href={SITE.reservationUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-primary"
@@ -197,6 +198,20 @@ export default async function TarifsPage() {
             ))}
           </div>
         </div>
+      </div>
+
+      {/* Consume-locally notice */}
+      <div
+        className="mt-10 p-6 md:p-8 animate-fade-up delay-300"
+        style={{ border: "0.5px solid rgba(127,119,221,0.3)", background: "rgba(127,119,221,0.06)" }}
+      >
+        <p className="label-tag mb-3">À savoir</p>
+        <p className="text-sm text-white mb-1" style={{ fontWeight: 400, lineHeight: "1.7" }}>
+          Please consume locally and support Be Here.
+        </p>
+        <p className="text-sm" style={{ color: "rgba(255,255,255,0.55)", lineHeight: "1.7" }}>
+          Refrain from bringing your own food and drinks.
+        </p>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SITE } from "@/lib/site";
 
 export default function Footer() {
   return (
@@ -12,22 +13,42 @@ export default function Footer() {
           {/* Brand */}
           <div className="md:col-span-2">
             <p className="text-white uppercase tracking-widest text-xs font-medium mb-4" style={{ letterSpacing: "0.2em" }}>
-              Rollerland Brussels
+              Rollerland<span style={{ color: "#9B92F0" }}>Brussels</span>
             </p>
-            <p className="text-xs mb-6" style={{ color: "rgba(255,255,255,0.35)", lineHeight: "1.9" }}>
+            <p className="text-xs mb-6" style={{ color: "rgba(255,255,255,0.45)", lineHeight: "1.9" }}>
               La piste de roller au cœur de Bruxelles.<br />
               Disco, cours, anniversaires &amp; team building.
             </p>
-            <p className="text-xs mb-2" style={{ color: "rgba(255,255,255,0.25)" }}>
-              Rue Dieudonné Lefèvre 4 · B-1020 Bruxelles
+            <p className="text-xs mb-2" style={{ color: "rgba(255,255,255,0.35)" }}>
+              {SITE.address.line1} · {SITE.address.line2}
             </p>
             <a
-              href="https://wa.me/32484772593"
+              href={`mailto:${SITE.email}`}
               className="text-xs transition-colors hover:text-white"
-              style={{ color: "rgba(127,119,221,0.7)" }}
+              style={{ color: "rgba(127,119,221,0.8)" }}
             >
-              WhatsApp : +32 484 77 25 93
+              {SITE.email}
             </a>
+
+            {/* Social links */}
+            <div className="flex gap-4 mt-5">
+              {[
+                { label: "Instagram", url: SITE.socials.instagram },
+                { label: "Facebook", url: SITE.socials.facebook },
+                { label: "TikTok", url: SITE.socials.tiktok },
+              ].map((s) => (
+                <a
+                  key={s.label}
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs uppercase tracking-wide transition-colors hover:text-white"
+                  style={{ color: "rgba(127,119,221,0.7)", letterSpacing: "0.1em" }}
+                >
+                  {s.label}
+                </a>
+              ))}
+            </div>
           </div>
 
           {/* Nav */}
@@ -35,13 +56,13 @@ export default function Footer() {
             <p className="label-tag mb-4">Pages</p>
             <div className="flex flex-col gap-2.5">
               {[
-                { label: "Disco Roller", href: "/disco-roller" },
                 { label: "Horaires", href: "/horaires" },
-                { label: "Tarifs", href: "/tarifs" },
-                { label: "Cours", href: "/cours" },
-                { label: "Services", href: "/services" },
                 { label: "Pratique", href: "/pratique" },
+                { label: "Tarifs", href: "/tarifs" },
                 { label: "Contact", href: "/contact" },
+                { label: "Cours", href: "/cours" },
+                { label: "Private Events", href: "/private-events" },
+                { label: "Disco Roller", href: "/disco-roller" },
               ].map((link) => (
                 <Link
                   key={link.href}

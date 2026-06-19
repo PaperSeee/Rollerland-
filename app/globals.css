@@ -48,10 +48,12 @@
 .hover-lift:hover { transform: translateY(-3px); }
 
 :root {
-  --background: #0D0A1A;
+  /* Vintage retro roller-disco palette — violet tones instead of near-black */
+  --background: #1A1230;
+  --background-deep: #150E28;
   --foreground: #FFFFFF;
-  --purple-bright: #7F77DD;
-  --purple-electric: #534AB7;
+  --purple-bright: #9B92F0;
+  --purple-electric: #6A5FD0;
 }
 
 * {
@@ -63,7 +65,10 @@ html {
 }
 
 body {
-  background-color: #0D0A1A;
+  /* Soft vertical violet wash keeps the vibe warm rather than flat-black */
+  background-color: #1A1230;
+  background-image: linear-gradient(180deg, #201640 0%, #1A1230 40%, #150E28 100%);
+  background-attachment: fixed;
   color: #FFFFFF;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
@@ -74,7 +79,7 @@ body {
   letter-spacing: 0.15em;
   font-size: 0.65rem;
   font-weight: 500;
-  color: #7F77DD;
+  color: #9B92F0;
 }
 
 .glass-card {
@@ -86,9 +91,9 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: #7F77DD;
-  color: #0D0A1A;
-  font-weight: 500;
+  background-color: #9B92F0;
+  color: #150E28;
+  font-weight: 600;
   font-size: 0.8rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -98,8 +103,8 @@ body {
 
 .btn-primary:hover {
   background-color: transparent;
-  color: #7F77DD;
-  outline: 0.5px solid #7F77DD;
+  color: #9B92F0;
+  outline: 0.5px solid #9B92F0;
 }
 
 .btn-outline {
@@ -107,18 +112,18 @@ body {
   align-items: center;
   justify-content: center;
   background-color: transparent;
-  color: #7F77DD;
+  color: #9B92F0;
   font-weight: 500;
   font-size: 0.8rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   padding: 0.75rem 2rem;
-  border: 0.5px solid rgba(127, 119, 221, 0.5);
+  border: 0.5px solid rgba(155, 146, 240, 0.5);
   transition: background-color 0.2s ease;
 }
 
 .btn-outline:hover {
-  background-color: rgba(127, 119, 221, 0.08);
+  background-color: rgba(155, 146, 240, 0.1);
 }
 
 .divider {

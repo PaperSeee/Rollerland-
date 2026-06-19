@@ -32,7 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" className={spaceGrotesk.variable}>
-      <body className="antialiased" style={{ backgroundColor: "#0D0A1A", color: "#FFFFFF" }}>
+      <body className="antialiased" style={{ color: "#FFFFFF" }}>
         <Navbar />
         <main className="pt-16">{children}</main>
         <Footer />

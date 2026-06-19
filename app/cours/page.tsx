@@ -1,3 +1,5 @@
+import { SITE } from "@/lib/site";
+
 export const revalidate = 60;
 
 export default function CoursPage() {
@@ -51,7 +53,7 @@ export default function CoursPage() {
                 <p className="label-tag mb-2">{course.tag} · {course.audience}</p>
                 <h2 className="text-2xl text-white" style={{ fontWeight: 400 }}>Cours {course.audience}</h2>
               </div>
-              <span className="text-2xl font-light" style={{ color: "#7F77DD" }}>{course.price}</span>
+              <span className="text-2xl font-light" style={{ color: "#9B92F0" }}>{course.price}</span>
             </div>
 
             <div className="flex flex-wrap gap-2 mb-6">
@@ -107,7 +109,7 @@ export default function CoursPage() {
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-4">
               <p className="label-tag">Nouveau</p>
-              <span className="text-xs px-2 py-0.5 uppercase" style={{ background: "#7F77DD", color: "#0D0A1A", fontSize: "0.6rem", letterSpacing: "0.1em" }}>
+              <span className="text-xs px-2 py-0.5 uppercase" style={{ background: "#9B92F0", color: "#150E28", fontSize: "0.6rem", letterSpacing: "0.1em" }}>
                 Outdoor
               </span>
             </div>
@@ -149,19 +151,42 @@ export default function CoursPage() {
 
       {/* Notes */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-up delay-300">
-        {[
-          { title: "Patins personnels", text: "Vous venez avec vos propres patins ? Les protections sont gratuites. Pas de surcoût." },
-          { title: "Annulations", text: "Rejoignez le groupe WhatsApp pour être informé en temps réel des annulations ou changements d'horaire." },
-        ].map((note) => (
-          <div
-            key={note.title}
-            className="p-5"
-            style={{ border: "0.5px solid rgba(127,119,221,0.15)", background: "rgba(255,255,255,0.02)" }}
-          >
-            <p className="label-tag mb-2">{note.title}</p>
-            <p className="text-xs" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }}>{note.text}</p>
-          </div>
-        ))}
+        <div
+          className="p-5"
+          style={{ border: "0.5px solid rgba(127,119,221,0.15)", background: "rgba(255,255,255,0.02)" }}
+        >
+          <p className="label-tag mb-2">Patins personnels</p>
+          <p className="text-xs" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }}>
+            Vous venez avec vos propres patins ? Les protections sont gratuites. Pas de surcoût.
+          </p>
+        </div>
+
+        {/* Course cancellations WhatsApp group (kept per spec) */}
+        <div
+          className="p-5"
+          style={{ border: "0.5px solid rgba(127,119,221,0.15)", background: "rgba(255,255,255,0.02)" }}
+        >
+          <p className="label-tag mb-2">Annulations</p>
+          <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }}>
+            Rejoignez le groupe WhatsApp dédié aux cours pour être informé en temps réel des
+            annulations ou changements d&apos;horaire.
+          </p>
+          {SITE.coursWhatsappGroupUrl ? (
+            <a
+              href={SITE.coursWhatsappGroupUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-outline"
+            >
+              Rejoindre le groupe WhatsApp
+            </a>
+          ) : (
+            // TODO(client): set SITE.coursWhatsappGroupUrl to enable this button.
+            <p className="text-xs" style={{ color: "rgba(255,255,255,0.25)" }}>
+              Lien du groupe disponible bientôt — demandez-le par e-mail à {SITE.email}.
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );

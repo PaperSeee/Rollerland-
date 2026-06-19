@@ -1,3 +1,5 @@
+import { SITE } from "@/lib/site";
+
 export const revalidate = 60;
 
 export default function ContactPage() {
@@ -10,29 +12,27 @@ export default function ContactPage() {
           Contact
         </h1>
         <p className="text-sm mt-6 max-w-lg" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }}>
-          Pour toute demande de réservation, information ou question. Réponse rapide garantie via WhatsApp.
+          Pour toute demande de réservation, information ou question. Réponse sous 24h par e-mail.
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Sidebar */}
         <div className="flex flex-col gap-4 animate-fade-up delay-100">
-          {/* WhatsApp */}
+          {/* Email */}
           <div
             className="p-6 hover-lift"
             style={{ border: "0.5px solid rgba(127,119,221,0.3)", background: "rgba(255,255,255,0.03)" }}
           >
-            <p className="label-tag mb-3">WhatsApp</p>
+            <p className="label-tag mb-3">E-mail</p>
             <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }}>
-              Réponse la plus rapide. Idéal pour les réservations urgentes et les questions de dernière minute.
+              Pour les réservations, devis groupes et toute question. Réponse rapide garantie.
             </p>
             <a
-              href="https://wa.me/32484772593"
-              target="_blank"
-              rel="noopener noreferrer"
+              href={`mailto:${SITE.email}`}
               className="btn-primary w-full justify-center animate-pulse-glow"
             >
-              +32 484 77 25 93
+              {SITE.email}
             </a>
           </div>
 
@@ -43,17 +43,66 @@ export default function ContactPage() {
           >
             <p className="label-tag mb-3">Adresse</p>
             <p className="text-sm text-white mb-3" style={{ lineHeight: "1.9", fontWeight: 300 }}>
-              Rue Dieudonné Lefèvre 4<br />
-              B-1020 Bruxelles
+              {SITE.address.line1}<br />
+              {SITE.address.line2}
             </p>
             <a
-              href="https://maps.app.goo.gl/wUYExjkrJLUSWEf88"
+              href={SITE.address.mapsUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs"
-              style={{ color: "#7F77DD" }}
+              style={{ color: "#9B92F0" }}
             >
               Voir sur la carte →
+            </a>
+          </div>
+
+          {/* Social networks */}
+          <div
+            className="p-6 hover-lift"
+            style={{ border: "0.5px solid rgba(127,119,221,0.2)", background: "rgba(255,255,255,0.02)" }}
+          >
+            <p className="label-tag mb-3">Réseaux sociaux</p>
+            <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.7" }}>
+              Suivez nos événements, horaires et soirées disco.
+            </p>
+            <div className="flex flex-col gap-2.5">
+              {[
+                { name: "Instagram", url: SITE.socials.instagram },
+                { name: "Facebook", url: SITE.socials.facebook },
+                { name: "TikTok", url: SITE.socials.tiktok },
+              ].map((s) => (
+                <a
+                  key={s.name}
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs uppercase tracking-wide hover:text-white transition-colors flex items-center justify-between"
+                  style={{ color: "#9B92F0", letterSpacing: "0.08em" }}
+                >
+                  <span>{s.name}</span>
+                  <span>→</span>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Google review */}
+          <div
+            className="p-6 hover-lift"
+            style={{ border: "0.5px solid rgba(127,119,221,0.25)", background: "rgba(127,119,221,0.05)" }}
+          >
+            <p className="label-tag mb-3">Avis Google</p>
+            <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.7" }}>
+              Vous avez aimé votre passage ? Laissez-nous un avis, ça nous aide énormément.
+            </p>
+            <a
+              href={SITE.googleReviewUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-outline w-full justify-center"
+            >
+              Laisser un avis ★
             </a>
           </div>
 
@@ -72,7 +121,7 @@ export default function ContactPage() {
               ].map((s) => (
                 <div key={s.day} className="flex justify-between items-center">
                   <p className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>{s.day}</p>
-                  <p className="text-xs font-medium" style={{ color: s.hot ? "#7F77DD" : "rgba(255,255,255,0.6)" }}>{s.h}</p>
+                  <p className="text-xs font-medium" style={{ color: s.hot ? "#9B92F0" : "rgba(255,255,255,0.6)" }}>{s.h}</p>
                 </div>
               ))}
             </div>
@@ -110,7 +159,7 @@ export default function ContactPage() {
             style={{ border: "0.5px solid rgba(127,119,221,0.3)", background: "rgba(255,255,255,0.02)" }}
           >
             <iframe
-              src="https://docs.google.com/forms/d/e/1FAIpQLScMq5Q5slrGQ-F_TX8hcWAV93R2pKOhk-cTWFo-QbaXGTjRCg/viewform?embedded=true"
+              src={SITE.reservationEmbedUrl}
               width="100%"
               height="720"
               style={{ border: 0, display: "block" }}
@@ -120,7 +169,7 @@ export default function ContactPage() {
             </iframe>
           </div>
           <p className="text-xs mt-3" style={{ color: "rgba(255,255,255,0.2)" }}>
-            Réponse sous 24h · Pour une réponse immédiate, préférez WhatsApp
+            Réponse sous 24h · Vous pouvez aussi nous écrire à {SITE.email}
           </p>
         </div>
       </div>

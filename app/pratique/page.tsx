@@ -156,7 +156,7 @@ export default async function PratiquePage() {
                   <span
                     className="text-xs font-medium px-2 py-0.5"
                     style={{
-                      background: "#7F77DD",
+                      background: "#9B92F0",
                       color: "white",
                       minWidth: 36,
                       textAlign: "center",
@@ -212,7 +212,7 @@ export default async function PratiquePage() {
               >
                 <span
                   className="text-xs font-medium flex-shrink-0 mt-0.5"
-                  style={{ color: "#7F77DD", minWidth: 20 }}
+                  style={{ color: "#9B92F0", minWidth: 20 }}
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>
@@ -242,27 +242,6 @@ export default async function PratiquePage() {
               style={{ objectPosition: "top center" }}
             />
           </div>
-        </div>
-      </div>
-
-      {/* Horaires reminder */}
-      <div
-        className="p-8"
-        style={{ background: "rgba(255,255,255,0.03)", border: "0.5px solid rgba(127,119,221,0.2)" }}
-      >
-        <p className="label-tag mb-4">Rappel des horaires</p>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {[
-            { day: "Mercredi", hours: "12h–20h" },
-            { day: "Vendredi", hours: "17h–24h" },
-            { day: "Samedi", hours: "12h–24h" },
-            { day: "Dimanche", hours: "16h–20h" },
-          ].map((s) => (
-            <div key={s.day}>
-              <p className="label-tag mb-1">{s.day}</p>
-              <p className="text-sm text-white font-medium">{s.hours}</p>
-            </div>
-          ))}
         </div>
       </div>
     </div>

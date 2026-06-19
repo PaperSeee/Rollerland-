@@ -1,4 +1,5 @@
 import { getRollerland } from "@/lib/wordpress";
+import { SITE } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -64,7 +65,7 @@ export default async function HorairesPage() {
                 <p
                   className="text-xs font-medium uppercase"
                   style={{
-                    color: slot.disco ? "#7F77DD" : slot.hours ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.2)",
+                    color: slot.disco ? "#9B92F0" : slot.hours ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.2)",
                     letterSpacing: "0.1em",
                     fontSize: "0.6rem",
                   }}
@@ -76,7 +77,7 @@ export default async function HorairesPage() {
               <div className="px-2 py-4 flex flex-col gap-2 flex-1">
                 {slot.hours ? (
                   <>
-                    <p className="text-xs text-center font-medium" style={{ color: slot.disco ? "#7F77DD" : "rgba(255,255,255,0.8)", fontSize: "0.65rem", lineHeight: "1.4" }}>
+                    <p className="text-xs text-center font-medium" style={{ color: slot.disco ? "#9B92F0" : "rgba(255,255,255,0.8)", fontSize: "0.65rem", lineHeight: "1.4" }}>
                       {slot.hours}
                     </p>
                     <div className="flex flex-col gap-1.5 mt-1">
@@ -87,7 +88,7 @@ export default async function HorairesPage() {
                           style={{
                             background: a === "Disco Roller" ? "rgba(127,119,221,0.2)" : "rgba(255,255,255,0.04)",
                             border: "0.5px solid rgba(127,119,221,0.2)",
-                            color: a === "Disco Roller" ? "#7F77DD" : "rgba(255,255,255,0.4)",
+                            color: a === "Disco Roller" ? "#9B92F0" : "rgba(255,255,255,0.4)",
                             fontSize: "0.55rem",
                             letterSpacing: "0.05em",
                             lineHeight: "1.4",
@@ -129,14 +130,14 @@ export default async function HorairesPage() {
             >
               <div className="flex items-center gap-3">
                 {slot.disco && (
-                  <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: "#7F77DD" }} />
+                  <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: "#9B92F0" }} />
                 )}
                 <p className="text-sm font-medium text-white uppercase" style={{ letterSpacing: "0.1em", fontWeight: 400 }}>
                   {slot.day}
                 </p>
               </div>
               <div>
-                <p className="text-sm font-medium" style={{ color: slot.disco ? "#7F77DD" : "rgba(255,255,255,0.8)", fontWeight: 500 }}>
+                <p className="text-sm font-medium" style={{ color: slot.disco ? "#9B92F0" : "rgba(255,255,255,0.8)", fontWeight: 500 }}>
                   {slot.hours}
                 </p>
                 {slot.note && (
@@ -150,7 +151,7 @@ export default async function HorairesPage() {
                     className="text-xs px-2.5 py-1"
                     style={{
                       border: a === "Disco Roller" ? "0.5px solid rgba(127,119,221,0.6)" : "0.5px solid rgba(127,119,221,0.25)",
-                      color: a === "Disco Roller" ? "#7F77DD" : "rgba(255,255,255,0.45)",
+                      color: a === "Disco Roller" ? "#9B92F0" : "rgba(255,255,255,0.45)",
                       letterSpacing: "0.05em",
                     }}
                   >
@@ -173,7 +174,7 @@ export default async function HorairesPage() {
               className="p-5 hover-lift"
               style={{ border: "0.5px solid rgba(127,119,221,0.25)", background: "rgba(255,255,255,0.02)" }}
             >
-              <div className="w-6 h-px mb-4" style={{ background: "#7F77DD" }} />
+              <div className="w-6 h-px mb-4" style={{ background: "#9B92F0" }} />
               <p className="text-sm font-medium text-white mb-2" style={{ fontWeight: 400 }}>{c.period}</p>
               <p className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>{c.reason}</p>
             </div>
@@ -181,24 +182,43 @@ export default async function HorairesPage() {
         </div>
       </div>
 
-      {/* WhatsApp CTA */}
+      {/* Updates + reservation CTA */}
       <div
         className="p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 animate-fade-up delay-400"
         style={{ background: "rgba(127,119,221,0.06)", border: "0.5px solid rgba(127,119,221,0.3)" }}
       >
         <div>
           <p className="label-tag mb-2">Mises à jour en temps réel</p>
-          <p className="text-sm text-white" style={{ fontWeight: 300 }}>
-            Rejoignez le groupe WhatsApp pour ne jamais manquer une annulation ou un événement spécial.
+          <p className="text-sm text-white mb-4" style={{ fontWeight: 300 }}>
+            Suivez-nous sur les réseaux pour ne jamais manquer une annulation, un changement
+            d&apos;horaire ou un événement spécial.
           </p>
+          <div className="flex flex-wrap gap-4">
+            {[
+              { name: "Instagram", url: SITE.socials.instagram },
+              { name: "Facebook", url: SITE.socials.facebook },
+              { name: "TikTok", url: SITE.socials.tiktok },
+            ].map((s) => (
+              <a
+                key={s.name}
+                href={s.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs uppercase tracking-wide hover:text-white transition-colors"
+                style={{ color: "#9B92F0", letterSpacing: "0.1em" }}
+              >
+                {s.name} →
+              </a>
+            ))}
+          </div>
         </div>
         <a
-          href={`https://wa.me/${acf.whatsapp_number || "32484772593"}`}
+          href={SITE.reservationUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="btn-primary flex-shrink-0 animate-pulse-glow"
         >
-          WhatsApp +32 484 77 25 93
+          Réserver
         </a>
       </div>
     </div>

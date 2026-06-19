@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getRollerland } from "@/lib/wordpress";
 import { getDiscoEvents, type DiscoEventView } from "@/lib/disco";
 import { SITE } from "@/lib/site";
@@ -24,7 +25,9 @@ function formatDate(dateStr: string) {
 
 const FALLBACK_HERO_DISCO = "https://retro.brussels/wp-content/uploads/2025/01/roller-party2-scaled.jpg";
 
-export default async function DiscoRollerPage() {
+export default async function DiscoRollerPage({ params }: { params: { locale: string } }) {
+  setRequestLocale(params.locale);
+  const t = await getTranslations("disco");
   const [dbEvents, acf] = await Promise.all([getDiscoEvents(), getRollerland()]);
   const heroImage = acf.disco_hero_image || FALLBACK_HERO_DISCO;
 
@@ -50,7 +53,7 @@ export default async function DiscoRollerPage() {
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 pb-16 w-full">
-          <p className="label-tag mb-5 animate-fade-up">Vendredi &amp; Samedi · Entrée gratuite</p>
+          <p className="label-tag mb-5 animate-fade-up">{t("kicker")}</p>
           <h1
             className="text-6xl md:text-8xl text-white animate-fade-up delay-100"
             style={{ fontWeight: 300, lineHeight: "0.95", letterSpacing: "-0.03em" }}
@@ -59,8 +62,7 @@ export default async function DiscoRollerPage() {
             <span style={{ color: "#9B92F0" }}>Roller</span>
           </h1>
           <p className="mt-6 text-base max-w-lg animate-fade-up delay-200" style={{ color: "rgba(255,255,255,0.5)", lineHeight: "1.75" }}>
-            Musique, lumières stroboscopiques et piste ouverte jusqu&apos;à minuit.
-            Chaque semaine, un nouveau thème musical.
+            {t("lead")}
           </p>
 
           <div className="flex flex-wrap gap-4 mt-8 animate-fade-up delay-300">
@@ -73,8 +75,8 @@ export default async function DiscoRollerPage() {
               <p className="text-white text-sm font-medium">17h00 – 00h00</p>
             </div>
             <div className="glass-card px-6 py-3">
-              <p className="label-tag mb-0.5">Entrée</p>
-              <p className="text-sm font-medium" style={{ color: "#9B92F0" }}>Gratuite</p>
+              <p className="label-tag mb-0.5">{t("entry")}</p>
+              <p className="text-sm font-medium" style={{ color: "#9B92F0" }}>{t("free")}</p>
             </div>
           </div>
         </div>
@@ -84,9 +86,9 @@ export default async function DiscoRollerPage() {
       <section className="py-24 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="mb-12">
-            <p className="label-tag mb-3">Agenda</p>
+            <p className="label-tag mb-3">{t("agenda")}</p>
             <h2 className="text-3xl md:text-4xl text-white" style={{ fontWeight: 300, letterSpacing: "-0.02em" }}>
-              Prochains événements
+              {t("nextEvents")}
             </h2>
           </div>
 
@@ -99,10 +101,10 @@ export default async function DiscoRollerPage() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div>
                 <div className="flex items-center gap-3 mb-4">
-                  <span className="label-tag">Prochain</span>
+                  <span className="label-tag">{t("next")}</span>
                   {nextEvent.special && (
                     <span className="text-xs px-2 py-0.5 uppercase" style={{ background: "#9B92F0", color: "#150E28", fontSize: "0.6rem", letterSpacing: "0.1em" }}>
-                      Spécial
+                      {t("special")}
                     </span>
                   )}
                 </div>
@@ -124,8 +126,8 @@ export default async function DiscoRollerPage() {
                   className="px-6 py-4 text-center animate-pulse-glow"
                   style={{ border: "0.5px solid rgba(127,119,221,0.5)", background: "rgba(127,119,221,0.08)" }}
                 >
-                  <p className="label-tag mb-1">Entrée</p>
-                  <p className="text-xl font-light" style={{ color: "#9B92F0" }}>Gratuite</p>
+                  <p className="label-tag mb-1">{t("entry")}</p>
+                  <p className="text-xl font-light" style={{ color: "#9B92F0" }}>{t("free")}</p>
                 </div>
               </div>
             </div>
@@ -155,7 +157,7 @@ export default async function DiscoRollerPage() {
                   </h4>
                   {event.special && (
                     <span className="text-xs px-2 py-0.5" style={{ border: "0.5px solid rgba(127,119,221,0.5)", color: "#9B92F0", fontSize: "0.6rem", letterSpacing: "0.1em", textTransform: "uppercase" }}>
-                      Spécial
+                      {t("special")}
                     </span>
                   )}
                 </div>
@@ -172,7 +174,7 @@ export default async function DiscoRollerPage() {
           </div>
 
           <p className="text-xs mt-4 text-center" style={{ color: "rgba(255,255,255,0.25)" }}>
-            Programme mis à jour chaque semaine · Entrée toujours gratuite
+            {t("weeklyUpdate")}
           </p>
         </div>
       </section>
@@ -185,15 +187,15 @@ export default async function DiscoRollerPage() {
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
             {
-              title: "Location de patins",
+              title: t("skateRental"),
               items: ["Patins quad — 8€ adulte / 6€ enfant", "Protection — 1€/paire", "Vestiaire — 1€"],
             },
             {
-              title: "Sur place",
+              title: t("onSite"),
               items: ["Bar avec boissons & cocktails", "Nourriture légère disponible", "Vestiaire & consignes"],
             },
             {
-              title: "À savoir",
+              title: t("toKnow"),
               items: ["Pas de réservation obligatoire", "Patins personnels autorisés", "Ouvert à tous les niveaux"],
             },
           ].map((block) => (
@@ -220,15 +222,15 @@ export default async function DiscoRollerPage() {
       <section className="py-20 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
           <div>
-            <p className="label-tag mb-2">Chaque vendredi &amp; samedi · Sans réservation</p>
+            <p className="label-tag mb-2">{t("ctaKicker")}</p>
             <h3 className="text-2xl text-white" style={{ fontWeight: 300 }}>
-              Venez comme vous êtes —<br />
-              <span style={{ color: "#9B92F0" }}>la piste vous attend.</span>
+              {t("ctaTitle1")}<br />
+              <span style={{ color: "#9B92F0" }}>{t("ctaTitle2")}</span>
             </h3>
           </div>
           <div className="flex gap-4">
             <a href={SITE.socials.instagram} target="_blank" rel="noopener noreferrer" className="btn-outline">
-              Suivre sur Instagram
+              {t("followInstagram")}
             </a>
           </div>
         </div>

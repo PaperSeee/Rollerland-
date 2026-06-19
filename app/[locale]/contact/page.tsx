@@ -1,19 +1,22 @@
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { SITE } from "@/lib/site";
 import ReservationForm from "@/components/ReservationForm";
 
 export const revalidate = 60;
 
-export default function ContactPage() {
+export default async function ContactPage({ params }: { params: { locale: string } }) {
+  setRequestLocale(params.locale);
+  const t = await getTranslations("contact");
   return (
     <div className="max-w-7xl mx-auto px-6 py-20">
       {/* Header */}
       <div className="mb-16 animate-fade-up">
-        <p className="label-tag mb-4">Nous écrire</p>
+        <p className="label-tag mb-4">{t("kicker")}</p>
         <h1 className="text-5xl md:text-7xl text-white mb-4" style={{ fontWeight: 300, letterSpacing: "-0.03em", lineHeight: "0.95" }}>
-          Contact
+          {t("title")}
         </h1>
         <p className="text-sm mt-6 max-w-lg" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }}>
-          Pour toute demande de réservation, information ou question. Réponse sous 24h par e-mail.
+          {t("intro")}
         </p>
       </div>
 
@@ -25,9 +28,9 @@ export default function ContactPage() {
             className="p-6 hover-lift"
             style={{ border: "0.5px solid rgba(127,119,221,0.3)", background: "rgba(255,255,255,0.03)" }}
           >
-            <p className="label-tag mb-3">E-mail</p>
+            <p className="label-tag mb-3">{t("email")}</p>
             <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }}>
-              Pour les réservations, devis groupes et toute question. Réponse rapide garantie.
+              {t("emailDesc")}
             </p>
             <a
               href={`mailto:${SITE.email}`}
@@ -42,7 +45,7 @@ export default function ContactPage() {
             className="p-6 hover-lift"
             style={{ border: "0.5px solid rgba(127,119,221,0.2)", background: "rgba(255,255,255,0.02)" }}
           >
-            <p className="label-tag mb-3">Adresse</p>
+            <p className="label-tag mb-3">{t("address")}</p>
             <p className="text-sm text-white mb-3" style={{ lineHeight: "1.9", fontWeight: 300 }}>
               {SITE.address.line1}<br />
               {SITE.address.line2}
@@ -54,7 +57,7 @@ export default function ContactPage() {
               className="text-xs"
               style={{ color: "#9B92F0" }}
             >
-              Voir sur la carte →
+              {t("seeMap")}
             </a>
           </div>
 
@@ -63,9 +66,9 @@ export default function ContactPage() {
             className="p-6 hover-lift"
             style={{ border: "0.5px solid rgba(127,119,221,0.2)", background: "rgba(255,255,255,0.02)" }}
           >
-            <p className="label-tag mb-3">Réseaux sociaux</p>
+            <p className="label-tag mb-3">{t("socials")}</p>
             <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.7" }}>
-              Suivez nos événements, horaires et soirées disco.
+              {t("socialsDesc")}
             </p>
             <div className="flex flex-col gap-2.5">
               {[
@@ -93,9 +96,9 @@ export default function ContactPage() {
             className="p-6 hover-lift"
             style={{ border: "0.5px solid rgba(127,119,221,0.25)", background: "rgba(127,119,221,0.05)" }}
           >
-            <p className="label-tag mb-3">Avis Google</p>
+            <p className="label-tag mb-3">{t("review")}</p>
             <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.7" }}>
-              Vous avez aimé votre passage ? Laissez-nous un avis, ça nous aide énormément.
+              {t("reviewDesc")}
             </p>
             <a
               href={SITE.googleReviewUrl}
@@ -103,7 +106,7 @@ export default function ContactPage() {
               rel="noopener noreferrer"
               className="btn-outline w-full justify-center"
             >
-              Laisser un avis ★
+              {t("reviewCta")}
             </a>
           </div>
 
@@ -112,7 +115,7 @@ export default function ContactPage() {
             className="p-6 hover-lift"
             style={{ border: "0.5px solid rgba(127,119,221,0.2)", background: "rgba(255,255,255,0.02)" }}
           >
-            <p className="label-tag mb-3">Horaires</p>
+            <p className="label-tag mb-3">{t("hours")}</p>
             <div className="flex flex-col gap-2">
               {[
                 { day: "Mercredi", h: "12h–20h" },
@@ -130,7 +133,7 @@ export default function ContactPage() {
 
           {/* Partners */}
           <div className="p-6" style={{ border: "0.5px solid rgba(127,119,221,0.15)" }}>
-            <p className="label-tag mb-3">Partenaires</p>
+            <p className="label-tag mb-3">{t("partners")}</p>
             <div className="flex flex-col gap-2">
               {[
                 { name: "VGC", url: "https://www.vgc.be/" },
@@ -154,7 +157,7 @@ export default function ContactPage() {
 
         {/* Google Form */}
         <div className="lg:col-span-2 animate-fade-up delay-200">
-          <p className="label-tag mb-5">Formulaire de réservation &amp; contact</p>
+          <p className="label-tag mb-5">{t("formTitle")}</p>
           <ReservationForm />
         </div>
       </div>

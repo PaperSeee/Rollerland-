@@ -1,3 +1,4 @@
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getRollerland } from "@/lib/wordpress";
 import { SITE } from "@/lib/site";
 
@@ -10,7 +11,9 @@ const CLOSURES_FALLBACK = [
   { period: "13 juin 2026", reason: "Fermé avant 19h" },
 ];
 
-export default async function HorairesPage() {
+export default async function HorairesPage({ params }: { params: { locale: string } }) {
+  setRequestLocale(params.locale);
+  const t = await getTranslations("horaires");
   const acf = await getRollerland();
 
   const SCHEDULE = [
@@ -31,18 +34,18 @@ export default async function HorairesPage() {
     <div className="max-w-7xl mx-auto px-6 py-20">
       {/* Header */}
       <div className="mb-16 animate-fade-up">
-        <p className="label-tag mb-4">Planning hebdomadaire</p>
+        <p className="label-tag mb-4">{t("kicker")}</p>
         <h1 className="text-5xl md:text-7xl text-white mb-4" style={{ fontWeight: 300, letterSpacing: "-0.03em", lineHeight: "0.95" }}>
-          Horaires
+          {t("title")}
         </h1>
         <p className="text-sm max-w-lg mt-6" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }}>
-          En dehors des horaires normaux, la piste est disponible sur réservation pour les groupes scolaires, team buildings et anniversaires.
+          {t("intro")}
         </p>
       </div>
 
       {/* Visual week grid */}
       <div className="mb-20 animate-fade-up delay-100">
-        <p className="label-tag mb-6">Semaine type</p>
+        <p className="label-tag mb-6">{t("typicalWeek")}</p>
         <div className="grid grid-cols-7 gap-0" style={{ border: "0.5px solid rgba(127,119,221,0.2)" }}>
           {SCHEDULE.map((slot, i) => (
             <div
@@ -101,7 +104,7 @@ export default async function HorairesPage() {
                   </>
                 ) : (
                   <p className="text-center text-xs" style={{ color: "rgba(255,255,255,0.15)", fontSize: "0.6rem", marginTop: "auto", marginBottom: "auto" }}>
-                    Fermé
+                    {t("closed")}
                   </p>
                 )}
                 {slot.note && (
@@ -117,7 +120,7 @@ export default async function HorairesPage() {
 
       {/* Detailed list */}
       <div className="mb-20 animate-fade-up delay-200">
-        <p className="label-tag mb-6">Détail des horaires</p>
+        <p className="label-tag mb-6">{t("detail")}</p>
         <div style={{ border: "0.5px solid rgba(127,119,221,0.2)" }}>
           {SCHEDULE.filter((s) => s.hours).map((slot, i, arr) => (
             <div
@@ -166,7 +169,7 @@ export default async function HorairesPage() {
 
       {/* Closures */}
       <div className="mb-16 animate-fade-up delay-300">
-        <p className="label-tag mb-6">Fermetures exceptionnelles</p>
+        <p className="label-tag mb-6">{t("closures")}</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {CLOSURES.map((c) => (
             <div
@@ -188,10 +191,9 @@ export default async function HorairesPage() {
         style={{ background: "rgba(127,119,221,0.06)", border: "0.5px solid rgba(127,119,221,0.3)" }}
       >
         <div>
-          <p className="label-tag mb-2">Mises à jour en temps réel</p>
+          <p className="label-tag mb-2">{t("updates")}</p>
           <p className="text-sm text-white mb-4" style={{ fontWeight: 300 }}>
-            Suivez-nous sur les réseaux pour ne jamais manquer une annulation, un changement
-            d&apos;horaire ou un événement spécial.
+            {t("updatesText")}
           </p>
           <div className="flex flex-wrap gap-4">
             {[
@@ -218,7 +220,7 @@ export default async function HorairesPage() {
           rel="noopener noreferrer"
           className="btn-primary flex-shrink-0 animate-pulse-glow"
         >
-          Réserver
+          {t("reserve")}
         </a>
       </div>
     </div>

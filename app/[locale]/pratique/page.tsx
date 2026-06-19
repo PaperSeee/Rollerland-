@@ -1,5 +1,7 @@
 import Image from "next/image";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getRollerland } from "@/lib/wordpress";
+import { SITE } from "@/lib/site";
 
 export const revalidate = 60;
 
@@ -30,7 +32,9 @@ const RULES = [
 
 const FALLBACK_REGLEMENT = "https://retro.brussels/wp-content/uploads/2024/04/roller-rules-Aida-724x1024.jpeg";
 
-export default async function PratiquePage() {
+export default async function PratiquePage({ params }: { params: { locale: string } }) {
+  setRequestLocale(params.locale);
+  const t = await getTranslations("pratique");
   const acf = await getRollerland();
   const reglementImage = acf.reglement_image || FALLBACK_REGLEMENT;
   const parkingUrl = acf.parking_url || "https://go.parkbee.net/start-booking/24763";
@@ -39,22 +43,22 @@ export default async function PratiquePage() {
     <div className="max-w-7xl mx-auto px-6 py-20">
       {/* Header */}
       <div className="mb-16">
-        <p className="label-tag mb-4">Informations</p>
+        <p className="label-tag mb-4">{t("kicker")}</p>
         <h1
           className="text-4xl md:text-6xl text-white mb-4"
           style={{ fontWeight: 300, letterSpacing: "-0.02em" }}
         >
-          Infos pratiques
+          {t("title")}
         </h1>
         <p className="text-sm" style={{ color: "rgba(255,255,255,0.45)", lineHeight: "1.8" }}>
-          Tout ce que vous devez savoir avant de venir à Rollerland Brussels.
+          {t("intro")}
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
         {/* Address + Map */}
         <div>
-          <p className="label-tag mb-5">Adresse</p>
+          <p className="label-tag mb-5">{t("address")}</p>
           <div
             className="p-6 mb-4"
             style={{ background: "rgba(255,255,255,0.04)", border: "0.5px solid rgba(127,119,221,0.3)" }}
@@ -87,18 +91,18 @@ export default async function PratiquePage() {
           </div>
 
           <a
-            href="https://maps.app.goo.gl/wUYExjkrJLUSWEf88"
+            href={SITE.address.mapsUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-outline mt-4 w-full justify-center"
           >
-            Ouvrir dans Google Maps
+            {t("openMaps")}
           </a>
         </div>
 
         {/* Transport */}
         <div>
-          <p className="label-tag mb-5">Transports en commun</p>
+          <p className="label-tag mb-5">{t("transport")}</p>
 
           <div className="mb-6">
             <p
@@ -180,9 +184,9 @@ export default async function PratiquePage() {
               border: "0.5px solid rgba(127,119,221,0.3)",
             }}
           >
-            <p className="label-tag mb-3">Parking sécurisé</p>
+            <p className="label-tag mb-3">{t("parking")}</p>
             <p className="text-xs mb-3" style={{ color: "rgba(255,255,255,0.5)", lineHeight: "1.8" }}>
-              Parking sécurisé disponible au numéro 160. Réservez votre place en ligne via ParkBee.
+              {t("parkingText")}
             </p>
             <a
               href={parkingUrl}
@@ -190,7 +194,7 @@ export default async function PratiquePage() {
               rel="noopener noreferrer"
               className="btn-outline"
             >
-              Réserver le parking
+              {t("bookParking")}
             </a>
           </div>
         </div>
@@ -199,7 +203,7 @@ export default async function PratiquePage() {
       {/* Roller rules */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
         <div>
-          <p className="label-tag mb-5">Règlement</p>
+          <p className="label-tag mb-5">{t("rules")}</p>
           <div style={{ border: "0.5px solid rgba(127,119,221,0.25)" }}>
             {RULES.map((rule, i) => (
               <div
@@ -226,7 +230,7 @@ export default async function PratiquePage() {
 
         {/* Rules image */}
         <div>
-          <p className="label-tag mb-5">Règles visuelles</p>
+          <p className="label-tag mb-5">{t("rulesVisual")}</p>
           <div
             className="relative overflow-hidden"
             style={{

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getRollerland } from "@/lib/wordpress";
 import { SITE } from "@/lib/site";
 
@@ -55,7 +56,9 @@ const EVENTS_FALLBACK = [
   },
 ];
 
-export default async function PrivateEventsPage() {
+export default async function PrivateEventsPage({ params }: { params: { locale: string } }) {
+  setRequestLocale(params.locale);
+  const t = await getTranslations("privateEvents");
   const acf = await getRollerland();
 
   const EVENTS = acf.services_liste?.length
@@ -73,16 +76,15 @@ export default async function PrivateEventsPage() {
     <div className="max-w-7xl mx-auto px-6 py-20">
       {/* Header */}
       <div className="mb-16">
-        <p className="label-tag mb-4">Événements privés</p>
+        <p className="label-tag mb-4">{t("kicker")}</p>
         <h1
           className="text-4xl md:text-6xl text-white mb-4"
           style={{ fontWeight: 300, letterSpacing: "-0.02em" }}
         >
-          Private Events
+          {t("title")}
         </h1>
         <p className="text-sm max-w-xl" style={{ color: "rgba(255,255,255,0.45)", lineHeight: "1.8" }}>
-          De la soirée disco au team building en passant par les anniversaires — Rollerland Brussels
-          s&apos;adapte à tous vos projets d&apos;événement privé.
+          {t("intro")}
         </p>
       </div>
 
@@ -175,18 +177,18 @@ export default async function PrivateEventsPage() {
         }}
       >
         <div>
-          <p className="label-tag mb-2">Privatisation</p>
+          <p className="label-tag mb-2">{t("privatization")}</p>
           <h3
             className="text-xl text-white"
             style={{ fontWeight: 400 }}
           >
-            Privatisez la piste pour votre événement
+            {t("privatizationTitle")}
           </h3>
           <p
             className="text-sm mt-2"
             style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.7" }}
           >
-            La piste est disponible à la privatisation pour les grands groupes et événements d&apos;entreprise.
+            {t("privatizationText")}
           </p>
         </div>
         <div className="flex gap-4 flex-shrink-0">
@@ -196,13 +198,13 @@ export default async function PrivateEventsPage() {
             rel="noopener noreferrer"
             className="btn-primary"
           >
-            Demander un devis
+            {t("requestQuote")}
           </a>
           <a
             href={`mailto:${SITE.email}`}
             className="btn-outline"
           >
-            Nous écrire
+            {t("write")}
           </a>
         </div>
       </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { SITE } from "@/lib/site";
 
 // Embedded Google Form. After a submission the form shows a confirmation and
@@ -9,6 +10,7 @@ import { SITE } from "@/lib/site";
 // empty form so visitors can make another reservation.
 export default function ReservationForm() {
   const [reloadKey, setReloadKey] = useState(0);
+  const t = useTranslations("reservation");
 
   return (
     <div>
@@ -29,14 +31,14 @@ export default function ReservationForm() {
       </div>
       <div className="flex items-center justify-between flex-wrap gap-3 mt-3">
         <p className="text-xs" style={{ color: "rgba(255,255,255,0.2)" }}>
-          Réponse sous 24h · Vous pouvez aussi nous écrire à {SITE.email}
+          {t("caption", { email: SITE.email })}
         </p>
         <button
           onClick={() => setReloadKey((k) => k + 1)}
           className="text-xs uppercase tracking-wide hover:text-white transition-colors"
           style={{ color: "#9B92F0", letterSpacing: "0.1em" }}
         >
-          ↻ Faire une nouvelle réservation
+          {t("newReservation")}
         </button>
       </div>
     </div>

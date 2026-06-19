@@ -1,12 +1,16 @@
 import Image from "next/image";
-import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
+import { routing } from "@/i18n/routing";
 import { FORMULES, getFormule } from "@/lib/formules";
 
-// Static formule detail pages — generated at build time from the FORMULES map.
+// Static formule detail pages — generated at build time for every locale × slug.
 export function generateStaticParams() {
-  return FORMULES.map((f) => ({ slug: f.slug }));
+  return routing.locales.flatMap((locale) =>
+    FORMULES.map((f) => ({ locale, slug: f.slug })),
+  );
 }
 
 export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
@@ -18,7 +22,13 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   };
 }
 
-export default function FormuleDetailPage({ params }: { params: { slug: string } }) {
+export default async function FormuleDetailPage({
+  params,
+}: {
+  params: { locale: string; slug: string };
+}) {
+  setRequestLocale(params.locale);
+  const t = await getTranslations("formule");
   const formule = getFormule(params.slug);
   if (!formule) notFound();
 
@@ -30,7 +40,7 @@ export default function FormuleDetailPage({ params }: { params: { slug: string }
         className="text-xs uppercase tracking-wide hover:text-white transition-colors inline-block mb-10"
         style={{ color: "rgba(127,119,221,0.7)", letterSpacing: "0.1em" }}
       >
-        ← Tous les tarifs
+        {t("back")}
       </Link>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
@@ -54,7 +64,7 @@ export default function FormuleDetailPage({ params }: { params: { slug: string }
                 className="px-5 py-4 flex-1"
                 style={{ border: "0.5px solid rgba(127,119,221,0.25)", background: "rgba(255,255,255,0.02)" }}
               >
-                <p className="label-tag mb-1">Enfant</p>
+                <p className="label-tag mb-1">{t("kids")}</p>
                 <p className="text-2xl font-light" style={{ color: "#9B92F0" }}>
                   {formule.priceKids}
                 </p>
@@ -65,7 +75,7 @@ export default function FormuleDetailPage({ params }: { params: { slug: string }
                 className="px-5 py-4 flex-1"
                 style={{ border: "0.5px solid rgba(127,119,221,0.25)", background: "rgba(255,255,255,0.02)" }}
               >
-                <p className="label-tag mb-1">Adulte</p>
+                <p className="label-tag mb-1">{t("adults")}</p>
                 <p className="text-2xl font-light" style={{ color: "#9B92F0" }}>
                   {formule.priceAdults}
                 </p>
@@ -74,7 +84,7 @@ export default function FormuleDetailPage({ params }: { params: { slug: string }
           </div>
 
           {/* Includes */}
-          <p className="label-tag mb-4">Ce qui est inclus</p>
+          <p className="label-tag mb-4">{t("included")}</p>
           <ul className="flex flex-col gap-2 mb-10">
             {formule.includes.map((item) => (
               <li key={item} className="flex gap-3 items-start">
@@ -114,12 +124,12 @@ export default function FormuleDetailPage({ params }: { params: { slug: string }
         className="mt-16 p-6 md:p-8"
         style={{ border: "0.5px solid rgba(127,119,221,0.3)", background: "rgba(127,119,221,0.06)" }}
       >
-        <p className="label-tag mb-3">À savoir</p>
+        <p className="label-tag mb-3">{t("goodToKnow")}</p>
         <p className="text-sm text-white mb-1" style={{ fontWeight: 400, lineHeight: "1.7" }}>
-          Please consume locally and support Be Here.
+          {t("consume1")}
         </p>
         <p className="text-sm" style={{ color: "rgba(255,255,255,0.55)", lineHeight: "1.7" }}>
-          Refrain from bringing your own food and drinks.
+          {t("consume2")}
         </p>
       </div>
     </div>

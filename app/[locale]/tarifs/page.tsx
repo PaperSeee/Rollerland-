@@ -1,4 +1,5 @@
-import Link from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { getRollerland } from "@/lib/wordpress";
 import { SITE } from "@/lib/site";
 import { FORMULES } from "@/lib/formules";
@@ -63,7 +64,9 @@ function Row({ label, price, desc, last }: { label: string; price: string; desc?
   );
 }
 
-export default async function TarifsPage() {
+export default async function TarifsPage({ params }: { params: { locale: string } }) {
+  setRequestLocale(params.locale);
+  const t = await getTranslations("tarifs");
   const acf = await getRollerland();
 
   const INDIVIDUAL = [
@@ -97,27 +100,27 @@ export default async function TarifsPage() {
     <div className="max-w-7xl mx-auto px-6 py-20">
       {/* Header */}
       <div className="mb-16 animate-fade-up">
-        <p className="label-tag mb-4">Tarification</p>
+        <p className="label-tag mb-4">{t("kicker")}</p>
         <h1 className="text-5xl md:text-7xl text-white mb-4" style={{ fontWeight: 300, letterSpacing: "-0.03em", lineHeight: "0.95" }}>
-          Tarifs
+          {t("title")}
         </h1>
         <p className="text-sm mt-6 max-w-lg" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }}>
-          Tous les tarifs sont par personne. Réservation obligatoire pour les groupes. Patins inclus dans tous les forfaits groupe.
+          {t("intro")}
         </p>
       </div>
 
       {/* Individual + options */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16 animate-fade-up delay-100">
         <div>
-          <p className="label-tag mb-4">Accès individuel</p>
+          <p className="label-tag mb-4">{t("individual")}</p>
           <div style={{ border: "0.5px solid rgba(127,119,221,0.25)" }}>
-            {INDIVIDUAL.map((t, i) => (
-              <Row key={t.label} label={t.label} price={t.price} desc={t.desc} last={i === INDIVIDUAL.length - 1} />
+            {INDIVIDUAL.map((item, i) => (
+              <Row key={item.label} label={item.label} price={item.price} desc={item.desc} last={i === INDIVIDUAL.length - 1} />
             ))}
           </div>
         </div>
         <div>
-          <p className="label-tag mb-4">Options supplémentaires</p>
+          <p className="label-tag mb-4">{t("options")}</p>
           <div style={{ border: "0.5px solid rgba(127,119,221,0.25)" }}>
             {OPTIONS.map((o, i) => (
               <Row key={o.label} label={o.label} price={o.price} last={i === OPTIONS.length - 1} />
@@ -128,7 +131,7 @@ export default async function TarifsPage() {
             style={{ border: "0.5px solid rgba(127,119,221,0.15)", background: "rgba(255,255,255,0.02)" }}
           >
             <p className="text-xs" style={{ color: "rgba(255,255,255,0.3)", lineHeight: "1.7" }}>
-              Protections gratuites si vous venez avec vos propres patins. Patins inclus dans tous les forfaits groupe.
+              {t("optionsNote")}
             </p>
           </div>
         </div>
@@ -137,9 +140,9 @@ export default async function TarifsPage() {
       {/* Group packages */}
       <div className="mb-16 animate-fade-up delay-200">
         <div className="flex items-end justify-between mb-4">
-          <p className="label-tag">Forfaits groupe</p>
+          <p className="label-tag">{t("groupPackages")}</p>
           <Link href="/contact" className="text-xs uppercase" style={{ color: "rgba(127,119,221,0.5)", letterSpacing: "0.1em" }}>
-            Réserver →
+            {t("reserve")}
           </Link>
         </div>
         <div style={{ border: "0.5px solid rgba(127,119,221,0.25)" }}>
@@ -147,9 +150,9 @@ export default async function TarifsPage() {
             className="grid grid-cols-4 px-5 py-3"
             style={{ borderBottom: "0.5px solid rgba(127,119,221,0.2)", background: "rgba(127,119,221,0.05)" }}
           >
-            <p className="label-tag col-span-2">Formule</p>
-            <p className="label-tag text-center">Enfant</p>
-            <p className="label-tag text-center">Adulte</p>
+            <p className="label-tag col-span-2">{t("colFormula")}</p>
+            <p className="label-tag text-center">{t("colKids")}</p>
+            <p className="label-tag text-center">{t("colAdults")}</p>
           </div>
           {groupRows.map((g, i) => (
             <div
@@ -190,7 +193,7 @@ export default async function TarifsPage() {
             rel="noopener noreferrer"
             className="btn-primary"
           >
-            Réserver un groupe
+            {t("reserveGroup")}
           </a>
         </div>
       </div>
@@ -198,7 +201,7 @@ export default async function TarifsPage() {
       {/* Bar + Food */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fade-up delay-300">
         <div>
-          <p className="label-tag mb-4">Bar · Boissons</p>
+          <p className="label-tag mb-4">{t("bar")}</p>
           <div style={{ border: "0.5px solid rgba(127,119,221,0.25)" }}>
             {DRINKS.map((d, i) => (
               <Row key={d.name} label={d.name} price={d.price} last={i === DRINKS.length - 1} />
@@ -206,7 +209,7 @@ export default async function TarifsPage() {
           </div>
         </div>
         <div>
-          <p className="label-tag mb-4">Nourriture</p>
+          <p className="label-tag mb-4">{t("food")}</p>
           <div style={{ border: "0.5px solid rgba(127,119,221,0.25)" }}>
             {FOOD.map((f, i) => (
               <Row key={f.name} label={f.name} price={f.price} last={i === FOOD.length - 1} />
@@ -220,12 +223,12 @@ export default async function TarifsPage() {
         className="mt-10 p-6 md:p-8 animate-fade-up delay-300"
         style={{ border: "0.5px solid rgba(127,119,221,0.3)", background: "rgba(127,119,221,0.06)" }}
       >
-        <p className="label-tag mb-3">À savoir</p>
+        <p className="label-tag mb-3">{t("goodToKnow")}</p>
         <p className="text-sm text-white mb-1" style={{ fontWeight: 400, lineHeight: "1.7" }}>
-          Please consume locally and support Be Here.
+          {t("consume1")}
         </p>
         <p className="text-sm" style={{ color: "rgba(255,255,255,0.55)", lineHeight: "1.7" }}>
-          Refrain from bringing your own food and drinks.
+          {t("consume2")}
         </p>
       </div>
     </div>

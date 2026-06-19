@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
       revalidatePath(path);
     } else {
       // Revalidate all known pages
-      const paths = ["/", "/horaires", "/tarifs", "/cours", "/services", "/pratique", "/contact"];
+      const paths = ["/", "/horaires", "/tarifs", "/cours", "/private-events", "/pratique", "/contact", "/disco-roller"];
       paths.forEach((p) => revalidatePath(p));
     }
 

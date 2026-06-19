@@ -1,0 +1,44 @@
+// Prisma schema for Rollerland Brussels.
+// Datasource uses Vercel Postgres env vars (pooled URL for the app, a direct
+// non-pooled URL for migrations). Locally both point at the same database.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+// Disco Roller events, managed from /admin and rendered on /disco-roller.
+// Shape mirrors the previous hardcoded FALLBACK_EVENTS so the UI is unchanged.
+model DiscoEvent {
+  id          String   @id @default(cuid())
+  date        DateTime @db.Date // sortable; rendered via the page's formatDate()
+  day         String // "Vendredi" / "Samedi"
+  theme       String
+  description String
+  dj          String?
+  time        String // free-text horaire, e.g. "17h00 – 00h00"
+  special     Boolean  @default(false)
+  image       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([date])
+}
+
+// Singleton (always id = 1) holding the promotional popup configuration edited
+// from /admin/popup and rendered once-per-visitor across the site.
+model PopupSettings {
+  id        Int      @id @default(1)
+  enabled   Boolean  @default(false)
+  title     String   @default("")
+  body      String   @default("")
+  imageUrl  String?
+  ctaLabel  String?
+  ctaUrl    String?
+  updatedAt DateTime @updatedAt
+}

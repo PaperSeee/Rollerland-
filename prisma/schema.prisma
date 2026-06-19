@@ -29,3 +29,16 @@ model DiscoEvent {
 
   @@index([date])
 }
+
+// Singleton (always id = 1) holding the promotional popup configuration edited
+// from /admin/popup and rendered once-per-visitor across the site.
+model PopupSettings {
+  id        Int      @id @default(1)
+  enabled   Boolean  @default(false)
+  title     String   @default("")
+  body      String   @default("")
+  imageUrl  String?
+  ctaLabel  String?
+  ctaUrl    String?
+  updatedAt DateTime @updatedAt
+}

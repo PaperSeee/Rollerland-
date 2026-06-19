@@ -63,3 +63,25 @@ export async function deleteEvent(id: string) {
   revalidatePath("/disco-roller");
   revalidatePath("/admin");
 }
+
+// ── Promo popup (singleton id = 1) ──────────────────────────────────────
+export async function updatePopup(formData: FormData) {
+  await assertAdmin();
+  const data = {
+    enabled: formData.get("enabled") === "on",
+    title: String(formData.get("title") ?? "").trim(),
+    body: String(formData.get("body") ?? "").trim(),
+    imageUrl: String(formData.get("imageUrl") ?? "").trim() || null,
+    ctaLabel: String(formData.get("ctaLabel") ?? "").trim() || null,
+    ctaUrl: String(formData.get("ctaUrl") ?? "").trim() || null,
+  };
+  await prisma.popupSettings.upsert({
+    where: { id: 1 },
+    create: { id: 1, ...data },
+    update: data,
+  });
+  // Popup is rendered from the root layout, so revalidate the whole tree.
+  revalidatePath("/", "layout");
+  revalidatePath("/admin/popup");
+  redirect("/admin/popup");
+}

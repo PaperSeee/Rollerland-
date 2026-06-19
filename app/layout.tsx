@@ -3,6 +3,8 @@ import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import PromoPopup from "@/components/PromoPopup";
+import { getPopup } from "@/lib/popup";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -25,17 +27,20 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const popup = await getPopup();
+
   return (
     <html lang="fr" className={spaceGrotesk.variable}>
       <body className="antialiased" style={{ color: "#FFFFFF" }}>
         <Navbar />
         <main className="pt-16">{children}</main>
         <Footer />
+        {popup && <PromoPopup data={popup} />}
       </body>
     </html>
   );

@@ -1,88 +1,20 @@
 import Image from "next/image";
 import { getRollerland } from "@/lib/wordpress";
+import { getDiscoEvents, type DiscoEventView } from "@/lib/disco";
 import { SITE } from "@/lib/site";
 
-export const revalidate = 60;
+// DB-backed; events are managed from /admin. Stay dynamic so admin edits show
+// immediately (Server Actions also revalidate this path).
+export const dynamic = "force-dynamic";
 
-// ── Types ──────────────────────────────────────────────────────────────
-interface WPEvent {
-  id: number;
-  title: { rendered: string };
-  content: { rendered: string };
-  acf?: {
-    event_date?: string;
-    event_time?: string;
-    event_theme?: string;
-    event_dj?: string;
-    event_image?: string;
-    event_special?: boolean;
-  };
-  featured_media?: number;
-  _embedded?: { "wp:featuredmedia"?: Array<{ source_url: string }> };
-}
-
-// ── Hardcoded fallback events ──────────────────────────────────────────
-const FALLBACK_EVENTS = [
-  {
-    id: 1,
-    date: "2026-05-23",
-    day: "Samedi",
-    theme: "Soirée Classics",
-    dj: "DJ Retro",
-    time: "17h00 – 00h00",
-    special: false,
-    desc: "Les meilleurs classiques des années 80-90 sur la piste.",
-  },
-  {
-    id: 2,
-    date: "2026-05-29",
-    day: "Vendredi",
-    theme: "Disco Night",
-    dj: "DJ Funky",
-    time: "17h00 – 00h00",
-    special: true,
-    desc: "La vraie soirée disco — tenues flashy bienvenues !",
-  },
-  {
-    id: 3,
-    date: "2026-05-30",
-    day: "Samedi",
-    theme: "80s Party",
-    dj: "DJ Retro",
-    time: "17h00 – 00h00",
-    special: false,
-    desc: "Synthés, néons et patins — une plongée dans les années 80.",
-  },
-  {
-    id: 4,
-    date: "2026-06-06",
-    day: "Vendredi",
-    theme: "Hip-Hop Session",
-    dj: "DJ Fresh",
-    time: "17h00 – 00h00",
-    special: false,
-    desc: "Beats urbains et grooves pour une session hip-hop.",
-  },
-  {
-    id: 5,
-    date: "2026-06-07",
-    day: "Samedi",
-    theme: "Latin Fever",
-    dj: "DJ Caliente",
-    time: "17h00 – 00h00",
-    special: true,
-    desc: "Salsa, reggaeton et zouk — la chaleur latine sur la piste !",
-  },
-  {
-    id: 6,
-    date: "2026-06-13",
-    day: "Samedi",
-    theme: "Summer Opening",
-    dj: "DJ Summer",
-    time: "17h00 – 00h00",
-    special: true,
-    desc: "Ouverture de la saison estivale — le plus grand événement de l'année.",
-  },
+// ── Fallback shown only when the database has no events ─────────────────
+const FALLBACK_EVENTS: DiscoEventView[] = [
+  { id: "f1", date: "2026-05-23", day: "Samedi", theme: "Soirée Classics", dj: "DJ Retro", time: "17h00 – 00h00", special: false, desc: "Les meilleurs classiques des années 80-90 sur la piste.", image: null },
+  { id: "f2", date: "2026-05-29", day: "Vendredi", theme: "Disco Night", dj: "DJ Funky", time: "17h00 – 00h00", special: true, desc: "La vraie soirée disco — tenues flashy bienvenues !", image: null },
+  { id: "f3", date: "2026-05-30", day: "Samedi", theme: "80s Party", dj: "DJ Retro", time: "17h00 – 00h00", special: false, desc: "Synthés, néons et patins — une plongée dans les années 80.", image: null },
+  { id: "f4", date: "2026-06-06", day: "Vendredi", theme: "Hip-Hop Session", dj: "DJ Fresh", time: "17h00 – 00h00", special: false, desc: "Beats urbains et grooves pour une session hip-hop.", image: null },
+  { id: "f5", date: "2026-06-07", day: "Samedi", theme: "Latin Fever", dj: "DJ Caliente", time: "17h00 – 00h00", special: true, desc: "Salsa, reggaeton et zouk — la chaleur latine sur la piste !", image: null },
+  { id: "f6", date: "2026-06-13", day: "Samedi", theme: "Summer Opening", dj: "DJ Summer", time: "17h00 – 00h00", special: true, desc: "Ouverture de la saison estivale — le plus grand événement de l'année.", image: null },
 ];
 
 function formatDate(dateStr: string) {
@@ -90,41 +22,14 @@ function formatDate(dateStr: string) {
   return d.toLocaleDateString("fr-BE", { day: "numeric", month: "long", year: "numeric" });
 }
 
-async function getDiscoEvents(): Promise<typeof FALLBACK_EVENTS> {
-  try {
-    const res = await fetch(
-      "https://retro.brussels/wp-json/wp/v2/posts?categories=disco&per_page=20&_embed&_fields=id,title,content,acf,date",
-      { next: { revalidate: 60 } }
-    );
-    if (!res.ok) return FALLBACK_EVENTS;
-    const posts: WPEvent[] = await res.json();
-    if (!posts.length) return FALLBACK_EVENTS;
-    return FALLBACK_EVENTS;
-  } catch {
-    return FALLBACK_EVENTS;
-  }
-}
-
 const FALLBACK_HERO_DISCO = "https://retro.brussels/wp-content/uploads/2025/01/roller-party2-scaled.jpg";
 
 export default async function DiscoRollerPage() {
-  const [events, acf] = await Promise.all([getDiscoEvents(), getRollerland()]);
+  const [dbEvents, acf] = await Promise.all([getDiscoEvents(), getRollerland()]);
   const heroImage = acf.disco_hero_image || FALLBACK_HERO_DISCO;
 
-  // Merge WP ACF events over fallback if available
-  const discoEvents = acf.disco_evenements?.length
-    ? acf.disco_evenements.map((e, i) => ({
-        id: i + 1,
-        date: e.date,
-        day: e.jour,
-        theme: e.theme,
-        dj: e.dj || "",
-        time: e.horaire,
-        special: Boolean(e.special),
-        desc: e.description,
-        image: e.image || null,
-      }))
-    : events;
+  // Use DB events when present, otherwise the hardcoded fallback list.
+  const discoEvents = dbEvents.length ? dbEvents : FALLBACK_EVENTS;
   const nextEvent = discoEvents[0];
 
   return (

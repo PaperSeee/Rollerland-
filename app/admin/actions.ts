@@ -23,6 +23,7 @@ function parseEvent(formData: FormData) {
   const dj = String(formData.get("dj") ?? "").trim();
   const time = String(formData.get("time") ?? "").trim();
   const image = String(formData.get("image") ?? "").trim();
+  const imagePosition = String(formData.get("imagePosition") ?? "center").trim() || "center";
   const special = formData.get("special") === "on";
 
   if (!date || !day || !theme || !time) {
@@ -37,6 +38,7 @@ function parseEvent(formData: FormData) {
     dj: dj || null,
     time,
     image: image || null,
+    imagePosition,
     special,
   };
 }
@@ -72,6 +74,7 @@ export async function updatePopup(formData: FormData) {
     title: String(formData.get("title") ?? "").trim(),
     body: String(formData.get("body") ?? "").trim(),
     imageUrl: String(formData.get("imageUrl") ?? "").trim() || null,
+    imagePosition: String(formData.get("imagePosition") ?? "center").trim() || "center",
     ctaLabel: String(formData.get("ctaLabel") ?? "").trim() || null,
     ctaUrl: String(formData.get("ctaUrl") ?? "").trim() || null,
   };

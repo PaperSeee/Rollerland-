@@ -29,6 +29,7 @@ export default async function EditEventPage({ params }: { params: { id: string }
           dj: event.dj ?? "",
           time: event.time,
           image: event.image ?? "",
+          imagePosition: event.imagePosition ?? "center",
           special: event.special,
         }}
       />

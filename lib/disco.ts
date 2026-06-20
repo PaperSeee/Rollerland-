@@ -12,6 +12,7 @@ export interface DiscoEventView {
   special: boolean;
   desc: string;
   image: string | null;
+  imagePosition: string | null;
 }
 
 function toISODate(d: Date): string {
@@ -33,6 +34,7 @@ export async function getDiscoEvents(): Promise<DiscoEventView[]> {
       special: e.special,
       desc: e.description,
       image: e.image,
+      imagePosition: e.imagePosition,
     }));
   } catch (err) {
     console.error("getDiscoEvents failed:", err);

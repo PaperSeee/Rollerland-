@@ -12,6 +12,8 @@ const nextConfig = {
         hostname: "retro.brussels",
         pathname: "/wp-content/uploads/**",
       },
+      // Admin-provided image URLs (popup, events) can come from any https host.
+      { protocol: "https", hostname: "**" },
     ],
   },
   async redirects() {

@@ -4,6 +4,7 @@ export interface PopupView {
   title: string;
   body: string;
   imageUrl: string | null;
+  imagePosition: string | null;
   ctaLabel: string | null;
   ctaUrl: string | null;
   version: string; // updatedAt timestamp — used to key the once-per-visitor flag
@@ -19,6 +20,7 @@ export async function getPopup(): Promise<PopupView | null> {
       title: p.title,
       body: p.body,
       imageUrl: p.imageUrl,
+      imagePosition: p.imagePosition,
       ctaLabel: p.ctaLabel,
       ctaUrl: p.ctaUrl,
       version: String(p.updatedAt.getTime()),

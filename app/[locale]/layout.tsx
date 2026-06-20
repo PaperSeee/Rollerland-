@@ -20,6 +20,11 @@ export const metadata: Metadata = {
   description:
     "Rollerland Brussels: roller skating lessons, disco nights, birthdays, team building and more. Rue Dieudonné Lefèvre 4, B-1020 Brussels.",
   keywords: "roller, Brussels, Bruxelles, skating, disco roller, birthday, roller lessons",
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+    apple: "/apple-icon.svg",
+  },
   openGraph: {
     title: "Rollerland Brussels",
     description: "Roller skating rink in the heart of Brussels.",

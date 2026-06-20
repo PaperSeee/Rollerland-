@@ -10,12 +10,12 @@ export const dynamic = "force-dynamic";
 
 // ── Fallback shown only when the database has no events ─────────────────
 const FALLBACK_EVENTS: DiscoEventView[] = [
-  { id: "f1", date: "2026-05-23", day: "Samedi", theme: "Soirée Classics", dj: "DJ Retro", time: "17h00 – 00h00", special: false, desc: "Les meilleurs classiques des années 80-90 sur la piste.", image: null },
-  { id: "f2", date: "2026-05-29", day: "Vendredi", theme: "Disco Night", dj: "DJ Funky", time: "17h00 – 00h00", special: true, desc: "La vraie soirée disco — tenues flashy bienvenues !", image: null },
-  { id: "f3", date: "2026-05-30", day: "Samedi", theme: "80s Party", dj: "DJ Retro", time: "17h00 – 00h00", special: false, desc: "Synthés, néons et patins — une plongée dans les années 80.", image: null },
-  { id: "f4", date: "2026-06-06", day: "Vendredi", theme: "Hip-Hop Session", dj: "DJ Fresh", time: "17h00 – 00h00", special: false, desc: "Beats urbains et grooves pour une session hip-hop.", image: null },
-  { id: "f5", date: "2026-06-07", day: "Samedi", theme: "Latin Fever", dj: "DJ Caliente", time: "17h00 – 00h00", special: true, desc: "Salsa, reggaeton et zouk — la chaleur latine sur la piste !", image: null },
-  { id: "f6", date: "2026-06-13", day: "Samedi", theme: "Summer Opening", dj: "DJ Summer", time: "17h00 – 00h00", special: true, desc: "Ouverture de la saison estivale — le plus grand événement de l'année.", image: null },
+  { id: "f1", date: "2026-05-23", day: "Samedi", theme: "Soirée Classics", dj: "DJ Retro", time: "17h00 – 00h00", special: false, desc: "Les meilleurs classiques des années 80-90 sur la piste.", image: null, imagePosition: null },
+  { id: "f2", date: "2026-05-29", day: "Vendredi", theme: "Disco Night", dj: "DJ Funky", time: "17h00 – 00h00", special: true, desc: "La vraie soirée disco — tenues flashy bienvenues !", image: null, imagePosition: null },
+  { id: "f3", date: "2026-05-30", day: "Samedi", theme: "80s Party", dj: "DJ Retro", time: "17h00 – 00h00", special: false, desc: "Synthés, néons et patins — une plongée dans les années 80.", image: null, imagePosition: null },
+  { id: "f4", date: "2026-06-06", day: "Vendredi", theme: "Hip-Hop Session", dj: "DJ Fresh", time: "17h00 – 00h00", special: false, desc: "Beats urbains et grooves pour une session hip-hop.", image: null, imagePosition: null },
+  { id: "f5", date: "2026-06-07", day: "Samedi", theme: "Latin Fever", dj: "DJ Caliente", time: "17h00 – 00h00", special: true, desc: "Salsa, reggaeton et zouk — la chaleur latine sur la piste !", image: null, imagePosition: null },
+  { id: "f6", date: "2026-06-13", day: "Samedi", theme: "Summer Opening", dj: "DJ Summer", time: "17h00 – 00h00", special: true, desc: "Ouverture de la saison estivale — le plus grand événement de l'année.", image: null, imagePosition: null },
 ];
 
 function formatDate(dateStr: string) {

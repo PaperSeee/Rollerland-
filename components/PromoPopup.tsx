@@ -60,7 +60,13 @@ export default function PromoPopup({ data }: { data: PopupView }) {
 
         {data.imageUrl && (
           <div className="relative w-full" style={{ height: 180 }}>
-            <Image src={data.imageUrl} alt={data.title} fill className="object-cover" />
+            <Image
+              src={data.imageUrl}
+              alt={data.title}
+              fill
+              className="object-cover"
+              style={{ objectPosition: data.imagePosition || "center" }}
+            />
             <div
               className="absolute inset-0"
               style={{ background: "linear-gradient(to top, #150E28 0%, transparent 70%)" }}

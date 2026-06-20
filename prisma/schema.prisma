@@ -23,11 +23,12 @@ model DiscoEvent {
   theme       String
   description String
   dj          String?
-  time        String // free-text horaire, e.g. "17h00 – 00h00"
-  special     Boolean  @default(false)
-  image       String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  time          String // free-text horaire, e.g. "17h00 – 00h00"
+  special       Boolean  @default(false)
+  image         String?
+  imagePosition String?  @default("center") // CSS object-position (simple crop)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   @@index([date])
 }
@@ -35,12 +36,13 @@ model DiscoEvent {
 // Singleton (always id = 1) holding the promotional popup configuration edited
 // from /admin/popup and rendered once-per-visitor across the site.
 model PopupSettings {
-  id        Int      @id @default(1)
-  enabled   Boolean  @default(false)
-  title     String   @default("")
-  body      String   @default("")
-  imageUrl  String?
-  ctaLabel  String?
-  ctaUrl    String?
-  updatedAt DateTime @updatedAt
+  id            Int      @id @default(1)
+  enabled       Boolean  @default(false)
+  title         String   @default("")
+  body          String   @default("")
+  imageUrl      String?
+  imagePosition String?  @default("center") // CSS object-position (simple crop)
+  ctaLabel      String?
+  ctaUrl        String?
+  updatedAt     DateTime @updatedAt
 }

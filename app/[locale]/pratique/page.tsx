@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { getRollerland } from "@/lib/wordpress";
+import { getRollerland, pick, pickRow } from "@/lib/wordpress";
 import { SITE } from "@/lib/site";
 
 export const revalidate = 60;
@@ -33,11 +33,16 @@ const RULES = [
 const FALLBACK_REGLEMENT = "https://retro.brussels/wp-content/uploads/2024/04/roller-rules-Aida-724x1024.jpeg";
 
 export default async function PratiquePage({ params }: { params: { locale: string } }) {
-  setRequestLocale(params.locale);
+  const { locale } = params;
+  setRequestLocale(locale);
   const t = await getTranslations("pratique");
   const acf = await getRollerland();
   const reglementImage = acf.reglement_image || FALLBACK_REGLEMENT;
   const parkingUrl = acf.parking_url || "https://go.parkbee.net/start-booking/24763";
+  const intro = pick(acf, "pratique_intro", locale) || t("intro");
+  const parkingText = pick(acf, "parking_text", locale) || t("parkingText");
+  // Rules from WP if provided, else the hardcoded RULES list.
+  const rules = acf.rules?.length ? acf.rules.map((r) => pickRow(r, "rule_text", locale)) : RULES;
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-20">
@@ -51,7 +56,7 @@ export default async function PratiquePage({ params }: { params: { locale: strin
           {t("title")}
         </h1>
         <p className="text-sm" style={{ color: "rgba(255,255,255,0.45)", lineHeight: "1.8" }}>
-          {t("intro")}
+          {intro}
         </p>
       </div>
 
@@ -186,7 +191,7 @@ export default async function PratiquePage({ params }: { params: { locale: strin
           >
             <p className="label-tag mb-3">{t("parking")}</p>
             <p className="text-xs mb-3" style={{ color: "rgba(255,255,255,0.5)", lineHeight: "1.8" }}>
-              {t("parkingText")}
+              {parkingText}
             </p>
             <a
               href={parkingUrl}
@@ -205,13 +210,13 @@ export default async function PratiquePage({ params }: { params: { locale: strin
         <div>
           <p className="label-tag mb-5">{t("rules")}</p>
           <div style={{ border: "0.5px solid rgba(127,119,221,0.25)" }}>
-            {RULES.map((rule, i) => (
+            {rules.map((rule, i) => (
               <div
                 key={i}
                 className="flex gap-4 px-5 py-4"
                 style={{
                   borderBottom:
-                    i < RULES.length - 1 ? "0.5px solid rgba(127,119,221,0.12)" : "none",
+                    i < rules.length - 1 ? "0.5px solid rgba(127,119,221,0.12)" : "none",
                 }}
               >
                 <span

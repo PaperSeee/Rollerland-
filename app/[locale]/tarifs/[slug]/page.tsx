@@ -4,7 +4,33 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
-import { FORMULES, getFormule } from "@/lib/formules";
+import { FORMULES, getFormule, type Formule } from "@/lib/formules";
+import { getRollerland, pickRow, rowStr } from "@/lib/wordpress";
+import { SITE } from "@/lib/site";
+
+// Build a Formule from a WordPress repeater row (localized), if one matches the
+// slug; otherwise returns null so we fall back to the static FORMULES map.
+async function formuleFromWP(slug: string, locale: string): Promise<Formule | null> {
+  const acf = await getRollerland();
+  const row = acf.formules?.find((f) => rowStr(f, "formule_slug") === slug);
+  if (!row) return null;
+  const includes = Array.isArray(row.formule_includes)
+    ? (row.formule_includes as Array<Record<string, unknown>>).map((r) => pickRow(r, "include_item", locale)).filter(Boolean)
+    : [];
+  return {
+    slug,
+    name: pickRow(row, "formule_nom", locale),
+    tagline: pickRow(row, "formule_tagline", locale),
+    desc: pickRow(row, "formule_description", locale),
+    priceKids: rowStr(row, "formule_prix_enfant") || "—",
+    priceAdults: rowStr(row, "formule_prix_adulte") || "—",
+    highlight: Boolean(row.formule_highlight),
+    includes,
+    image: rowStr(row, "formule_image") || null,
+    ctaLabel: "Réserver cette formule",
+    ctaHref: SITE.reservationUrl,
+  };
+}
 
 // Static formule detail pages — generated at build time for every locale × slug.
 export function generateStaticParams() {
@@ -29,7 +55,8 @@ export default async function FormuleDetailPage({
 }) {
   setRequestLocale(params.locale);
   const t = await getTranslations("formule");
-  const formule = getFormule(params.slug);
+  // Prefer WordPress content for this slug, else the static map.
+  const formule = (await formuleFromWP(params.slug, params.locale)) ?? getFormule(params.slug);
   if (!formule) notFound();
 
   return (

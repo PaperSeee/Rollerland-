@@ -1,0 +1,1006 @@
+[
+  {
+    "key": "group_rl_global_v2",
+    "title": "Rollerland — Réglages globaux (nouveau)",
+    "fields": [
+      {
+        "key": "field_site_email",
+        "label": "E-mail du site",
+        "name": "site_email",
+        "type": "text",
+        "default_value": "info@rollerland.brussels"
+      },
+      {
+        "key": "field_social_instagram",
+        "label": "Instagram (URL)",
+        "name": "social_instagram",
+        "type": "url"
+      },
+      {
+        "key": "field_social_facebook",
+        "label": "Facebook (URL)",
+        "name": "social_facebook",
+        "type": "url"
+      },
+      {
+        "key": "field_social_tiktok",
+        "label": "TikTok (URL)",
+        "name": "social_tiktok",
+        "type": "url"
+      },
+      {
+        "key": "field_google_review_url",
+        "label": "Lien avis Google",
+        "name": "google_review_url",
+        "type": "url"
+      },
+      {
+        "key": "field_cours_whatsapp_group_url",
+        "label": "Groupe WhatsApp cours (URL)",
+        "name": "cours_whatsapp_group_url",
+        "type": "url"
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "page",
+          "operator": "==",
+          "value": "42"
+        }
+      ]
+    ]
+  },
+  {
+    "key": "group_rl_footer_v2",
+    "title": "Rollerland — Pied de page (nouveau)",
+    "fields": [
+      {
+        "key": "field_footer_tagline_en",
+        "label": "Footer — slogan (EN)",
+        "name": "footer_tagline_en",
+        "type": "text"
+      },
+      {
+        "key": "field_footer_tagline_fr",
+        "label": "Footer — slogan (FR)",
+        "name": "footer_tagline_fr",
+        "type": "text"
+      },
+      {
+        "key": "field_footer_tagline_nl",
+        "label": "Footer — slogan (NL)",
+        "name": "footer_tagline_nl",
+        "type": "text"
+      },
+      {
+        "key": "field_footer_subtitle_en",
+        "label": "Footer — sous-titre (EN)",
+        "name": "footer_subtitle_en",
+        "type": "text"
+      },
+      {
+        "key": "field_footer_subtitle_fr",
+        "label": "Footer — sous-titre (FR)",
+        "name": "footer_subtitle_fr",
+        "type": "text"
+      },
+      {
+        "key": "field_footer_subtitle_nl",
+        "label": "Footer — sous-titre (NL)",
+        "name": "footer_subtitle_nl",
+        "type": "text"
+      },
+      {
+        "key": "field_footer_closed_note_en",
+        "label": "Footer — note jours fermés (EN)",
+        "name": "footer_closed_note_en",
+        "type": "text"
+      },
+      {
+        "key": "field_footer_closed_note_fr",
+        "label": "Footer — note jours fermés (FR)",
+        "name": "footer_closed_note_fr",
+        "type": "text"
+      },
+      {
+        "key": "field_footer_closed_note_nl",
+        "label": "Footer — note jours fermés (NL)",
+        "name": "footer_closed_note_nl",
+        "type": "text"
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "page",
+          "operator": "==",
+          "value": "42"
+        }
+      ]
+    ]
+  },
+  {
+    "key": "group_rl_home_v2",
+    "title": "Rollerland — Page d'accueil (nouveau)",
+    "fields": [
+      {
+        "key": "field_home_location_en",
+        "label": "Accueil — localisation (sous-titre héro) (EN)",
+        "name": "home_location_en",
+        "type": "text"
+      },
+      {
+        "key": "field_home_location_fr",
+        "label": "Accueil — localisation (sous-titre héro) (FR)",
+        "name": "home_location_fr",
+        "type": "text"
+      },
+      {
+        "key": "field_home_location_nl",
+        "label": "Accueil — localisation (sous-titre héro) (NL)",
+        "name": "home_location_nl",
+        "type": "text"
+      },
+      {
+        "key": "field_home_hero_lead_en",
+        "label": "Accueil — accroche héro (EN)",
+        "name": "home_hero_lead_en",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_home_hero_lead_fr",
+        "label": "Accueil — accroche héro (FR)",
+        "name": "home_hero_lead_fr",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_home_hero_lead_nl",
+        "label": "Accueil — accroche héro (NL)",
+        "name": "home_hero_lead_nl",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_home_open_tonight_en",
+        "label": "Accueil — badge « ouvert ce soir » (EN)",
+        "name": "home_open_tonight_en",
+        "type": "text"
+      },
+      {
+        "key": "field_home_open_tonight_fr",
+        "label": "Accueil — badge « ouvert ce soir » (FR)",
+        "name": "home_open_tonight_fr",
+        "type": "text"
+      },
+      {
+        "key": "field_home_open_tonight_nl",
+        "label": "Accueil — badge « ouvert ce soir » (NL)",
+        "name": "home_open_tonight_nl",
+        "type": "text"
+      },
+      {
+        "key": "field_home_tribute_title_en",
+        "label": "Accueil — titre hommage (EN)",
+        "name": "home_tribute_title_en",
+        "type": "text"
+      },
+      {
+        "key": "field_home_tribute_title_fr",
+        "label": "Accueil — titre hommage (FR)",
+        "name": "home_tribute_title_fr",
+        "type": "text"
+      },
+      {
+        "key": "field_home_tribute_title_nl",
+        "label": "Accueil — titre hommage (NL)",
+        "name": "home_tribute_title_nl",
+        "type": "text"
+      },
+      {
+        "key": "field_home_tribute_body_en",
+        "label": "Accueil — texte hommage Aalst (EN)",
+        "name": "home_tribute_body_en",
+        "type": "textarea",
+        "instructions": "Texte officiel Rollerland Aalst.",
+        "rows": 3
+      },
+      {
+        "key": "field_home_tribute_body_fr",
+        "label": "Accueil — texte hommage Aalst (FR)",
+        "name": "home_tribute_body_fr",
+        "type": "textarea",
+        "instructions": "Texte officiel Rollerland Aalst.",
+        "rows": 3
+      },
+      {
+        "key": "field_home_tribute_body_nl",
+        "label": "Accueil — texte hommage Aalst (NL)",
+        "name": "home_tribute_body_nl",
+        "type": "textarea",
+        "instructions": "Texte officiel Rollerland Aalst.",
+        "rows": 3
+      },
+      {
+        "key": "field_home_tribute_image",
+        "label": "Accueil — image hommage",
+        "name": "home_tribute_image",
+        "type": "image",
+        "return_format": "url",
+        "preview_size": "medium"
+      },
+      {
+        "key": "field_home_services_title_en",
+        "label": "Accueil — titre section Services (EN)",
+        "name": "home_services_title_en",
+        "type": "text"
+      },
+      {
+        "key": "field_home_services_title_fr",
+        "label": "Accueil — titre section Services (FR)",
+        "name": "home_services_title_fr",
+        "type": "text"
+      },
+      {
+        "key": "field_home_services_title_nl",
+        "label": "Accueil — titre section Services (NL)",
+        "name": "home_services_title_nl",
+        "type": "text"
+      },
+      {
+        "key": "field_home_partners_title_en",
+        "label": "Accueil — titre section Partenaires (EN)",
+        "name": "home_partners_title_en",
+        "type": "text"
+      },
+      {
+        "key": "field_home_partners_title_fr",
+        "label": "Accueil — titre section Partenaires (FR)",
+        "name": "home_partners_title_fr",
+        "type": "text"
+      },
+      {
+        "key": "field_home_partners_title_nl",
+        "label": "Accueil — titre section Partenaires (NL)",
+        "name": "home_partners_title_nl",
+        "type": "text"
+      },
+      {
+        "key": "field_home_cta_title_en",
+        "label": "Accueil — titre CTA final (EN)",
+        "name": "home_cta_title_en",
+        "type": "text"
+      },
+      {
+        "key": "field_home_cta_title_fr",
+        "label": "Accueil — titre CTA final (FR)",
+        "name": "home_cta_title_fr",
+        "type": "text"
+      },
+      {
+        "key": "field_home_cta_title_nl",
+        "label": "Accueil — titre CTA final (NL)",
+        "name": "home_cta_title_nl",
+        "type": "text"
+      },
+      {
+        "key": "field_home_cta_lead_en",
+        "label": "Accueil — texte CTA final (EN)",
+        "name": "home_cta_lead_en",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_home_cta_lead_fr",
+        "label": "Accueil — texte CTA final (FR)",
+        "name": "home_cta_lead_fr",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_home_cta_lead_nl",
+        "label": "Accueil — texte CTA final (NL)",
+        "name": "home_cta_lead_nl",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_partners",
+        "label": "Accueil — Partenaires (logos)",
+        "name": "partners",
+        "type": "repeater",
+        "layout": "table",
+        "button_label": "Ajouter un partenaire",
+        "sub_fields": [
+          {
+            "key": "field_partner_name",
+            "label": "Nom",
+            "name": "partner_name",
+            "type": "text"
+          },
+          {
+            "key": "field_partner_logo",
+            "label": "Logo",
+            "name": "partner_logo",
+            "type": "image",
+            "return_format": "url",
+            "preview_size": "medium"
+          },
+          {
+            "key": "field_partner_url",
+            "label": "Lien",
+            "name": "partner_url",
+            "type": "url"
+          }
+        ]
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "page",
+          "operator": "==",
+          "value": "42"
+        }
+      ]
+    ]
+  },
+  {
+    "key": "group_rl_tarifs_v2",
+    "title": "Rollerland — Tarifs (nouveau)",
+    "fields": [
+      {
+        "key": "field_tarifs_intro_en",
+        "label": "Tarifs — intro (EN)",
+        "name": "tarifs_intro_en",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_tarifs_intro_fr",
+        "label": "Tarifs — intro (FR)",
+        "name": "tarifs_intro_fr",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_tarifs_intro_nl",
+        "label": "Tarifs — intro (NL)",
+        "name": "tarifs_intro_nl",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_consume_notice_1_en",
+        "label": "Tarifs — message Be Here (ligne 1) (EN)",
+        "name": "consume_notice_1_en",
+        "type": "text"
+      },
+      {
+        "key": "field_consume_notice_1_fr",
+        "label": "Tarifs — message Be Here (ligne 1) (FR)",
+        "name": "consume_notice_1_fr",
+        "type": "text"
+      },
+      {
+        "key": "field_consume_notice_1_nl",
+        "label": "Tarifs — message Be Here (ligne 1) (NL)",
+        "name": "consume_notice_1_nl",
+        "type": "text"
+      },
+      {
+        "key": "field_consume_notice_2_en",
+        "label": "Tarifs — message Be Here (ligne 2) (EN)",
+        "name": "consume_notice_2_en",
+        "type": "text"
+      },
+      {
+        "key": "field_consume_notice_2_fr",
+        "label": "Tarifs — message Be Here (ligne 2) (FR)",
+        "name": "consume_notice_2_fr",
+        "type": "text"
+      },
+      {
+        "key": "field_consume_notice_2_nl",
+        "label": "Tarifs — message Be Here (ligne 2) (NL)",
+        "name": "consume_notice_2_nl",
+        "type": "text"
+      },
+      {
+        "key": "field_options_supplementaires",
+        "label": "Tarifs — Options supplémentaires",
+        "name": "options_supplementaires",
+        "type": "repeater",
+        "layout": "table",
+        "button_label": "Ajouter une option",
+        "sub_fields": [
+          {
+            "key": "field_option_label_en",
+            "label": "Libellé (EN)",
+            "name": "option_label_en",
+            "type": "text"
+          },
+          {
+            "key": "field_option_label_fr",
+            "label": "Libellé (FR)",
+            "name": "option_label_fr",
+            "type": "text"
+          },
+          {
+            "key": "field_option_label_nl",
+            "label": "Libellé (NL)",
+            "name": "option_label_nl",
+            "type": "text"
+          },
+          {
+            "key": "field_option_price",
+            "label": "Prix",
+            "name": "option_price",
+            "type": "text"
+          }
+        ]
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "page",
+          "operator": "==",
+          "value": "42"
+        }
+      ]
+    ]
+  },
+  {
+    "key": "group_rl_formules_v2",
+    "title": "Rollerland — Formules / Forfaits (nouveau)",
+    "fields": [
+      {
+        "key": "field_formules",
+        "label": "Formules (tableau + pages détail)",
+        "name": "formules",
+        "type": "repeater",
+        "layout": "block",
+        "button_label": "Ajouter une formule",
+        "sub_fields": [
+          {
+            "key": "field_formule_slug",
+            "label": "Slug (URL, ex: birthday-party)",
+            "name": "formule_slug",
+            "type": "text"
+          },
+          {
+            "key": "field_formule_nom_en",
+            "label": "Nom (EN)",
+            "name": "formule_nom_en",
+            "type": "text"
+          },
+          {
+            "key": "field_formule_nom_fr",
+            "label": "Nom (FR)",
+            "name": "formule_nom_fr",
+            "type": "text"
+          },
+          {
+            "key": "field_formule_nom_nl",
+            "label": "Nom (NL)",
+            "name": "formule_nom_nl",
+            "type": "text"
+          },
+          {
+            "key": "field_formule_tagline_en",
+            "label": "Accroche (EN)",
+            "name": "formule_tagline_en",
+            "type": "text"
+          },
+          {
+            "key": "field_formule_tagline_fr",
+            "label": "Accroche (FR)",
+            "name": "formule_tagline_fr",
+            "type": "text"
+          },
+          {
+            "key": "field_formule_tagline_nl",
+            "label": "Accroche (NL)",
+            "name": "formule_tagline_nl",
+            "type": "text"
+          },
+          {
+            "key": "field_formule_description_en",
+            "label": "Description (EN)",
+            "name": "formule_description_en",
+            "type": "textarea",
+            "rows": 3
+          },
+          {
+            "key": "field_formule_description_fr",
+            "label": "Description (FR)",
+            "name": "formule_description_fr",
+            "type": "textarea",
+            "rows": 3
+          },
+          {
+            "key": "field_formule_description_nl",
+            "label": "Description (NL)",
+            "name": "formule_description_nl",
+            "type": "textarea",
+            "rows": 3
+          },
+          {
+            "key": "field_formule_prix_enfant",
+            "label": "Prix enfant",
+            "name": "formule_prix_enfant",
+            "type": "text"
+          },
+          {
+            "key": "field_formule_prix_adulte",
+            "label": "Prix adulte",
+            "name": "formule_prix_adulte",
+            "type": "text"
+          },
+          {
+            "key": "field_formule_highlight",
+            "label": "Mettre en avant",
+            "name": "formule_highlight",
+            "type": "true_false",
+            "ui": 1,
+            "default_value": 0
+          },
+          {
+            "key": "field_formule_image",
+            "label": "Image",
+            "name": "formule_image",
+            "type": "image",
+            "return_format": "url",
+            "preview_size": "medium"
+          },
+          {
+            "key": "field_formule_includes",
+            "label": "Inclus (liste)",
+            "name": "formule_includes",
+            "type": "repeater",
+            "layout": "table",
+            "button_label": "Ajouter un élément",
+            "sub_fields": [
+              {
+                "key": "field_include_item_en",
+                "label": "Élément (EN)",
+                "name": "include_item_en",
+                "type": "text"
+              },
+              {
+                "key": "field_include_item_fr",
+                "label": "Élément (FR)",
+                "name": "include_item_fr",
+                "type": "text"
+              },
+              {
+                "key": "field_include_item_nl",
+                "label": "Élément (NL)",
+                "name": "include_item_nl",
+                "type": "text"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "page",
+          "operator": "==",
+          "value": "42"
+        }
+      ]
+    ]
+  },
+  {
+    "key": "group_rl_horaires_v2",
+    "title": "Rollerland — Horaires (nouveau)",
+    "fields": [
+      {
+        "key": "field_horaires_intro_en",
+        "label": "Horaires — intro (EN)",
+        "name": "horaires_intro_en",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_horaires_intro_fr",
+        "label": "Horaires — intro (FR)",
+        "name": "horaires_intro_fr",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_horaires_intro_nl",
+        "label": "Horaires — intro (NL)",
+        "name": "horaires_intro_nl",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_horaire_note_dimanche_i18n_en",
+        "label": "Horaires — note dimanche (EN)",
+        "name": "horaire_note_dimanche_i18n_en",
+        "type": "text"
+      },
+      {
+        "key": "field_horaire_note_dimanche_i18n_fr",
+        "label": "Horaires — note dimanche (FR)",
+        "name": "horaire_note_dimanche_i18n_fr",
+        "type": "text"
+      },
+      {
+        "key": "field_horaire_note_dimanche_i18n_nl",
+        "label": "Horaires — note dimanche (NL)",
+        "name": "horaire_note_dimanche_i18n_nl",
+        "type": "text"
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "page",
+          "operator": "==",
+          "value": "42"
+        }
+      ]
+    ]
+  },
+  {
+    "key": "group_rl_pratique_v2",
+    "title": "Rollerland — Infos pratiques (nouveau)",
+    "fields": [
+      {
+        "key": "field_pratique_intro_en",
+        "label": "Pratique — intro (EN)",
+        "name": "pratique_intro_en",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_pratique_intro_fr",
+        "label": "Pratique — intro (FR)",
+        "name": "pratique_intro_fr",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_pratique_intro_nl",
+        "label": "Pratique — intro (NL)",
+        "name": "pratique_intro_nl",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_parking_text_en",
+        "label": "Pratique — texte parking (EN)",
+        "name": "parking_text_en",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_parking_text_fr",
+        "label": "Pratique — texte parking (FR)",
+        "name": "parking_text_fr",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_parking_text_nl",
+        "label": "Pratique — texte parking (NL)",
+        "name": "parking_text_nl",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_rules",
+        "label": "Pratique — Règlement (liste)",
+        "name": "rules",
+        "type": "repeater",
+        "layout": "table",
+        "button_label": "Ajouter une règle",
+        "sub_fields": [
+          {
+            "key": "field_rule_text_en",
+            "label": "Règle (EN)",
+            "name": "rule_text_en",
+            "type": "text"
+          },
+          {
+            "key": "field_rule_text_fr",
+            "label": "Règle (FR)",
+            "name": "rule_text_fr",
+            "type": "text"
+          },
+          {
+            "key": "field_rule_text_nl",
+            "label": "Règle (NL)",
+            "name": "rule_text_nl",
+            "type": "text"
+          }
+        ]
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "page",
+          "operator": "==",
+          "value": "42"
+        }
+      ]
+    ]
+  },
+  {
+    "key": "group_rl_cours_v2",
+    "title": "Rollerland — Cours (nouveau)",
+    "fields": [
+      {
+        "key": "field_cours_intro_en",
+        "label": "Cours — intro (EN)",
+        "name": "cours_intro_en",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_cours_intro_fr",
+        "label": "Cours — intro (FR)",
+        "name": "cours_intro_fr",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_cours_intro_nl",
+        "label": "Cours — intro (NL)",
+        "name": "cours_intro_nl",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_start2ride_desc_en",
+        "label": "Cours — description Start2Ride (EN)",
+        "name": "start2ride_desc_en",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_start2ride_desc_fr",
+        "label": "Cours — description Start2Ride (FR)",
+        "name": "start2ride_desc_fr",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_start2ride_desc_nl",
+        "label": "Cours — description Start2Ride (NL)",
+        "name": "start2ride_desc_nl",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_cours_own_skates_text_en",
+        "label": "Cours — texte patins personnels (EN)",
+        "name": "cours_own_skates_text_en",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_cours_own_skates_text_fr",
+        "label": "Cours — texte patins personnels (FR)",
+        "name": "cours_own_skates_text_fr",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_cours_own_skates_text_nl",
+        "label": "Cours — texte patins personnels (NL)",
+        "name": "cours_own_skates_text_nl",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_cours_cancellations_text_en",
+        "label": "Cours — texte annulations (EN)",
+        "name": "cours_cancellations_text_en",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_cours_cancellations_text_fr",
+        "label": "Cours — texte annulations (FR)",
+        "name": "cours_cancellations_text_fr",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_cours_cancellations_text_nl",
+        "label": "Cours — texte annulations (NL)",
+        "name": "cours_cancellations_text_nl",
+        "type": "textarea",
+        "rows": 3
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "page",
+          "operator": "==",
+          "value": "42"
+        }
+      ]
+    ]
+  },
+  {
+    "key": "group_rl_pe_v2",
+    "title": "Rollerland — Private Events (nouveau)",
+    "fields": [
+      {
+        "key": "field_pe_intro_en",
+        "label": "Private Events — intro (EN)",
+        "name": "pe_intro_en",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_pe_intro_fr",
+        "label": "Private Events — intro (FR)",
+        "name": "pe_intro_fr",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_pe_intro_nl",
+        "label": "Private Events — intro (NL)",
+        "name": "pe_intro_nl",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_pe_privatization_title_en",
+        "label": "Private Events — titre privatisation (EN)",
+        "name": "pe_privatization_title_en",
+        "type": "text"
+      },
+      {
+        "key": "field_pe_privatization_title_fr",
+        "label": "Private Events — titre privatisation (FR)",
+        "name": "pe_privatization_title_fr",
+        "type": "text"
+      },
+      {
+        "key": "field_pe_privatization_title_nl",
+        "label": "Private Events — titre privatisation (NL)",
+        "name": "pe_privatization_title_nl",
+        "type": "text"
+      },
+      {
+        "key": "field_pe_privatization_text_en",
+        "label": "Private Events — texte privatisation (EN)",
+        "name": "pe_privatization_text_en",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_pe_privatization_text_fr",
+        "label": "Private Events — texte privatisation (FR)",
+        "name": "pe_privatization_text_fr",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_pe_privatization_text_nl",
+        "label": "Private Events — texte privatisation (NL)",
+        "name": "pe_privatization_text_nl",
+        "type": "textarea",
+        "rows": 3
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "page",
+          "operator": "==",
+          "value": "42"
+        }
+      ]
+    ]
+  },
+  {
+    "key": "group_rl_contact_v2",
+    "title": "Rollerland — Contact (nouveau)",
+    "fields": [
+      {
+        "key": "field_contact_intro_en",
+        "label": "Contact — intro (EN)",
+        "name": "contact_intro_en",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_contact_intro_fr",
+        "label": "Contact — intro (FR)",
+        "name": "contact_intro_fr",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_contact_intro_nl",
+        "label": "Contact — intro (NL)",
+        "name": "contact_intro_nl",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_contact_email_desc_en",
+        "label": "Contact — description e-mail (EN)",
+        "name": "contact_email_desc_en",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_contact_email_desc_fr",
+        "label": "Contact — description e-mail (FR)",
+        "name": "contact_email_desc_fr",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_contact_email_desc_nl",
+        "label": "Contact — description e-mail (NL)",
+        "name": "contact_email_desc_nl",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_contact_socials_desc_en",
+        "label": "Contact — description réseaux (EN)",
+        "name": "contact_socials_desc_en",
+        "type": "text"
+      },
+      {
+        "key": "field_contact_socials_desc_fr",
+        "label": "Contact — description réseaux (FR)",
+        "name": "contact_socials_desc_fr",
+        "type": "text"
+      },
+      {
+        "key": "field_contact_socials_desc_nl",
+        "label": "Contact — description réseaux (NL)",
+        "name": "contact_socials_desc_nl",
+        "type": "text"
+      },
+      {
+        "key": "field_contact_review_desc_en",
+        "label": "Contact — description avis Google (EN)",
+        "name": "contact_review_desc_en",
+        "type": "text"
+      },
+      {
+        "key": "field_contact_review_desc_fr",
+        "label": "Contact — description avis Google (FR)",
+        "name": "contact_review_desc_fr",
+        "type": "text"
+      },
+      {
+        "key": "field_contact_review_desc_nl",
+        "label": "Contact — description avis Google (NL)",
+        "name": "contact_review_desc_nl",
+        "type": "text"
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "page",
+          "operator": "==",
+          "value": "42"
+        }
+      ]
+    ]
+  }
+]

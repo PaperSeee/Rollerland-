@@ -26,14 +26,15 @@ Dans Vercel → Project → Settings → Environment Variables :
 
 | Variable | Description |
 |----------|-------------|
-| `POSTGRES_PRISMA_URL` | URL poolée (auto-injectée par l'intégration Vercel Postgres) |
-| `POSTGRES_URL_NON_POOLING` | URL directe pour les migrations (auto-injectée aussi) |
+| `DATABASE_URL` | URL poolée (auto-injectée par l'intégration Neon) |
+| `DATABASE_URL_UNPOOLED` | URL directe pour les migrations (auto-injectée aussi) |
 | `ADMIN_PASSWORD` | **Le mot de passe de `/admin`** — choisis-le, c'est lui que tu donnes au client |
 | `REVALIDATE_SECRET` | Jeton du webhook de revalidation (existant) |
 
-### Base de données
-1. Vercel → Storage → **Create Database → Postgres** → lier au projet
-   (les deux `POSTGRES_*` sont injectées automatiquement).
+### Base de données (Neon via le Marketplace Vercel)
+1. Vercel → **Storage → Create Database** → *Marketplace* → **Neon (Serverless
+   Postgres)** → **Continue** → plan **Free** → lier au projet
+   (les deux `DATABASE_URL*` sont injectées automatiquement).
 2. Au premier déploiement, appliquer le schéma :
    `npx prisma migrate deploy` (ou via un build hook).
 3. (Optionnel) Pré-remplir les événements : `npm run db:seed`.

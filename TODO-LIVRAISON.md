@@ -13,19 +13,21 @@
 
 ---
 
-## 1. Base de données Postgres (Vercel) — corrige l'erreur serveur
-1. Vercel → ton projet → **Storage → Create Database → Postgres** → lier au projet.
-   → ça injecte automatiquement `POSTGRES_PRISMA_URL` et `POSTGRES_URL_NON_POOLING`.
-2. Appliquer le schéma à la base de prod (depuis ton repo, une fois les URLs en
-   local OU via le dashboard) :
-   `npx prisma migrate deploy`
-3. (Optionnel) pré-remplir les events Disco : `npm run db:seed`
+## 1. Base de données Postgres (Vercel → Storage) — corrige l'erreur serveur
+> Vercel n'a plus de "Vercel Postgres" maison : c'est via le **Marketplace**.
+1. Vercel → **Storage → Create Database** → section *Marketplace Database
+   Providers* → **Neon (Serverless Postgres)** → **Continue**.
+2. Plan **Free**, région **Frankfurt** (ou Paris), lier au projet `rollerland`.
+   → ça injecte automatiquement `DATABASE_URL` et `DATABASE_URL_UNPOOLED`.
+3. Appliquer le schéma à la base de prod (en local, avec les URLs Neon dans
+   `.env.local`, OU via la console Neon) : `npx prisma migrate deploy`
+4. (Optionnel) pré-remplir les events Disco : `npm run db:seed`
 
 ## 2. Variables d'environnement (Vercel → Settings → Environment Variables)
 | Variable | Valeur |
 |----------|--------|
-| `POSTGRES_PRISMA_URL` | (auto, étape 1) |
-| `POSTGRES_URL_NON_POOLING` | (auto, étape 1) |
+| `DATABASE_URL` | (auto, créée par Neon à l'étape 1) |
+| `DATABASE_URL_UNPOOLED` | (auto, créée par Neon à l'étape 1) |
 | `ADMIN_PASSWORD` | **un mot de passe fort que tu choisis** → c'est celui de `/admin` |
 | `REVALIDATE_SECRET` | une chaîne aléatoire |
 → **Redéployer** après avoir ajouté les variables (sinon elles ne sont pas prises).

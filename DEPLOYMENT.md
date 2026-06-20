@@ -40,6 +40,56 @@ Dans Vercel → Project → Settings → Environment Variables :
 
 ---
 
+## 2bis. Importer les champs ACF dans WordPress (retro.brussels)
+
+Le contenu éditable (textes + images, EN/FR/NL) est géré dans WordPress via des
+champs ACF. Le fichier à importer est **`acf-export-cms.json`** (à la racine du
+repo). 10 groupes, ~101 champs.
+
+> ⚠️ **Sans danger pour le site existant.** L'import n'ajoute que des
+> *définitions de champs* attachées à **une seule page** (`rollerland-brussels`,
+> ID 42). Il ne crée/modifie aucun contenu, page, article, thème ou réglage
+> existant. C'est réversible (supprimer les groupes = retour à l'état d'avant).
+
+### Pré-requis
+- Plugin **ACF** (version gratuite suffit — pas besoin d'ACF Pro).
+- La page existe déjà : *Rollerland Brussels*, slug `rollerland-brussels`, **ID 42**.
+
+### Étapes
+1. WordPress Admin → **Custom Fields → Tools** (Champs personnalisés → Outils).
+2. Section **Import Field Groups** → *Choisir un fichier* → sélectionner
+   `acf-export-cms.json` → **Import File**.
+3. Les 10 groupes « Rollerland — … » apparaissent dans **Custom Fields → Field Groups**.
+
+### Vérifier le rattachement à la page
+L'export cible déjà la page **ID 42** (la règle est pré-réglée). Si jamais les
+champs n'apparaissent pas en éditant la page :
+1. Ouvrir le groupe → bloc **Location Rules / Règles d'emplacement**.
+2. Vérifier : **Page** `est égal à` **Rollerland Brussels**.
+3. **Update / Mettre à jour**.
+
+> Si l'ID de la page change un jour (autre WordPress, page recréée), il faut
+> régénérer l'export avec le bon ID, ou corriger la règle d'emplacement à la main.
+
+### Remplir le contenu
+- Éditer la page **Rollerland Brussels** (ID 42) dans WordPress.
+- Les groupes « Rollerland — Accueil / Tarifs / … » s'affichent sous l'éditeur.
+- Remplir les champs souhaités. **Champs laissés vides = le site garde le texte
+  par défaut** (rien ne casse). Les textes ont 3 variantes : `…(EN)`, `…(FR)`,
+  `…(NL)`.
+- Après modification, le site se met à jour (le front lit WordPress à chaque
+  rendu ; au besoin déclencher la revalidation — voir webhook `REVALIDATE_SECRET`).
+
+### Rangé proprement dans un WordPress partagé
+- Tout le contenu du nouveau site vit sous la **seule page ID 42** + des groupes
+  **préfixés « Rollerland — »** → aucun mélange avec le site existant.
+- Le site existant (`retro.brussels`) continue de fonctionner normalement : c'est
+  WordPress qui l'affiche ; le nouveau site (Next.js/Vercel) ne fait que **lire**
+  des données via l'API. Deux rendus séparés, un seul WordPress, **zéro coût en
+  plus** (pas de 2e hébergement, ACF gratuit, Vercel + Postgres en palier gratuit).
+
+---
+
 ## 3. Espace admin (`/admin`)
 
 - **Connexion** : aller sur `https://<le-site>/admin`, entrer le mot de passe

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { getRollerland } from "@/lib/wordpress";
+import { getRollerland, pick } from "@/lib/wordpress";
 import { SITE } from "@/lib/site";
 
 export const revalidate = 60;
@@ -57,9 +57,15 @@ const EVENTS_FALLBACK = [
 ];
 
 export default async function PrivateEventsPage({ params }: { params: { locale: string } }) {
-  setRequestLocale(params.locale);
+  const { locale } = params;
+  setRequestLocale(locale);
   const t = await getTranslations("privateEvents");
   const acf = await getRollerland();
+  const cms = {
+    intro: pick(acf, "pe_intro", locale) || t("intro"),
+    privTitle: pick(acf, "pe_privatization_title", locale) || t("privatizationTitle"),
+    privText: pick(acf, "pe_privatization_text", locale) || t("privatizationText"),
+  };
 
   const EVENTS = acf.services_liste?.length
     ? acf.services_liste.map((s, i) => ({
@@ -84,7 +90,7 @@ export default async function PrivateEventsPage({ params }: { params: { locale: 
           {t("title")}
         </h1>
         <p className="text-sm max-w-xl" style={{ color: "rgba(255,255,255,0.45)", lineHeight: "1.8" }}>
-          {t("intro")}
+          {cms.intro}
         </p>
       </div>
 
@@ -182,13 +188,13 @@ export default async function PrivateEventsPage({ params }: { params: { locale: 
             className="text-xl text-white"
             style={{ fontWeight: 400 }}
           >
-            {t("privatizationTitle")}
+            {cms.privTitle}
           </h3>
           <p
             className="text-sm mt-2"
             style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.7" }}
           >
-            {t("privatizationText")}
+            {cms.privText}
           </p>
         </div>
         <div className="flex gap-4 flex-shrink-0">

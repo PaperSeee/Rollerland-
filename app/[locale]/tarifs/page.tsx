@@ -1,6 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getRollerland } from "@/lib/wordpress";
+import { getRollerland, pick, pickRow, rowStr } from "@/lib/wordpress";
 import { SITE } from "@/lib/site";
 import { FORMULES } from "@/lib/formules";
 
@@ -18,7 +18,7 @@ const GROUPS = FORMULES.map((f) => ({
   slug: f.slug,
 }));
 
-const OPTIONS = [
+const OPTIONS_FALLBACK = [
   { label: "Cours / animation privé(e)", price: "75€/heure" },
   { label: "Karaoké", price: "50€/heure" },
 ];
@@ -65,9 +65,14 @@ function Row({ label, price, desc, last }: { label: string; price: string; desc?
 }
 
 export default async function TarifsPage({ params }: { params: { locale: string } }) {
-  setRequestLocale(params.locale);
+  const { locale } = params;
+  setRequestLocale(locale);
   const t = await getTranslations("tarifs");
   const acf = await getRollerland();
+
+  const intro = pick(acf, "tarifs_intro", locale) || t("intro");
+  const consume1 = pick(acf, "consume_notice_1", locale) || t("consume1");
+  const consume2 = pick(acf, "consume_notice_2", locale) || t("consume2");
 
   const INDIVIDUAL = [
     { label: "Enfant (−16 ans)", price: acf.tarif_enfant || "6€", desc: "Location de patins incluse" },
@@ -75,6 +80,11 @@ export default async function TarifsPage({ params }: { params: { locale: string 
     { label: "Protection", price: acf.tarif_protection || "1€/paire", desc: "Genouillères, coudières, poignets" },
     { label: "Vestiaire", price: acf.tarif_vestiaire || "1€", desc: "Casier sécurisé" },
   ];
+
+  // Options: WP repeater (localized label + neutral price) else hardcoded.
+  const OPTIONS = acf.options_supplementaires?.length
+    ? acf.options_supplementaires.map((o) => ({ label: pickRow(o, "option_label", locale), price: rowStr(o, "option_price") }))
+    : OPTIONS_FALLBACK;
 
   const DRINKS = acf.menu_boissons?.length
     ? acf.menu_boissons.map((d) => ({ name: d.nom, price: d.prix }))
@@ -84,15 +94,15 @@ export default async function TarifsPage({ params }: { params: { locale: string 
     ? acf.menu_nourriture.map((f) => ({ name: f.nom, price: f.prix }))
     : FOOD_FALLBACK;
 
-  const groupRows = acf.forfaits_groupe?.length
-    ? acf.forfaits_groupe.map((g, i) => ({
-        name: g.nom,
-        desc: g.description,
-        kids: g.prix_enfant,
-        adults: g.prix_adulte,
-        highlight: i === 2 || i === 3,
-        // Link to a detail page only if this formule has one (matched by name).
-        slug: FORMULES.find((f) => f.name === g.nom)?.slug ?? null,
+  // Group table: WP `formules` repeater (localized) → else shared FORMULES map.
+  const groupRows = acf.formules?.length
+    ? acf.formules.map((f) => ({
+        name: pickRow(f, "formule_nom", locale),
+        desc: pickRow(f, "formule_tagline", locale),
+        kids: rowStr(f, "formule_prix_enfant") || "—",
+        adults: rowStr(f, "formule_prix_adulte") || "—",
+        highlight: Boolean(f.formule_highlight),
+        slug: rowStr(f, "formule_slug") || null,
       }))
     : GROUPS;
 
@@ -105,7 +115,7 @@ export default async function TarifsPage({ params }: { params: { locale: string 
           {t("title")}
         </h1>
         <p className="text-sm mt-6 max-w-lg" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }}>
-          {t("intro")}
+          {intro}
         </p>
       </div>
 
@@ -225,10 +235,10 @@ export default async function TarifsPage({ params }: { params: { locale: string 
       >
         <p className="label-tag mb-3">{t("goodToKnow")}</p>
         <p className="text-sm text-white mb-1" style={{ fontWeight: 400, lineHeight: "1.7" }}>
-          {t("consume1")}
+          {consume1}
         </p>
         <p className="text-sm" style={{ color: "rgba(255,255,255,0.55)", lineHeight: "1.7" }}>
-          {t("consume2")}
+          {consume2}
         </p>
       </div>
     </div>

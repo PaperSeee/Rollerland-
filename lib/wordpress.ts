@@ -62,6 +62,11 @@ export interface WPAcf {
   // Home — structured
   home_tribute_image?: string;
   partners?: Array<{ partner_name: string; partner_logo?: string; partner_url?: string }>;
+  // Tarifs — structured repeaters (sub-field text values are localized triplets)
+  options_supplementaires?: Array<Record<string, unknown>>;
+  formules?: Array<Record<string, unknown>>;
+  // Pratique — rules repeater (each row has rule_text_{en,fr,nl})
+  rules?: Array<Record<string, unknown>>;
   // Triplet text fields (footer_*, home_*) accessed via pick(); declared as an
   // index signature so any "<base>_<locale>" key type-checks.
   [key: `${string}_en`]: unknown;
@@ -80,6 +85,21 @@ export function pick(acf: WPAcf, base: string, locale: string): string {
     if (typeof val === "string" && val.trim()) return val;
   }
   return "";
+}
+
+// Same as pick() but for a repeater row object (e.g. a formule / option / rule).
+export function pickRow(row: Record<string, unknown>, base: string, locale: string): string {
+  for (const loc of [locale, "fr", "en"]) {
+    const val = row[`${base}_${loc}`];
+    if (typeof val === "string" && val.trim()) return val;
+  }
+  return "";
+}
+
+// Read a plain (non-localized) string value from a repeater row.
+export function rowStr(row: Record<string, unknown>, key: string): string {
+  const v = row[key];
+  return typeof v === "string" ? v : "";
 }
 
 export async function getRollerland(): Promise<WPAcf> {

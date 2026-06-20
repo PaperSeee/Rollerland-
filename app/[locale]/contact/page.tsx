@@ -1,12 +1,26 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getRollerland, pick } from "@/lib/wordpress";
 import { SITE } from "@/lib/site";
 import ReservationForm from "@/components/ReservationForm";
 
 export const revalidate = 60;
 
 export default async function ContactPage({ params }: { params: { locale: string } }) {
-  setRequestLocale(params.locale);
+  const { locale } = params;
+  setRequestLocale(locale);
   const t = await getTranslations("contact");
+  const acf = await getRollerland();
+  const cms = {
+    intro: pick(acf, "contact_intro", locale) || t("intro"),
+    emailDesc: pick(acf, "contact_email_desc", locale) || t("emailDesc"),
+    socialsDesc: pick(acf, "contact_socials_desc", locale) || t("socialsDesc"),
+    reviewDesc: pick(acf, "contact_review_desc", locale) || t("reviewDesc"),
+    email: acf.site_email || SITE.email,
+    instagram: acf.social_instagram || SITE.socials.instagram,
+    facebook: acf.social_facebook || SITE.socials.facebook,
+    tiktok: acf.social_tiktok || SITE.socials.tiktok,
+    reviewUrl: acf.google_review_url || SITE.googleReviewUrl,
+  };
   return (
     <div className="max-w-7xl mx-auto px-6 py-20">
       {/* Header */}
@@ -16,7 +30,7 @@ export default async function ContactPage({ params }: { params: { locale: string
           {t("title")}
         </h1>
         <p className="text-sm mt-6 max-w-lg" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }}>
-          {t("intro")}
+          {cms.intro}
         </p>
       </div>
 
@@ -30,13 +44,13 @@ export default async function ContactPage({ params }: { params: { locale: string
           >
             <p className="label-tag mb-3">{t("email")}</p>
             <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }}>
-              {t("emailDesc")}
+              {cms.emailDesc}
             </p>
             <a
-              href={`mailto:${SITE.email}`}
+              href={`mailto:${cms.email}`}
               className="btn-primary w-full justify-center animate-pulse-glow"
             >
-              {SITE.email}
+              {cms.email}
             </a>
           </div>
 
@@ -68,13 +82,13 @@ export default async function ContactPage({ params }: { params: { locale: string
           >
             <p className="label-tag mb-3">{t("socials")}</p>
             <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.7" }}>
-              {t("socialsDesc")}
+              {cms.socialsDesc}
             </p>
             <div className="flex flex-col gap-2.5">
               {[
-                { name: "Instagram", url: SITE.socials.instagram },
-                { name: "Facebook", url: SITE.socials.facebook },
-                { name: "TikTok", url: SITE.socials.tiktok },
+                { name: "Instagram", url: cms.instagram },
+                { name: "Facebook", url: cms.facebook },
+                { name: "TikTok", url: cms.tiktok },
               ].map((s) => (
                 <a
                   key={s.name}
@@ -98,10 +112,10 @@ export default async function ContactPage({ params }: { params: { locale: string
           >
             <p className="label-tag mb-3">{t("review")}</p>
             <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.7" }}>
-              {t("reviewDesc")}
+              {cms.reviewDesc}
             </p>
             <a
-              href={SITE.googleReviewUrl}
+              href={cms.reviewUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-outline w-full justify-center"

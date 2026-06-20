@@ -1,11 +1,20 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getRollerland, pick } from "@/lib/wordpress";
 import { SITE } from "@/lib/site";
 
 export const revalidate = 60;
 
 export default async function CoursPage({ params }: { params: { locale: string } }) {
-  setRequestLocale(params.locale);
+  const { locale } = params;
+  setRequestLocale(locale);
   const t = await getTranslations("cours");
+  const acf = await getRollerland();
+  const cms = {
+    intro: pick(acf, "cours_intro", locale) || t("intro"),
+    start2rideDesc: pick(acf, "start2ride_desc", locale) || t("start2rideDesc"),
+    ownSkatesText: pick(acf, "cours_own_skates_text", locale) || t("ownSkatesText"),
+    cancellationsText: pick(acf, "cours_cancellations_text", locale) || t("cancellationsText"),
+  };
 
   const COURSES = [
     {
@@ -43,7 +52,7 @@ export default async function CoursPage({ params }: { params: { locale: string }
           {t("title")}
         </h1>
         <p className="text-sm mt-6 max-w-lg" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }}>
-          {t("intro")}
+          {cms.intro}
         </p>
       </div>
 
@@ -124,7 +133,7 @@ export default async function CoursPage({ params }: { params: { locale: string }
               Start2Ride
             </h2>
             <p className="text-sm mb-6" style={{ color: "rgba(255,255,255,0.5)", lineHeight: "1.85" }}>
-              {t("start2rideDesc")}
+              {cms.start2rideDesc}
             </p>
 
             <div
@@ -163,7 +172,7 @@ export default async function CoursPage({ params }: { params: { locale: string }
         >
           <p className="label-tag mb-2">{t("ownSkates")}</p>
           <p className="text-xs" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }}>
-            {t("ownSkatesText")}
+            {cms.ownSkatesText}
           </p>
         </div>
 
@@ -174,7 +183,7 @@ export default async function CoursPage({ params }: { params: { locale: string }
         >
           <p className="label-tag mb-2">{t("cancellations")}</p>
           <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }}>
-            {t("cancellationsText")}
+            {cms.cancellationsText}
           </p>
           {SITE.coursWhatsappGroupUrl ? (
             <a

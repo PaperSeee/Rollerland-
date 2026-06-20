@@ -50,6 +50,36 @@ export interface WPAcf {
   // Pratique
   reglement_image?: string;
   parking_url?: string;
+
+  // ── CMS v2 (WordPress-editable, EN/FR/NL triplets) ──────────────────
+  // Global settings (neutral)
+  site_email?: string;
+  social_instagram?: string;
+  social_facebook?: string;
+  social_tiktok?: string;
+  google_review_url?: string;
+  cours_whatsapp_group_url?: string;
+  // Home — structured
+  home_tribute_image?: string;
+  partners?: Array<{ partner_name: string; partner_logo?: string; partner_url?: string }>;
+  // Triplet text fields (footer_*, home_*) accessed via pick(); declared as an
+  // index signature so any "<base>_<locale>" key type-checks.
+  [key: `${string}_en`]: unknown;
+  [key: `${string}_fr`]: unknown;
+  [key: `${string}_nl`]: unknown;
+}
+
+export type Locale = "en" | "fr" | "nl";
+
+// Pick a localized ACF text field: tries `<base>_<locale>`, then FR, then EN.
+// Returns "" if none set, so callers can fall back to their own default.
+export function pick(acf: WPAcf, base: string, locale: string): string {
+  const order = [locale, "fr", "en"];
+  for (const loc of order) {
+    const val = acf[`${base}_${loc}` as keyof WPAcf];
+    if (typeof val === "string" && val.trim()) return val;
+  }
+  return "";
 }
 
 export async function getRollerland(): Promise<WPAcf> {

@@ -1,0 +1,350 @@
+[
+  {
+    "key": "group_rl_global_v2",
+    "title": "Rollerland — Réglages globaux (nouveau)",
+    "fields": [
+      {
+        "key": "field_site_email",
+        "label": "E-mail du site",
+        "name": "site_email",
+        "type": "text",
+        "default_value": "info@rollerland.brussels"
+      },
+      {
+        "key": "field_social_instagram",
+        "label": "Instagram (URL)",
+        "name": "social_instagram",
+        "type": "url"
+      },
+      {
+        "key": "field_social_facebook",
+        "label": "Facebook (URL)",
+        "name": "social_facebook",
+        "type": "url"
+      },
+      {
+        "key": "field_social_tiktok",
+        "label": "TikTok (URL)",
+        "name": "social_tiktok",
+        "type": "url"
+      },
+      {
+        "key": "field_google_review_url",
+        "label": "Lien avis Google",
+        "name": "google_review_url",
+        "type": "url"
+      },
+      {
+        "key": "field_cours_whatsapp_group_url",
+        "label": "Groupe WhatsApp cours (URL)",
+        "name": "cours_whatsapp_group_url",
+        "type": "url"
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "page",
+          "operator": "==",
+          "value": "rollerland-brussels"
+        }
+      ]
+    ]
+  },
+  {
+    "key": "group_rl_footer_v2",
+    "title": "Rollerland — Pied de page (nouveau)",
+    "fields": [
+      {
+        "key": "field_footer_tagline_en",
+        "label": "Footer — slogan (EN)",
+        "name": "footer_tagline_en",
+        "type": "text"
+      },
+      {
+        "key": "field_footer_tagline_fr",
+        "label": "Footer — slogan (FR)",
+        "name": "footer_tagline_fr",
+        "type": "text"
+      },
+      {
+        "key": "field_footer_tagline_nl",
+        "label": "Footer — slogan (NL)",
+        "name": "footer_tagline_nl",
+        "type": "text"
+      },
+      {
+        "key": "field_footer_subtitle_en",
+        "label": "Footer — sous-titre (EN)",
+        "name": "footer_subtitle_en",
+        "type": "text"
+      },
+      {
+        "key": "field_footer_subtitle_fr",
+        "label": "Footer — sous-titre (FR)",
+        "name": "footer_subtitle_fr",
+        "type": "text"
+      },
+      {
+        "key": "field_footer_subtitle_nl",
+        "label": "Footer — sous-titre (NL)",
+        "name": "footer_subtitle_nl",
+        "type": "text"
+      },
+      {
+        "key": "field_footer_closed_note_en",
+        "label": "Footer — note jours fermés (EN)",
+        "name": "footer_closed_note_en",
+        "type": "text"
+      },
+      {
+        "key": "field_footer_closed_note_fr",
+        "label": "Footer — note jours fermés (FR)",
+        "name": "footer_closed_note_fr",
+        "type": "text"
+      },
+      {
+        "key": "field_footer_closed_note_nl",
+        "label": "Footer — note jours fermés (NL)",
+        "name": "footer_closed_note_nl",
+        "type": "text"
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "page",
+          "operator": "==",
+          "value": "rollerland-brussels"
+        }
+      ]
+    ]
+  },
+  {
+    "key": "group_rl_home_v2",
+    "title": "Rollerland — Page d'accueil (nouveau)",
+    "fields": [
+      {
+        "key": "field_home_location_en",
+        "label": "Accueil — localisation (sous-titre héro) (EN)",
+        "name": "home_location_en",
+        "type": "text"
+      },
+      {
+        "key": "field_home_location_fr",
+        "label": "Accueil — localisation (sous-titre héro) (FR)",
+        "name": "home_location_fr",
+        "type": "text"
+      },
+      {
+        "key": "field_home_location_nl",
+        "label": "Accueil — localisation (sous-titre héro) (NL)",
+        "name": "home_location_nl",
+        "type": "text"
+      },
+      {
+        "key": "field_home_hero_lead_en",
+        "label": "Accueil — accroche héro (EN)",
+        "name": "home_hero_lead_en",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_home_hero_lead_fr",
+        "label": "Accueil — accroche héro (FR)",
+        "name": "home_hero_lead_fr",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_home_hero_lead_nl",
+        "label": "Accueil — accroche héro (NL)",
+        "name": "home_hero_lead_nl",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_home_open_tonight_en",
+        "label": "Accueil — badge « ouvert ce soir » (EN)",
+        "name": "home_open_tonight_en",
+        "type": "text"
+      },
+      {
+        "key": "field_home_open_tonight_fr",
+        "label": "Accueil — badge « ouvert ce soir » (FR)",
+        "name": "home_open_tonight_fr",
+        "type": "text"
+      },
+      {
+        "key": "field_home_open_tonight_nl",
+        "label": "Accueil — badge « ouvert ce soir » (NL)",
+        "name": "home_open_tonight_nl",
+        "type": "text"
+      },
+      {
+        "key": "field_home_tribute_title_en",
+        "label": "Accueil — titre hommage (EN)",
+        "name": "home_tribute_title_en",
+        "type": "text"
+      },
+      {
+        "key": "field_home_tribute_title_fr",
+        "label": "Accueil — titre hommage (FR)",
+        "name": "home_tribute_title_fr",
+        "type": "text"
+      },
+      {
+        "key": "field_home_tribute_title_nl",
+        "label": "Accueil — titre hommage (NL)",
+        "name": "home_tribute_title_nl",
+        "type": "text"
+      },
+      {
+        "key": "field_home_tribute_body_en",
+        "label": "Accueil — texte hommage Aalst (EN)",
+        "name": "home_tribute_body_en",
+        "type": "textarea",
+        "instructions": "Texte officiel Rollerland Aalst.",
+        "rows": 3
+      },
+      {
+        "key": "field_home_tribute_body_fr",
+        "label": "Accueil — texte hommage Aalst (FR)",
+        "name": "home_tribute_body_fr",
+        "type": "textarea",
+        "instructions": "Texte officiel Rollerland Aalst.",
+        "rows": 3
+      },
+      {
+        "key": "field_home_tribute_body_nl",
+        "label": "Accueil — texte hommage Aalst (NL)",
+        "name": "home_tribute_body_nl",
+        "type": "textarea",
+        "instructions": "Texte officiel Rollerland Aalst.",
+        "rows": 3
+      },
+      {
+        "key": "field_home_tribute_image",
+        "label": "Accueil — image hommage",
+        "name": "home_tribute_image",
+        "type": "image",
+        "return_format": "url",
+        "preview_size": "medium"
+      },
+      {
+        "key": "field_home_services_title_en",
+        "label": "Accueil — titre section Services (EN)",
+        "name": "home_services_title_en",
+        "type": "text"
+      },
+      {
+        "key": "field_home_services_title_fr",
+        "label": "Accueil — titre section Services (FR)",
+        "name": "home_services_title_fr",
+        "type": "text"
+      },
+      {
+        "key": "field_home_services_title_nl",
+        "label": "Accueil — titre section Services (NL)",
+        "name": "home_services_title_nl",
+        "type": "text"
+      },
+      {
+        "key": "field_home_partners_title_en",
+        "label": "Accueil — titre section Partenaires (EN)",
+        "name": "home_partners_title_en",
+        "type": "text"
+      },
+      {
+        "key": "field_home_partners_title_fr",
+        "label": "Accueil — titre section Partenaires (FR)",
+        "name": "home_partners_title_fr",
+        "type": "text"
+      },
+      {
+        "key": "field_home_partners_title_nl",
+        "label": "Accueil — titre section Partenaires (NL)",
+        "name": "home_partners_title_nl",
+        "type": "text"
+      },
+      {
+        "key": "field_home_cta_title_en",
+        "label": "Accueil — titre CTA final (EN)",
+        "name": "home_cta_title_en",
+        "type": "text"
+      },
+      {
+        "key": "field_home_cta_title_fr",
+        "label": "Accueil — titre CTA final (FR)",
+        "name": "home_cta_title_fr",
+        "type": "text"
+      },
+      {
+        "key": "field_home_cta_title_nl",
+        "label": "Accueil — titre CTA final (NL)",
+        "name": "home_cta_title_nl",
+        "type": "text"
+      },
+      {
+        "key": "field_home_cta_lead_en",
+        "label": "Accueil — texte CTA final (EN)",
+        "name": "home_cta_lead_en",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_home_cta_lead_fr",
+        "label": "Accueil — texte CTA final (FR)",
+        "name": "home_cta_lead_fr",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_home_cta_lead_nl",
+        "label": "Accueil — texte CTA final (NL)",
+        "name": "home_cta_lead_nl",
+        "type": "textarea",
+        "rows": 3
+      },
+      {
+        "key": "field_partners",
+        "label": "Accueil — Partenaires (logos)",
+        "name": "partners",
+        "type": "repeater",
+        "layout": "table",
+        "button_label": "Ajouter un partenaire",
+        "sub_fields": [
+          {
+            "key": "field_partner_name",
+            "label": "Nom",
+            "name": "partner_name",
+            "type": "text"
+          },
+          {
+            "key": "field_partner_logo",
+            "label": "Logo",
+            "name": "partner_logo",
+            "type": "image",
+            "return_format": "url",
+            "preview_size": "thumbnail"
+          },
+          {
+            "key": "field_partner_url",
+            "label": "Lien",
+            "name": "partner_url",
+            "type": "url"
+          }
+        ]
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "page",
+          "operator": "==",
+          "value": "rollerland-brussels"
+        }
+      ]
+    ]
+  }
+]

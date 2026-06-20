@@ -2,7 +2,7 @@ import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import Ticker from "@/components/Ticker";
-import { getRollerland } from "@/lib/wordpress";
+import { getRollerland, pick } from "@/lib/wordpress";
 import { SITE } from "@/lib/site";
 
 const STATS = [
@@ -45,10 +45,31 @@ const FALLBACK_GALLERY = [
 ];
 
 export default async function HomePage({ params }: { params: { locale: string } }) {
-  setRequestLocale(params.locale);
+  const { locale } = params;
+  setRequestLocale(locale);
   const t = await getTranslations("home");
   const acf = await getRollerland();
   const heroImage = acf.hero_image || FALLBACK_HERO;
+
+  // Editable copy: WordPress value (current locale → FR → EN) else i18n default.
+  const cms = {
+    location: pick(acf, "home_location", locale) || t("location"),
+    heroLead: pick(acf, "home_hero_lead", locale) || `${t("heroLead")}\n${t("heroLead2")}`,
+    openTonight: pick(acf, "home_open_tonight", locale) || t("openTonight"),
+    tributeTitle: pick(acf, "home_tribute_title", locale) || t("tributeTitle"),
+    tributeBody: pick(acf, "home_tribute_body", locale) || t("tributeBody"),
+    tributeImage: acf.home_tribute_image || "https://retro.brussels/wp-content/uploads/2024/10/IMG_20231112_111005-scaled.jpg",
+    servicesTitle: pick(acf, "home_services_title", locale) || t("servicesTitle"),
+    partnersTitle: pick(acf, "home_partners_title", locale) || t("partnersTitle"),
+    ctaTitle: pick(acf, "home_cta_title", locale),
+    ctaLead: pick(acf, "home_cta_lead", locale) || t("ctaLead", { email: SITE.email }),
+  };
+
+  // Partners from WP if provided, else the hardcoded fallback list.
+  const partners = acf.partners?.length
+    ? acf.partners.map((p) => ({ name: p.partner_name, url: p.partner_url || "#", logo: p.partner_logo || null }))
+    : PARTNERS;
+
   const galleryImages = acf.gallery_images?.length
     ? acf.gallery_images.map((src, i) => ({ src, label: `Photo ${i + 1}` }))
     : FALLBACK_GALLERY;
@@ -77,13 +98,13 @@ export default async function HomePage({ params }: { params: { locale: string } 
         {/* Floating badge top-right */}
         <div className="absolute top-24 right-6 z-10 hidden md:flex flex-col items-end gap-2 animate-fade-in delay-600">
           <div className="glass-card px-4 py-2 animate-pulse-glow">
-            <p className="text-xs" style={{ color: "#9B92F0", letterSpacing: "0.12em" }}>{t("openTonight")}</p>
+            <p className="text-xs" style={{ color: "#9B92F0", letterSpacing: "0.12em" }}>{cms.openTonight}</p>
           </div>
         </div>
 
         {/* Hero content */}
         <div className="relative z-10 max-w-7xl mx-auto px-6 pb-0 w-full">
-          <p className="label-tag mb-5 animate-fade-up">{t("location")}</p>
+          <p className="label-tag mb-5 animate-fade-up">{cms.location}</p>
 
           <h1
             className="animate-fade-up delay-100"
@@ -102,10 +123,9 @@ export default async function HomePage({ params }: { params: { locale: string } 
 
           <p
             className="mt-6 mb-10 max-w-md text-base animate-fade-up delay-200"
-            style={{ color: "rgba(255,255,255,0.55)", lineHeight: "1.75" }}
+            style={{ color: "rgba(255,255,255,0.55)", lineHeight: "1.75", whiteSpace: "pre-line" }}
           >
-            {t("heroLead")}<br />
-            {t("heroLead2")}
+            {cms.heroLead}
           </p>
 
           <div className="flex flex-wrap gap-3 animate-fade-up delay-300">
@@ -157,8 +177,8 @@ export default async function HomePage({ params }: { params: { locale: string } 
               style={{ background: "rgba(127,119,221,0.05)" }}
             >
               <Image
-                src="https://retro.brussels/wp-content/uploads/2024/10/IMG_20231112_111005-scaled.jpg"
-                alt="Hommage à Rollerland Aalst"
+                src={cms.tributeImage}
+                alt="Rollerland Aalst"
                 fill
                 className="object-cover"
                 style={{ opacity: 0.85 }}
@@ -173,13 +193,11 @@ export default async function HomePage({ params }: { params: { locale: string } 
                 className="text-3xl md:text-4xl text-white mb-5"
                 style={{ fontWeight: 300, letterSpacing: "-0.02em", lineHeight: "1.1" }}
               >
-                {t("tributeTitle")}<br />
+                {cms.tributeTitle}<br />
                 <span style={{ color: "#9B92F0" }}>Rollerland Aalst</span>
               </h2>
-              {/* TODO(client): remplacer ce texte par la présentation officielle de
-                  Rollerland Aalst qui sera fournie (clé home.tributeBody). */}
-              <p className="text-sm mb-6" style={{ color: "rgba(255,255,255,0.5)", lineHeight: "1.85" }}>
-                {t("tributeBody")}
+              <p className="text-sm mb-6" style={{ color: "rgba(255,255,255,0.5)", lineHeight: "1.85", whiteSpace: "pre-line" }}>
+                {cms.tributeBody}
               </p>
               <a
                 href="https://www.rollerland.be/"
@@ -260,7 +278,7 @@ export default async function HomePage({ params }: { params: { locale: string } 
             <div>
               <p className="label-tag mb-3">{t("servicesKicker")}</p>
               <h2 className="text-3xl md:text-4xl text-white" style={{ fontWeight: 300, letterSpacing: "-0.02em" }}>
-                {t("servicesTitle")}
+                {cms.servicesTitle}
               </h2>
             </div>
             <Link href="/private-events" className="hidden md:block text-xs uppercase tracking-widest hover:text-white transition-colors" style={{ color: "rgba(127,119,221,0.6)", letterSpacing: "0.14em" }}>
@@ -398,11 +416,11 @@ export default async function HomePage({ params }: { params: { locale: string } 
           <div className="text-center mb-12">
             <p className="label-tag mb-3 justify-center flex">{t("partnersKicker")}</p>
             <h2 className="text-3xl md:text-4xl text-white" style={{ fontWeight: 300, letterSpacing: "-0.02em" }}>
-              {t("partnersTitle")}
+              {cms.partnersTitle}
             </h2>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-px" style={{ background: "rgba(127,119,221,0.15)", border: "0.5px solid rgba(127,119,221,0.2)" }}>
-            {PARTNERS.map((p) => (
+            {partners.map((p) => (
               <a
                 key={p.name}
                 href={p.url}
@@ -501,11 +519,11 @@ export default async function HomePage({ params }: { params: { locale: string } 
             className="mb-6 text-white"
             style={{ fontSize: "clamp(2rem, 5vw, 4rem)", fontWeight: 300, letterSpacing: "-0.02em", lineHeight: "1.1" }}
           >
-            {t("ctaTitle1")}<br />
-            <span style={{ color: "#9B92F0" }}>{t("ctaTitle2")}</span>
+            {cms.ctaTitle || t("ctaTitle1")}<br />
+            <span style={{ color: "#9B92F0" }}>{cms.ctaTitle ? "" : t("ctaTitle2")}</span>
           </h2>
-          <p className="text-sm mb-10 max-w-md mx-auto" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }}>
-            {t("ctaLead", { email: SITE.email })}
+          <p className="text-sm mb-10 max-w-md mx-auto" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8", whiteSpace: "pre-line" }}>
+            {cms.ctaLead}
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <a

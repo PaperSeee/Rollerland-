@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import ImageUpload from "./ImageUpload";
 
 export interface EventFormValues {
   date?: string; // YYYY-MM-DD
@@ -78,10 +79,8 @@ export default function EventForm({
           <textarea name="description" value={v.description ?? ""} onChange={(e) => set("description", e.target.value)} rows={3} className="px-4 py-2.5 text-sm text-white outline-none" style={FIELD_STYLE} />
         </label>
 
-        <label className="flex flex-col gap-2">
-          <span className="label-tag">Image (URL)</span>
-          <input name="image" value={v.image ?? ""} onChange={(e) => set("image", e.target.value)} placeholder="https://…" className="px-4 py-2.5 text-sm text-white outline-none" style={FIELD_STYLE} />
-        </label>
+        <ImageUpload value={v.image ?? ""} onChange={(url) => set("image", url)} />
+        <input type="hidden" name="image" value={v.image ?? ""} />
 
         {v.image && (
           <div className="flex flex-col gap-2">

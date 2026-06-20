@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { updatePopup } from "../actions";
+import ImageUpload from "../ImageUpload";
 
 export interface PopupInitial {
   enabled: boolean;
@@ -54,11 +55,8 @@ export default function PopupEditor({ initial }: { initial: PopupInitial }) {
             placeholder="Rejoignez-nous pour une soirée disco…" className="px-4 py-2.5 text-sm text-white outline-none" style={FIELD} />
         </label>
 
-        <label className="flex flex-col gap-2">
-          <span className="label-tag">Image (URL, optionnel)</span>
-          <input name="imageUrl" value={v.imageUrl} onChange={(e) => set("imageUrl", e.target.value)}
-            placeholder="https://…" className="px-4 py-2.5 text-sm text-white outline-none" style={FIELD} />
-        </label>
+        <ImageUpload value={v.imageUrl} onChange={(url) => set("imageUrl", url)} />
+        <input type="hidden" name="imageUrl" value={v.imageUrl} />
 
         {/* Image crop / reposition */}
         {v.imageUrl && (

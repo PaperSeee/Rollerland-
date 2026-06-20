@@ -32,6 +32,12 @@
 | `REVALIDATE_SECRET` | une chaîne aléatoire |
 → **Redéployer** après avoir ajouté les variables (sinon elles ne sont pas prises).
 
+## 2bis. Stockage d'images (Vercel Blob) — pour l'upload dans /admin
+1. Vercel → **Storage → Create Database → Blob** → lier au projet `rollerland`.
+   → ça injecte automatiquement `BLOB_READ_WRITE_TOKEN`.
+2. **Redéployer**. Sans ça, l'upload d'image dans popup/events renverra une
+   erreur « stockage non configuré ».
+
 ## 3. Tester l'admin
 - Aller sur `https://<le-site>/admin` → entrer `ADMIN_PASSWORD`.
 - Vérifier : liste events, créer/modifier/supprimer, page `/admin/popup`.

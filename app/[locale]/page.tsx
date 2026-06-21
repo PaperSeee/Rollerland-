@@ -7,6 +7,8 @@ import { translate } from "@/lib/translate";
 import { SITE } from "@/lib/site";
 import Editable from "@/components/edit/Editable";
 import EditableImage from "@/components/edit/EditableImage";
+import EditablePartners from "@/components/edit/EditablePartners";
+import EditableGallery from "@/components/edit/EditableGallery";
 
 const STATS = [
   { label: "Mercredi", value: "12h–20h", sub: "Cours + accès libre" },
@@ -90,11 +92,11 @@ export default async function HomePage({ params }: { params: { locale: string } 
       <section className="relative h-screen min-h-[680px] flex flex-col justify-end overflow-hidden">
         {/* BG image */}
         <div className="absolute inset-0 z-0">
-          <Image
-            src={heroImage}
+          <EditableImage
+            field="hero_image"
+            value={heroImage}
             alt="Disco Roller Bruxelles"
             fill
-            priority
             className="object-cover"
             style={{ objectPosition: "center 40%" }}
           />
@@ -349,32 +351,7 @@ export default async function HomePage({ params }: { params: { locale: string } 
               </h2>
             </div>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {galleryImages.map((g, i) => (
-              <div
-                key={i}
-                className="group relative overflow-hidden hover-lift"
-                style={{
-                  aspectRatio: i === 0 ? "16/9" : "4/3",
-                  gridColumn: i === 0 ? "span 2" : "span 1",
-                  border: "0.5px solid rgba(127,119,221,0.2)",
-                }}
-              >
-                <Image
-                  src={g.src}
-                  alt={g.label}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4"
-                  style={{ background: "linear-gradient(to top, rgba(21,14,40,0.8) 0%, transparent 60%)" }}
-                >
-                  <p className="label-tag">{g.label}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+          <EditableGallery images={galleryImages} />
         </div>
       </section>
 
@@ -426,37 +403,7 @@ export default async function HomePage({ params }: { params: { locale: string } 
             <p className="label-tag mb-3 justify-center flex">{t("partnersKicker")}</p>
             <Editable as="h2" field="home_partners_title" value={cms.partnersTitle} className="text-3xl md:text-4xl text-white" style={{ fontWeight: 300, letterSpacing: "-0.02em" }} />
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-px" style={{ background: "rgba(127,119,221,0.15)", border: "0.5px solid rgba(127,119,221,0.2)" }}>
-            {partners.map((p) => (
-              <a
-                key={p.name}
-                href={p.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-center justify-center px-6 py-12 hover-lift transition-all"
-                style={{ background: "rgba(21,14,40,0.6)" }}
-              >
-                {p.logo ? (
-                  <Image
-                    src={p.logo}
-                    alt={p.name}
-                    width={180}
-                    height={64}
-                    className="object-contain transition-opacity opacity-70 group-hover:opacity-100"
-                    style={{ maxHeight: 64, width: "auto" }}
-                  />
-                ) : (
-                  // TODO(client): swap this text placeholder for the real logo image.
-                  <span
-                    className="text-xl md:text-2xl font-light text-center transition-colors"
-                    style={{ color: "rgba(255,255,255,0.55)", letterSpacing: "0.02em" }}
-                  >
-                    {p.name}
-                  </span>
-                )}
-              </a>
-            ))}
-          </div>
+          <EditablePartners partners={partners} />
         </div>
       </section>
 

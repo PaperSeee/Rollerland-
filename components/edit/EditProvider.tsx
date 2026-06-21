@@ -12,6 +12,7 @@ interface EditCtx {
   editing: boolean;
   setField: (key: string, value: unknown) => void;
   getField: (key: string, fallback: string) => string;
+  getValue: <T>(key: string, fallback: T) => T;
   dirty: boolean;
 }
 
@@ -19,6 +20,7 @@ const Ctx = createContext<EditCtx>({
   editing: false,
   setField: () => {},
   getField: (_k, f) => f,
+  getValue: (_k, f) => f,
   dirty: false,
 });
 
@@ -65,6 +67,14 @@ export default function EditProvider({
     [changes],
   );
 
+  // Generic getter for non-string values (arrays/objects) buffered in edit mode.
+  const getValue = useCallback(
+    <T,>(key: string, fallback: T): T => {
+      return (key in changes ? (changes[key] as T) : fallback);
+    },
+    [changes],
+  );
+
   const save = useCallback(async () => {
     setSaving(true);
     try {
@@ -87,7 +97,7 @@ export default function EditProvider({
   const dirty = Object.keys(changes).length > 0;
 
   return (
-    <Ctx.Provider value={{ editing: enabled, setField, getField, dirty }}>
+    <Ctx.Provider value={{ editing: enabled, setField, getField, getValue, dirty }}>
       {children}
       {enabled && (
         <div

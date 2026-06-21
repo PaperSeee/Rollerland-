@@ -27,7 +27,7 @@ function parseEvent(formData: FormData) {
   const special = formData.get("special") === "on";
 
   if (!date || !day || !theme || !time) {
-    throw new Error("Champs requis manquants (date, jour, thème, horaire).");
+    throw new Error("Missing required fields (date, day, theme, time).");
   }
 
   return {
@@ -67,24 +67,33 @@ export async function deleteEvent(id: string) {
 }
 
 // ── Promo popup (singleton id = 1) ──────────────────────────────────────
-export async function updatePopup(formData: FormData) {
-  await assertAdmin();
-  const data = {
-    enabled: formData.get("enabled") === "on",
-    title: String(formData.get("title") ?? "").trim(),
-    body: String(formData.get("body") ?? "").trim(),
-    imageUrl: String(formData.get("imageUrl") ?? "").trim() || null,
-    imagePosition: String(formData.get("imagePosition") ?? "center").trim() || "center",
-    ctaLabel: String(formData.get("ctaLabel") ?? "").trim() || null,
-    ctaUrl: String(formData.get("ctaUrl") ?? "").trim() || null,
-  };
-  await prisma.popupSettings.upsert({
-    where: { id: 1 },
-    create: { id: 1, ...data },
-    update: data,
-  });
-  // Popup is rendered from the root layout, so revalidate the whole tree.
-  revalidatePath("/", "layout");
-  revalidatePath("/admin/popup");
-  redirect("/admin/popup");
+export type SaveState = { ok: boolean; message: string };
+
+// useActionState signature: (prevState, formData). Returns a status the editor
+// shows ("Enregistré ✓") instead of redirecting to the same page (which looked
+// like nothing happened).
+export async function updatePopup(_prev: SaveState, formData: FormData): Promise<SaveState> {
+  try {
+    await assertAdmin();
+    const data = {
+      enabled: formData.get("enabled") === "on",
+      title: String(formData.get("title") ?? "").trim(),
+      body: String(formData.get("body") ?? "").trim(),
+      imageUrl: String(formData.get("imageUrl") ?? "").trim() || null,
+      imagePosition: String(formData.get("imagePosition") ?? "center").trim() || "center",
+      ctaLabel: String(formData.get("ctaLabel") ?? "").trim() || null,
+      ctaUrl: String(formData.get("ctaUrl") ?? "").trim() || null,
+    };
+    await prisma.popupSettings.upsert({
+      where: { id: 1 },
+      create: { id: 1, ...data },
+      update: data,
+    });
+    // Popup is rendered from the root layout, so revalidate the whole tree.
+    revalidatePath("/", "layout");
+    revalidatePath("/admin/popup");
+    return { ok: true, message: "Saved ✓" };
+  } catch (e) {
+    return { ok: false, message: e instanceof Error ? e.message : "Error while saving" };
+  }
 }

@@ -16,11 +16,11 @@ export default async function EditEventPage({ params }: { params: { id: string }
     <div className="max-w-2xl mx-auto px-6 py-12">
       <p className="label-tag mb-2">Disco Roller</p>
       <h1 className="text-3xl text-white mb-10" style={{ fontWeight: 300, letterSpacing: "-0.02em" }}>
-        Éditer l&apos;événement
+        Edit event
       </h1>
       <EventForm
         action={action}
-        submitLabel="Enregistrer"
+        submitLabel="Save"
         values={{
           date: event.date.toISOString().slice(0, 10),
           day: event.day,

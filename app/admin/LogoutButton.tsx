@@ -17,7 +17,7 @@ export default function LogoutButton() {
       className="text-xs uppercase tracking-wide hover:text-white transition-colors"
       style={{ color: "rgba(255,255,255,0.4)", letterSpacing: "0.1em" }}
     >
-      Déconnexion
+      Log out
     </button>
   );
 }

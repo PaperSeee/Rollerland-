@@ -23,22 +23,22 @@ export default function AdminLoginPage() {
       router.push("/admin");
       router.refresh();
     } else {
-      setError("Mot de passe incorrect.");
+      setError("Incorrect password.");
     }
   }
 
   return (
     <div className="max-w-md mx-auto px-6 py-32">
-      <p className="label-tag mb-4">Espace administration</p>
+      <p className="label-tag mb-4">Administration</p>
       <h1 className="text-3xl text-white mb-8" style={{ fontWeight: 300, letterSpacing: "-0.02em" }}>
-        Connexion
+        Log in
       </h1>
       <form onSubmit={onSubmit} className="flex flex-col gap-4">
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Mot de passe"
+          placeholder="Password"
           autoFocus
           className="px-4 py-3 text-sm text-white bg-transparent outline-none"
           style={{ border: "0.5px solid rgba(127,119,221,0.4)" }}
@@ -49,7 +49,7 @@ export default function AdminLoginPage() {
           </p>
         )}
         <button type="submit" disabled={loading} className="btn-primary justify-center">
-          {loading ? "Connexion…" : "Se connecter"}
+          {loading ? "Logging in…" : "Log in"}
         </button>
       </form>
     </div>

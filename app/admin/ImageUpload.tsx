@@ -32,15 +32,15 @@ export default function ImageUpload({
       } catch {
         throw new Error(
           res.status === 413
-            ? "Image trop lourde pour l'envoi."
-            : `Erreur d'envoi (${res.status}).`,
+            ? "Image too large to upload."
+            : `Upload error (${res.status}).`,
         );
       }
-      if (!res.ok) throw new Error(data.error || "Échec de l'envoi");
-      if (!data.url) throw new Error("Réponse invalide du serveur.");
+      if (!res.ok) throw new Error(data.error || "Upload failed");
+      if (!data.url) throw new Error("Invalid server response.");
       onChange(data.url);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Échec de l'envoi");
+      setError(e instanceof Error ? e.message : "Upload failed");
     } finally {
       setUploading(false);
     }
@@ -71,7 +71,7 @@ export default function ImageUpload({
               className="text-xs uppercase tracking-wide hover:text-white transition-colors"
               style={{ color: "#9B92F0", letterSpacing: "0.08em" }}
             >
-              Remplacer
+              Replace
             </button>
             <button
               type="button"
@@ -79,7 +79,7 @@ export default function ImageUpload({
               className="text-xs uppercase tracking-wide transition-colors"
               style={{ color: "rgba(255,128,128,0.7)", letterSpacing: "0.08em" }}
             >
-              Retirer
+              Remove
             </button>
           </div>
         </div>
@@ -105,10 +105,10 @@ export default function ImageUpload({
         >
           <span style={{ color: "#9B92F0", fontSize: "1.5rem" }}>↑</span>
           <span className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>
-            {uploading ? "Envoi en cours…" : "Cliquez ou glissez une image ici"}
+            {uploading ? "Uploading…" : "Click or drag an image here"}
           </span>
           <span className="text-xs" style={{ color: "rgba(255,255,255,0.25)" }}>
-            JPG, PNG, WebP — max 8 Mo
+            JPG, PNG, WebP — max 8 MB
           </span>
         </button>
       )}

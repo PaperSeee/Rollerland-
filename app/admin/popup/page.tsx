@@ -12,21 +12,20 @@ export default async function AdminPopupPage() {
       {/* Section nav */}
       <div className="flex flex-wrap gap-3 mb-12">
         <Link href="/admin" className="btn-outline">
-          Événements Disco
+          Disco Events
         </Link>
         <span className="btn-outline" style={{ borderColor: "#9B92F0", color: "#9B92F0" }}>
-          Popup promo
+          Promo Popup
         </span>
       </div>
 
-      <p className="label-tag mb-2">Popup promotionnel</p>
+      <p className="label-tag mb-2">Promotional popup</p>
       <h1 className="text-3xl text-white mb-3" style={{ fontWeight: 300, letterSpacing: "-0.02em" }}>
-        Configuration du popup
+        Popup settings
       </h1>
       <p className="text-sm mb-10" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.7" }}>
-        Le popup ne s&apos;affiche qu&apos;une seule fois par visiteur. Toute modification le
-        réaffiche une fois aux visiteurs qui l&apos;avaient déjà vu. L&apos;aperçu à droite se
-        met à jour en direct.
+        The popup is shown only once per visitor. Any change shows it again once to visitors who
+        had already seen it. The preview on the right updates live.
       </p>
 
       <PopupEditor

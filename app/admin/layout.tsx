@@ -15,7 +15,7 @@ export const metadata = {
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={spaceGrotesk.variable}>
+    <html lang="en" className={spaceGrotesk.variable}>
       <body className="antialiased" style={{ color: "#FFFFFF" }}>
         <div className="min-h-screen">
           <header
@@ -36,7 +36,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 className="text-xs uppercase tracking-wide hover:text-white transition-colors"
                 style={{ color: "rgba(255,255,255,0.4)", letterSpacing: "0.1em" }}
               >
-                Voir le site →
+                View site →
               </Link>
               <LogoutButton />
             </nav>

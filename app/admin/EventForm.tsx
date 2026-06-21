@@ -27,7 +27,7 @@ const POSITIONS = [
 function formatDate(d: string) {
   if (!d) return "Date";
   const dt = new Date(d + "T00:00:00");
-  return dt.toLocaleDateString("fr-BE", { day: "numeric", month: "long", year: "numeric" });
+  return dt.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
 }
 
 export default function EventForm({
@@ -53,19 +53,19 @@ export default function EventForm({
             <input type="date" name="date" value={v.date ?? ""} onChange={(e) => set("date", e.target.value)} required className="px-4 py-2.5 text-sm text-white outline-none" style={FIELD_STYLE} />
           </label>
           <label className="flex flex-col gap-2">
-            <span className="label-tag">Jour <span style={{ color: "#9B92F0" }}>*</span></span>
-            <input name="day" value={v.day ?? ""} onChange={(e) => set("day", e.target.value)} required placeholder="Samedi" className="px-4 py-2.5 text-sm text-white outline-none" style={FIELD_STYLE} />
+            <span className="label-tag">Day <span style={{ color: "#9B92F0" }}>*</span></span>
+            <input name="day" value={v.day ?? ""} onChange={(e) => set("day", e.target.value)} required placeholder="Saturday" className="px-4 py-2.5 text-sm text-white outline-none" style={FIELD_STYLE} />
           </label>
         </div>
 
         <label className="flex flex-col gap-2">
-          <span className="label-tag">Thème <span style={{ color: "#9B92F0" }}>*</span></span>
+          <span className="label-tag">Theme <span style={{ color: "#9B92F0" }}>*</span></span>
           <input name="theme" value={v.theme ?? ""} onChange={(e) => set("theme", e.target.value)} required placeholder="Summer Opening" className="px-4 py-2.5 text-sm text-white outline-none" style={FIELD_STYLE} />
         </label>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <label className="flex flex-col gap-2">
-            <span className="label-tag">Horaire <span style={{ color: "#9B92F0" }}>*</span></span>
+            <span className="label-tag">Time <span style={{ color: "#9B92F0" }}>*</span></span>
             <input name="time" value={v.time ?? ""} onChange={(e) => set("time", e.target.value)} required placeholder="17h00 – 00h00" className="px-4 py-2.5 text-sm text-white outline-none" style={FIELD_STYLE} />
           </label>
           <label className="flex flex-col gap-2">
@@ -84,7 +84,7 @@ export default function EventForm({
 
         {v.image && (
           <div className="flex flex-col gap-2">
-            <span className="label-tag">Cadrage de l&apos;image</span>
+            <span className="label-tag">Image framing</span>
             <div className="grid grid-cols-3 gap-1" style={{ width: 96 }}>
               {POSITIONS.map((p) => (
                 <button key={p.value} type="button" onClick={() => set("imagePosition", p.value)}
@@ -104,20 +104,18 @@ export default function EventForm({
 
         <label className="flex items-center gap-3">
           <input type="checkbox" name="special" checked={Boolean(v.special)} onChange={(e) => set("special", e.target.checked)} />
-          <span className="text-sm text-white">Événement spécial</span>
+          <span className="text-sm text-white">Special event</span>
         </label>
 
         <div className="flex items-center gap-4 mt-2">
           <button type="submit" className="btn-primary">{submitLabel}</button>
-          <Link href="/admin" className="text-xs uppercase tracking-wide hover:text-white transition-colors" style={{ color: "rgba(255,255,255,0.4)", letterSpacing: "0.1em" }}>
-            Annuler
-          </Link>
+          <Link href="/admin" className="text-xs uppercase tracking-wide hover:text-white transition-colors" style={{ color: "rgba(255,255,255,0.4)", letterSpacing: "0.1em" }}>Cancel</Link>
         </div>
       </form>
 
       {/* ── Live preview (carte agenda comme sur /disco-roller) ── */}
       <div className="lg:sticky lg:top-6 self-start">
-        <p className="label-tag mb-3">Aperçu en direct</p>
+        <p className="label-tag mb-3">Live preview</p>
         <div
           className="p-6 relative overflow-hidden"
           style={{ border: "0.5px solid rgba(127,119,221,0.4)", background: "rgba(127,119,221,0.07)" }}
@@ -129,19 +127,19 @@ export default function EventForm({
             </div>
           )}
           <div className="flex items-center gap-3 mb-3">
-            <span className="label-tag">{v.day || "Jour"} · {formatDate(v.date ?? "")}</span>
+            <span className="label-tag">{v.day || "Day"} · {formatDate(v.date ?? "")}</span>
             {v.special && (
               <span className="text-xs px-2 py-0.5 uppercase" style={{ background: "#9B92F0", color: "#150E28", fontSize: "0.55rem", letterSpacing: "0.1em" }}>
-                Spécial
+                Special
               </span>
             )}
           </div>
-          <h3 className="text-2xl text-white mb-2" style={{ fontWeight: 400 }}>{v.theme || "Thème de l'événement"}</h3>
+          <h3 className="text-2xl text-white mb-2" style={{ fontWeight: 400 }}>{v.theme || "Event theme"}</h3>
           {v.description && (
             <p className="text-sm mb-4" style={{ color: "rgba(255,255,255,0.45)", lineHeight: 1.7 }}>{v.description}</p>
           )}
           <div className="flex flex-wrap gap-3 text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>
-            <span>{v.time || "Horaire"}</span>
+            <span>{v.time || "Time"}</span>
             {v.dj && <><span>·</span><span>{v.dj}</span></>}
           </div>
         </div>

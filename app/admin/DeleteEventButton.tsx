@@ -5,7 +5,7 @@ export default function DeleteEventButton({ action }: { action: () => Promise<vo
     <form
       action={action}
       onSubmit={(e) => {
-        if (!confirm("Supprimer cet événement ?")) e.preventDefault();
+        if (!confirm("Delete this event?")) e.preventDefault();
       }}
     >
       <button
@@ -13,7 +13,7 @@ export default function DeleteEventButton({ action }: { action: () => Promise<vo
         className="text-xs uppercase tracking-wide transition-colors hover:opacity-100"
         style={{ color: "rgba(255,128,128,0.7)", letterSpacing: "0.08em" }}
       >
-        Supprimer
+        Delete
       </button>
     </form>
   );

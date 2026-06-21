@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
   }
 
   if (!(await isValidPassword(password))) {
-    return NextResponse.json({ error: "Mot de passe incorrect" }, { status: 401 });
+    return NextResponse.json({ error: "Incorrect password" }, { status: 401 });
   }
 
   const res = NextResponse.json({ ok: true });

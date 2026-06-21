@@ -14,18 +14,18 @@ export async function POST(request: NextRequest) {
   const form = await request.formData().catch(() => null);
   const file = form?.get("file");
   if (!(file instanceof File)) {
-    return NextResponse.json({ error: "Aucun fichier reçu." }, { status: 400 });
+    return NextResponse.json({ error: "No file received." }, { status: 400 });
   }
   if (!file.type.startsWith("image/")) {
-    return NextResponse.json({ error: "Le fichier doit être une image." }, { status: 400 });
+    return NextResponse.json({ error: "The file must be an image." }, { status: 400 });
   }
   if (file.size > 8 * 1024 * 1024) {
-    return NextResponse.json({ error: "Image trop lourde (max 8 Mo)." }, { status: 400 });
+    return NextResponse.json({ error: "Image too large (max 8 MB)." }, { status: 400 });
   }
 
   if (!process.env.BLOB_READ_WRITE_TOKEN) {
     return NextResponse.json(
-      { error: "Stockage d'images non configuré (BLOB_READ_WRITE_TOKEN manquant)." },
+      { error: "Image storage not configured (BLOB_READ_WRITE_TOKEN missing)." },
       { status: 500 },
     );
   }

@@ -6,7 +6,7 @@ import DeleteEventButton from "./DeleteEventButton";
 export const dynamic = "force-dynamic";
 
 function formatDate(d: Date) {
-  return d.toLocaleDateString("fr-BE", { day: "numeric", month: "long", year: "numeric" });
+  return d.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
 }
 
 export default async function AdminHome() {
@@ -17,10 +17,10 @@ export default async function AdminHome() {
       {/* Section nav */}
       <div className="flex flex-wrap gap-3 mb-12">
         <span className="btn-outline" style={{ borderColor: "#9B92F0", color: "#9B92F0" }}>
-          Événements Disco
+          Disco Events
         </span>
         <Link href="/admin/popup" className="btn-outline">
-          Popup promo
+          Promo Popup
         </Link>
       </div>
 
@@ -28,17 +28,17 @@ export default async function AdminHome() {
         <div>
           <p className="label-tag mb-2">Disco Roller</p>
           <h1 className="text-3xl text-white" style={{ fontWeight: 300, letterSpacing: "-0.02em" }}>
-            Événements ({events.length})
+            Events ({events.length})
           </h1>
         </div>
         <Link href="/admin/events/new" className="btn-primary">
-          + Nouvel événement
+          + New event
         </Link>
       </div>
 
       {events.length === 0 ? (
         <p className="text-sm" style={{ color: "rgba(255,255,255,0.4)" }}>
-          Aucun événement. Le site affiche la liste par défaut tant que la base est vide.
+          No events yet. The site shows the default list while the database is empty.
         </p>
       ) : (
         <div style={{ border: "0.5px solid rgba(127,119,221,0.2)" }}>
@@ -64,7 +64,7 @@ export default async function AdminHome() {
                     className="text-xs px-2 py-0.5 uppercase"
                     style={{ background: "#9B92F0", color: "#150E28", fontSize: "0.55rem", letterSpacing: "0.1em" }}
                   >
-                    Spécial
+                    Special
                   </span>
                 )}
               </div>
@@ -84,7 +84,7 @@ export default async function AdminHome() {
                   className="text-xs uppercase tracking-wide hover:text-white transition-colors"
                   style={{ color: "#9B92F0", letterSpacing: "0.08em" }}
                 >
-                  Éditer
+                  Edit
                 </Link>
                 <DeleteEventButton action={deleteEvent.bind(null, e.id)} />
               </div>

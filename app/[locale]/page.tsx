@@ -73,8 +73,13 @@ export default async function HomePage({ params }: { params: { locale: string } 
     ? acf.partners.map((p) => ({ name: p.partner_name, url: p.partner_url || "#", logo: p.partner_logo || null }))
     : PARTNERS;
 
-  const galleryImages = acf.gallery_images?.length
-    ? acf.gallery_images.map((src, i) => ({ src, label: `Photo ${i + 1}` }))
+  // Gallery: new editor rows ({src}) → legacy string[] → hardcoded fallback.
+  const galleryRows = (acf.gallery_images_rows as Array<{ src?: string }> | undefined)
+    ?.map((r) => r.src)
+    .filter((s): s is string => Boolean(s));
+  const gallerySrcs = galleryRows?.length ? galleryRows : acf.gallery_images;
+  const galleryImages = gallerySrcs?.length
+    ? gallerySrcs.map((src, i) => ({ src, label: `Photo ${i + 1}` }))
     : FALLBACK_GALLERY;
 
   return (

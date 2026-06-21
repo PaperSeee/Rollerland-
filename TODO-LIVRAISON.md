@@ -39,43 +39,50 @@
    erreur « stockage non configuré ».
 
 ## 2ter. Traduction automatique (DeepL) — contenu écrit en anglais seulement
-Le contenu (WordPress + popup + events) est écrit **uniquement en anglais** ;
+Le contenu (admin /content + popup + events) est écrit **uniquement en anglais** ;
 le site traduit automatiquement vers FR/NL (mis en cache dans Neon).
 1. Créer une clé gratuite sur **deepl.com/pro-api** (clé gratuite finit par `:fx`).
 2. Vercel → Settings → Environment Variables → ajouter `DEEPL_API_KEY` (Production+Preview).
 3. **Redéployer**.
 > Sans clé : le site affiche l'anglais en FR/NL (aucune casse), mais pas de traduction.
 
+## 2quater. Pré-remplir le contenu (1re fois)
+La base de contenu (`SiteContent`) doit contenir les valeurs par défaut anglaises :
+`npm run db:seed-content` (en local avec les URLs Neon). Idempotent : ne fait rien si déjà rempli.
+
 ## 3. Tester l'admin
 - Aller sur `https://<le-site>/admin` → entrer `ADMIN_PASSWORD`.
-- Vérifier : liste events, créer/modifier/supprimer, page `/admin/popup`.
+- **Disco Events** : créer/modifier/supprimer (aperçu live + upload image).
+- **Promo Popup** : éditer + activer (aperçu live).
+- **Content** : 8 sections (Home, Prices & Packages, Schedule, Practical, Lessons,
+  Private Events, Contact, Global & Footer) — tout le texte + images du site, en anglais.
 
-## 4. Importer les champs ACF dans WordPress (retro.brussels)
-- Voir **DEPLOYMENT.md §2bis** (procédure détaillée).
-- Fichier : `acf-export-cms.json` → WP Admin → Custom Fields → Tools → Import.
-- Page support déjà existante : **ID 42** (`rollerland-brussels`).
-- Plugin **ACF gratuit** suffit. Non destructif pour le site existant.
+## 4. Le contenu se gère 100 % dans /admin (plus de WordPress)
+Le site **n'utilise plus WordPress**. Tout le contenu (textes, images, tarifs, formules,
+horaires, partenaires, règles…) s'édite dans **`/admin/content`** :
+- Écrire **en anglais** → traduit FR/NL automatiquement.
+- Images : **upload par glisser-déposer** (stockées sur Vercel Blob).
+- Champ vide = le site garde la valeur par défaut (rien ne casse).
+> L'import ACF WordPress et le fichier `acf-export-cms.json` ne sont **plus nécessaires**.
 
 ## 5. Brancher le sous-domaine (Combell → Vercel)
 - Voir **DEPLOYMENT.md §4**.
 - Vercel → Domains → ajouter `rollerland.ledomaine.be` → CNAME `cname.vercel-dns.com`.
 - Combell → Gestion DNS → ajouter ce CNAME. Ne pas toucher aux enregistrements existants.
 
-## 6. Remplir le contenu (optionnel au lancement)
-- Éditer la page WordPress ID 42 ; champs vides = textes par défaut (rien ne casse).
-
 ---
 
-## État du projet (déjà fait, poussé sur GitHub)
-Branche `feat/rollerland-quick-wins` :
+## État du projet (déjà fait, poussé sur GitHub, branche main)
 - ✅ Refonte (branding, menu, contact, style violet vintage)
-- ✅ Admin events Disco + popup (`/admin`, Postgres)
+- ✅ Admin events Disco + popup (`/admin`, Postgres) — aperçu live + upload image
 - ✅ Pages détail formules `/tarifs/[slug]`
 - ✅ Fix formulaire de réservation
-- ✅ i18n EN/FR/NL (EN par défaut)
-- ✅ Tout le site éditable depuis WordPress (textes + images, 3 langues), avec
-  fallback : le site marche même si WordPress n'est pas encore rempli.
+- ✅ i18n EN/FR/NL (EN par défaut) + auto-traduction DeepL (cache)
+- ✅ **CMS maison complet** : tout le contenu éditable dans `/admin/content`
+  (textes + images), en anglais, traduit automatiquement. Plus de dépendance WordPress.
 
 ## Coût : 0 € en plus
+ACF/WordPress plus utilisés · Vercel + Neon + Blob en palier gratuit · DeepL gratuit ·
+sous-domaine Combell gratuit.
 ACF gratuit · pas de 2e WordPress · Vercel + Postgres palier gratuit ·
 sous-domaine Combell gratuit.

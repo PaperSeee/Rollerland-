@@ -17,6 +17,9 @@ export default async function AdminPopupPage() {
         <span className="btn-outline" style={{ borderColor: "#9B92F0", color: "#9B92F0" }}>
           Promo Popup
         </span>
+        <Link href="/admin/content" className="btn-outline">
+          Content
+        </Link>
       </div>
 
       <p className="label-tag mb-2">Promotional popup</p>

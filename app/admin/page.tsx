@@ -22,6 +22,9 @@ export default async function AdminHome() {
         <Link href="/admin/popup" className="btn-outline">
           Promo Popup
         </Link>
+        <Link href="/admin/content" className="btn-outline">
+          Content
+        </Link>
       </div>
 
       <div className="flex items-end justify-between mb-8">

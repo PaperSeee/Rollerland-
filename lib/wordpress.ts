@@ -1,5 +1,3 @@
-const WP_BASE = "https://retro.brussels/wp-json/wp/v2";
-
 export interface WPAcf {
   // Général
   hero_tagline?: string;
@@ -86,23 +84,9 @@ export function rowStr(row: Record<string, unknown>, key: string): string {
   return typeof v === "string" ? v : "";
 }
 
+// Content now comes from the database (edited in /admin/content), not WordPress.
+// Kept the name + WPAcf type so the public pages don't change their imports.
 export async function getRollerland(): Promise<WPAcf> {
-  try {
-    const res = await fetch(
-      `${WP_BASE}/pages?slug=rollerland-brussels&_fields=id,slug,acf&_=${Date.now()}`,
-      { cache: "no-store" }
-    );
-    if (!res.ok) {
-      console.error("WP fetch failed:", res.status, res.statusText);
-      return {};
-    }
-    const text = await res.text();
-    console.log("WP raw response (first 500):", text.slice(0, 500));
-    const pages: Array<{ acf?: WPAcf }> = JSON.parse(text);
-    console.log("WP pages length:", pages.length, "acf keys:", Object.keys(pages[0]?.acf ?? {}));
-    return pages[0]?.acf ?? {};
-  } catch (e) {
-    console.error("WP fetch error:", e);
-    return {};
-  }
+  const { getContent } = await import("@/lib/content");
+  return getContent();
 }

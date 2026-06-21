@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getRollerland, pick, pickRow, rowStr } from "@/lib/wordpress";
+import { getRollerland, pick, rowStr } from "@/lib/wordpress";
+import { translate } from "@/lib/translate";
 import { SITE } from "@/lib/site";
 import { FORMULES } from "@/lib/formules";
 
@@ -70,9 +71,9 @@ export default async function TarifsPage({ params }: { params: { locale: string 
   const t = await getTranslations("tarifs");
   const acf = await getRollerland();
 
-  const intro = pick(acf, "tarifs_intro", locale) || t("intro");
-  const consume1 = pick(acf, "consume_notice_1", locale) || t("consume1");
-  const consume2 = pick(acf, "consume_notice_2", locale) || t("consume2");
+  const intro = (await translate(pick(acf, "tarifs_intro"), locale)) || t("intro");
+  const consume1 = (await translate(pick(acf, "consume_notice_1"), locale)) || t("consume1");
+  const consume2 = (await translate(pick(acf, "consume_notice_2"), locale)) || t("consume2");
 
   const INDIVIDUAL = [
     { label: "Enfant (−16 ans)", price: acf.tarif_enfant || "6€", desc: "Location de patins incluse" },
@@ -81,9 +82,14 @@ export default async function TarifsPage({ params }: { params: { locale: string 
     { label: "Vestiaire", price: acf.tarif_vestiaire || "1€", desc: "Casier sécurisé" },
   ];
 
-  // Options: WP repeater (localized label + neutral price) else hardcoded.
+  // Options: WP repeater (label auto-translated + neutral price) else hardcoded.
   const OPTIONS = acf.options_supplementaires?.length
-    ? acf.options_supplementaires.map((o) => ({ label: pickRow(o, "option_label", locale), price: rowStr(o, "option_price") }))
+    ? await Promise.all(
+        acf.options_supplementaires.map(async (o) => ({
+          label: await translate(rowStr(o, "option_label"), locale),
+          price: rowStr(o, "option_price"),
+        })),
+      )
     : OPTIONS_FALLBACK;
 
   const DRINKS = acf.menu_boissons?.length
@@ -94,16 +100,18 @@ export default async function TarifsPage({ params }: { params: { locale: string 
     ? acf.menu_nourriture.map((f) => ({ name: f.nom, price: f.prix }))
     : FOOD_FALLBACK;
 
-  // Group table: WP `formules` repeater (localized) → else shared FORMULES map.
+  // Group table: WP `formules` repeater (auto-translated) → else shared FORMULES.
   const groupRows = acf.formules?.length
-    ? acf.formules.map((f) => ({
-        name: pickRow(f, "formule_nom", locale),
-        desc: pickRow(f, "formule_tagline", locale),
-        kids: rowStr(f, "formule_prix_enfant") || "—",
-        adults: rowStr(f, "formule_prix_adulte") || "—",
-        highlight: Boolean(f.formule_highlight),
-        slug: rowStr(f, "formule_slug") || null,
-      }))
+    ? await Promise.all(
+        acf.formules.map(async (f) => ({
+          name: await translate(rowStr(f, "formule_nom"), locale),
+          desc: await translate(rowStr(f, "formule_tagline"), locale),
+          kids: rowStr(f, "formule_prix_enfant") || "—",
+          adults: rowStr(f, "formule_prix_adulte") || "—",
+          highlight: Boolean(f.formule_highlight),
+          slug: rowStr(f, "formule_slug") || null,
+        })),
+      )
     : GROUPS;
 
   return (

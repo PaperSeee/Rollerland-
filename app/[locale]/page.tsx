@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import Ticker from "@/components/Ticker";
 import { getRollerland, pick } from "@/lib/wordpress";
+import { translate } from "@/lib/translate";
 import { SITE } from "@/lib/site";
 
 const STATS = [
@@ -51,18 +52,20 @@ export default async function HomePage({ params }: { params: { locale: string } 
   const acf = await getRollerland();
   const heroImage = acf.hero_image || FALLBACK_HERO;
 
-  // Editable copy: WordPress value (current locale → FR → EN) else i18n default.
+  // Editable copy: WordPress value (English, auto-translated to the locale) else
+  // the i18n default. tr() = translate the WP field; "" if the field is empty.
+  const tr = (field: string) => translate(pick(acf, field), locale);
   const cms = {
-    location: pick(acf, "home_location", locale) || t("location"),
-    heroLead: pick(acf, "home_hero_lead", locale) || `${t("heroLead")}\n${t("heroLead2")}`,
-    openTonight: pick(acf, "home_open_tonight", locale) || t("openTonight"),
-    tributeTitle: pick(acf, "home_tribute_title", locale) || t("tributeTitle"),
-    tributeBody: pick(acf, "home_tribute_body", locale) || t("tributeBody"),
+    location: (await tr("home_location")) || t("location"),
+    heroLead: (await tr("home_hero_lead")) || `${t("heroLead")}\n${t("heroLead2")}`,
+    openTonight: (await tr("home_open_tonight")) || t("openTonight"),
+    tributeTitle: (await tr("home_tribute_title")) || t("tributeTitle"),
+    tributeBody: (await tr("home_tribute_body")) || t("tributeBody"),
     tributeImage: acf.home_tribute_image || "https://retro.brussels/wp-content/uploads/2024/10/IMG_20231112_111005-scaled.jpg",
-    servicesTitle: pick(acf, "home_services_title", locale) || t("servicesTitle"),
-    partnersTitle: pick(acf, "home_partners_title", locale) || t("partnersTitle"),
-    ctaTitle: pick(acf, "home_cta_title", locale),
-    ctaLead: pick(acf, "home_cta_lead", locale) || t("ctaLead", { email: SITE.email }),
+    servicesTitle: (await tr("home_services_title")) || t("servicesTitle"),
+    partnersTitle: (await tr("home_partners_title")) || t("partnersTitle"),
+    ctaTitle: await tr("home_cta_title"),
+    ctaLead: (await tr("home_cta_lead")) || t("ctaLead", { email: SITE.email }),
   };
 
   // Partners from WP if provided, else the hardcoded fallback list.

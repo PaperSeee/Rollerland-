@@ -38,6 +38,14 @@
 2. **Redéployer**. Sans ça, l'upload d'image dans popup/events renverra une
    erreur « stockage non configuré ».
 
+## 2ter. Traduction automatique (DeepL) — contenu écrit en anglais seulement
+Le contenu (WordPress + popup + events) est écrit **uniquement en anglais** ;
+le site traduit automatiquement vers FR/NL (mis en cache dans Neon).
+1. Créer une clé gratuite sur **deepl.com/pro-api** (clé gratuite finit par `:fx`).
+2. Vercel → Settings → Environment Variables → ajouter `DEEPL_API_KEY` (Production+Preview).
+3. **Redéployer**.
+> Sans clé : le site affiche l'anglais en FR/NL (aucune casse), mais pas de traduction.
+
 ## 3. Tester l'admin
 - Aller sur `https://<le-site>/admin` → entrer `ADMIN_PASSWORD`.
 - Vérifier : liste events, créer/modifier/supprimer, page `/admin/popup`.

@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getRollerland, pick } from "@/lib/wordpress";
+import { translate } from "@/lib/translate";
 import { SITE } from "@/lib/site";
 
 export const revalidate = 60;
@@ -10,10 +11,10 @@ export default async function CoursPage({ params }: { params: { locale: string }
   const t = await getTranslations("cours");
   const acf = await getRollerland();
   const cms = {
-    intro: pick(acf, "cours_intro", locale) || t("intro"),
-    start2rideDesc: pick(acf, "start2ride_desc", locale) || t("start2rideDesc"),
-    ownSkatesText: pick(acf, "cours_own_skates_text", locale) || t("ownSkatesText"),
-    cancellationsText: pick(acf, "cours_cancellations_text", locale) || t("cancellationsText"),
+    intro: (await translate(pick(acf, "cours_intro"), locale)) || t("intro"),
+    start2rideDesc: (await translate(pick(acf, "start2ride_desc"), locale)) || t("start2rideDesc"),
+    ownSkatesText: (await translate(pick(acf, "cours_own_skates_text"), locale)) || t("ownSkatesText"),
+    cancellationsText: (await translate(pick(acf, "cours_cancellations_text"), locale)) || t("cancellationsText"),
   };
 
   const COURSES = [

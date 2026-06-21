@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getRollerland, pick } from "@/lib/wordpress";
+import { translate } from "@/lib/translate";
 import { SITE } from "@/lib/site";
 import ReservationForm from "@/components/ReservationForm";
 
@@ -11,10 +12,10 @@ export default async function ContactPage({ params }: { params: { locale: string
   const t = await getTranslations("contact");
   const acf = await getRollerland();
   const cms = {
-    intro: pick(acf, "contact_intro", locale) || t("intro"),
-    emailDesc: pick(acf, "contact_email_desc", locale) || t("emailDesc"),
-    socialsDesc: pick(acf, "contact_socials_desc", locale) || t("socialsDesc"),
-    reviewDesc: pick(acf, "contact_review_desc", locale) || t("reviewDesc"),
+    intro: (await translate(pick(acf, "contact_intro"), locale)) || t("intro"),
+    emailDesc: (await translate(pick(acf, "contact_email_desc"), locale)) || t("emailDesc"),
+    socialsDesc: (await translate(pick(acf, "contact_socials_desc"), locale)) || t("socialsDesc"),
+    reviewDesc: (await translate(pick(acf, "contact_review_desc"), locale)) || t("reviewDesc"),
     email: acf.site_email || SITE.email,
     instagram: acf.social_instagram || SITE.socials.instagram,
     facebook: acf.social_facebook || SITE.socials.facebook,

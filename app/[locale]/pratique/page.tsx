@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { getRollerland, pick, pickRow } from "@/lib/wordpress";
+import { getRollerland, pick, rowStr } from "@/lib/wordpress";
+import { translate, translateMany } from "@/lib/translate";
 import { SITE } from "@/lib/site";
 
 export const revalidate = 60;
@@ -39,10 +40,12 @@ export default async function PratiquePage({ params }: { params: { locale: strin
   const acf = await getRollerland();
   const reglementImage = acf.reglement_image || FALLBACK_REGLEMENT;
   const parkingUrl = acf.parking_url || "https://go.parkbee.net/start-booking/24763";
-  const intro = pick(acf, "pratique_intro", locale) || t("intro");
-  const parkingText = pick(acf, "parking_text", locale) || t("parkingText");
-  // Rules from WP if provided, else the hardcoded RULES list.
-  const rules = acf.rules?.length ? acf.rules.map((r) => pickRow(r, "rule_text", locale)) : RULES;
+  const intro = (await translate(pick(acf, "pratique_intro"), locale)) || t("intro");
+  const parkingText = (await translate(pick(acf, "parking_text"), locale)) || t("parkingText");
+  // Rules from WP (translated) if provided, else the hardcoded RULES list.
+  const rules = acf.rules?.length
+    ? await translateMany(acf.rules.map((r) => rowStr(r, "rule_text")), locale)
+    : RULES;
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-20">

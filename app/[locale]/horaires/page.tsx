@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getRollerland, pick } from "@/lib/wordpress";
+import { translate } from "@/lib/translate";
 import { SITE } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
@@ -16,7 +17,7 @@ export default async function HorairesPage({ params }: { params: { locale: strin
   setRequestLocale(locale);
   const t = await getTranslations("horaires");
   const acf = await getRollerland();
-  const intro = pick(acf, "horaires_intro", locale) || t("intro");
+  const intro = (await translate(pick(acf, "horaires_intro"), locale)) || t("intro");
 
   const SCHEDULE = [
     { day: "Lundi", short: "LUN", hours: null as string | null, activities: [] as string[], note: "Sur réservation groupes", disco: false },

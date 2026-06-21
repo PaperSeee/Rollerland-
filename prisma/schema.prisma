@@ -46,3 +46,18 @@ model PopupSettings {
   ctaUrl        String?
   updatedAt     DateTime @updatedAt
 }
+
+// Cache of machine translations (English source → FR/NL via DeepL). Keyed by a
+// hash of the source text + target locale so identical strings are translated
+// once. Lets the site auto-translate WordPress/admin content without re-calling
+// DeepL on every render.
+model Translation {
+  id        String   @id @default(cuid())
+  hash      String   @unique // sha256(targetLocale + "::" + source)
+  locale    String // "fr" | "nl"
+  source    String   @db.Text
+  result    String   @db.Text
+  createdAt DateTime @default(now())
+
+  @@index([locale])
+}

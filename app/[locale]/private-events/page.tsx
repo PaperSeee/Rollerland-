@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getRollerland, pick } from "@/lib/wordpress";
+import { translate } from "@/lib/translate";
 import { SITE } from "@/lib/site";
 
 export const revalidate = 60;
@@ -62,9 +63,9 @@ export default async function PrivateEventsPage({ params }: { params: { locale: 
   const t = await getTranslations("privateEvents");
   const acf = await getRollerland();
   const cms = {
-    intro: pick(acf, "pe_intro", locale) || t("intro"),
-    privTitle: pick(acf, "pe_privatization_title", locale) || t("privatizationTitle"),
-    privText: pick(acf, "pe_privatization_text", locale) || t("privatizationText"),
+    intro: (await translate(pick(acf, "pe_intro"), locale)) || t("intro"),
+    privTitle: (await translate(pick(acf, "pe_privatization_title"), locale)) || t("privatizationTitle"),
+    privText: (await translate(pick(acf, "pe_privatization_text"), locale)) || t("privatizationText"),
   };
 
   const EVENTS = acf.services_liste?.length

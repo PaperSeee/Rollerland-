@@ -5,23 +5,30 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { FORMULES, getFormule, type Formule } from "@/lib/formules";
-import { getRollerland, pickRow, rowStr } from "@/lib/wordpress";
+import { getRollerland, rowStr } from "@/lib/wordpress";
+import { translate, translateMany } from "@/lib/translate";
 import { SITE } from "@/lib/site";
 
-// Build a Formule from a WordPress repeater row (localized), if one matches the
-// slug; otherwise returns null so we fall back to the static FORMULES map.
+// Build a Formule from a WordPress repeater row (auto-translated to the locale),
+// if one matches the slug; otherwise null so we fall back to the static map.
 async function formuleFromWP(slug: string, locale: string): Promise<Formule | null> {
   const acf = await getRollerland();
   const row = acf.formules?.find((f) => rowStr(f, "formule_slug") === slug);
   if (!row) return null;
-  const includes = Array.isArray(row.formule_includes)
-    ? (row.formule_includes as Array<Record<string, unknown>>).map((r) => pickRow(r, "include_item", locale)).filter(Boolean)
+  const includesSrc = Array.isArray(row.formule_includes)
+    ? (row.formule_includes as Array<Record<string, unknown>>).map((r) => rowStr(r, "include_item")).filter(Boolean)
     : [];
+  const [name, tagline, desc, includes] = await Promise.all([
+    translate(rowStr(row, "formule_nom"), locale),
+    translate(rowStr(row, "formule_tagline"), locale),
+    translate(rowStr(row, "formule_description"), locale),
+    translateMany(includesSrc, locale),
+  ]);
   return {
     slug,
-    name: pickRow(row, "formule_nom", locale),
-    tagline: pickRow(row, "formule_tagline", locale),
-    desc: pickRow(row, "formule_description", locale),
+    name,
+    tagline,
+    desc,
     priceKids: rowStr(row, "formule_prix_enfant") || "—",
     priceAdults: rowStr(row, "formule_prix_adulte") || "—",
     highlight: Boolean(row.formule_highlight),

@@ -51,7 +51,7 @@ export interface WPAcf {
   reglement_image?: string;
   parking_url?: string;
 
-  // ── CMS v2 (WordPress-editable, EN/FR/NL triplets) ──────────────────
+  // ── CMS v3 (WordPress-editable, single-language EN; site auto-translates) ──
   // Global settings (neutral)
   site_email?: string;
   social_instagram?: string;
@@ -62,41 +62,25 @@ export interface WPAcf {
   // Home — structured
   home_tribute_image?: string;
   partners?: Array<{ partner_name: string; partner_logo?: string; partner_url?: string }>;
-  // Tarifs — structured repeaters (sub-field text values are localized triplets)
+  // Tarifs — structured repeaters
   options_supplementaires?: Array<Record<string, unknown>>;
   formules?: Array<Record<string, unknown>>;
-  // Pratique — rules repeater (each row has rule_text_{en,fr,nl})
+  // Pratique — rules repeater
   rules?: Array<Record<string, unknown>>;
-  // Triplet text fields (footer_*, home_*) accessed via pick(); declared as an
-  // index signature so any "<base>_<locale>" key type-checks.
-  [key: `${string}_en`]: unknown;
-  [key: `${string}_fr`]: unknown;
-  [key: `${string}_nl`]: unknown;
+  // Single-language editable text fields (footer_*, home_*, *_intro, …).
+  [key: string]: unknown;
 }
 
 export type Locale = "en" | "fr" | "nl";
 
-// Pick a localized ACF text field: tries `<base>_<locale>`, then FR, then EN.
-// Returns "" if none set, so callers can fall back to their own default.
-export function pick(acf: WPAcf, base: string, locale: string): string {
-  const order = [locale, "fr", "en"];
-  for (const loc of order) {
-    const val = acf[`${base}_${loc}` as keyof WPAcf];
-    if (typeof val === "string" && val.trim()) return val;
-  }
-  return "";
+// Read a single-language ACF text field (English). Translation to FR/NL happens
+// at render time via lib/translate. Returns "" if unset.
+export function pick(acf: WPAcf, base: string): string {
+  const val = acf[base as keyof WPAcf];
+  return typeof val === "string" ? val.trim() : "";
 }
 
-// Same as pick() but for a repeater row object (e.g. a formule / option / rule).
-export function pickRow(row: Record<string, unknown>, base: string, locale: string): string {
-  for (const loc of [locale, "fr", "en"]) {
-    const val = row[`${base}_${loc}`];
-    if (typeof val === "string" && val.trim()) return val;
-  }
-  return "";
-}
-
-// Read a plain (non-localized) string value from a repeater row.
+// Read a string value from a repeater row (single-language).
 export function rowStr(row: Record<string, unknown>, key: string): string {
   const v = row[key];
   return typeof v === "string" ? v : "";

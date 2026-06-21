@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getRollerland, pick, rowStr } from "@/lib/wordpress";
 import { translate } from "@/lib/translate";
+import Editable from "@/components/edit/Editable";
 import { SITE } from "@/lib/site";
 import { FORMULES } from "@/lib/formules";
 
@@ -122,9 +123,7 @@ export default async function TarifsPage({ params }: { params: { locale: string 
         <h1 className="text-5xl md:text-7xl text-white mb-4" style={{ fontWeight: 300, letterSpacing: "-0.03em", lineHeight: "0.95" }}>
           {t("title")}
         </h1>
-        <p className="text-sm mt-6 max-w-lg" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }}>
-          {intro}
-        </p>
+        <Editable as="p" field="tarifs_intro" value={intro} multiline className="text-sm mt-6 max-w-lg" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }} />
       </div>
 
       {/* Individual + options */}
@@ -242,12 +241,8 @@ export default async function TarifsPage({ params }: { params: { locale: string 
         style={{ border: "0.5px solid rgba(127,119,221,0.3)", background: "rgba(127,119,221,0.06)" }}
       >
         <p className="label-tag mb-3">{t("goodToKnow")}</p>
-        <p className="text-sm text-white mb-1" style={{ fontWeight: 400, lineHeight: "1.7" }}>
-          {consume1}
-        </p>
-        <p className="text-sm" style={{ color: "rgba(255,255,255,0.55)", lineHeight: "1.7" }}>
-          {consume2}
-        </p>
+        <Editable as="p" field="consume_notice_1" value={consume1} className="text-sm text-white mb-1" style={{ fontWeight: 400, lineHeight: "1.7" }} />
+        <Editable as="p" field="consume_notice_2" value={consume2} className="text-sm" style={{ color: "rgba(255,255,255,0.55)", lineHeight: "1.7" }} />
       </div>
     </div>
   );

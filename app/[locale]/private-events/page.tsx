@@ -2,6 +2,7 @@ import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getRollerland, pick } from "@/lib/wordpress";
 import { translate } from "@/lib/translate";
+import Editable from "@/components/edit/Editable";
 import { SITE } from "@/lib/site";
 
 export const revalidate = 60;
@@ -90,9 +91,7 @@ export default async function PrivateEventsPage({ params }: { params: { locale: 
         >
           {t("title")}
         </h1>
-        <p className="text-sm max-w-xl" style={{ color: "rgba(255,255,255,0.45)", lineHeight: "1.8" }}>
-          {cms.intro}
-        </p>
+        <Editable as="p" field="pe_intro" value={cms.intro} multiline className="text-sm max-w-xl" style={{ color: "rgba(255,255,255,0.45)", lineHeight: "1.8" }} />
       </div>
 
       {/* Events list */}

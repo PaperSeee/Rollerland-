@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import PromoPopup from "@/components/PromoPopup";
 import { getPopup } from "@/lib/popup";
 import { routing } from "@/i18n/routing";
+import EditProvider from "@/components/edit/EditProvider";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -56,10 +57,12 @@ export default async function LocaleLayout({
     <html lang={locale} className={spaceGrotesk.variable}>
       <body className="antialiased" style={{ color: "#FFFFFF" }}>
         <NextIntlClientProvider>
-          <Navbar />
-          <main className="pt-16">{children}</main>
-          <Footer />
-          {popup && <PromoPopup data={popup} />}
+          <EditProvider locale={locale}>
+            <Navbar />
+            <main className="pt-16">{children}</main>
+            <Footer />
+            {popup && <PromoPopup data={popup} />}
+          </EditProvider>
         </NextIntlClientProvider>
       </body>
     </html>

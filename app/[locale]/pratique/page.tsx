@@ -2,6 +2,7 @@ import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getRollerland, pick, rowStr } from "@/lib/wordpress";
 import { translate, translateMany } from "@/lib/translate";
+import Editable from "@/components/edit/Editable";
 import { SITE } from "@/lib/site";
 
 export const revalidate = 60;
@@ -58,9 +59,7 @@ export default async function PratiquePage({ params }: { params: { locale: strin
         >
           {t("title")}
         </h1>
-        <p className="text-sm" style={{ color: "rgba(255,255,255,0.45)", lineHeight: "1.8" }}>
-          {intro}
-        </p>
+        <Editable as="p" field="pratique_intro" value={intro} multiline className="text-sm" style={{ color: "rgba(255,255,255,0.45)", lineHeight: "1.8" }} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">

@@ -5,6 +5,8 @@ import Ticker from "@/components/Ticker";
 import { getRollerland, pick } from "@/lib/wordpress";
 import { translate } from "@/lib/translate";
 import { SITE } from "@/lib/site";
+import Editable from "@/components/edit/Editable";
+import EditableImage from "@/components/edit/EditableImage";
 
 const STATS = [
   { label: "Mercredi", value: "12h–20h", sub: "Cours + accès libre" },
@@ -106,13 +108,13 @@ export default async function HomePage({ params }: { params: { locale: string } 
         {/* Floating badge top-right */}
         <div className="absolute top-24 right-6 z-10 hidden md:flex flex-col items-end gap-2 animate-fade-in delay-600">
           <div className="glass-card px-4 py-2 animate-pulse-glow">
-            <p className="text-xs" style={{ color: "#9B92F0", letterSpacing: "0.12em" }}>{cms.openTonight}</p>
+            <Editable as="p" field="home_open_tonight" value={cms.openTonight} className="text-xs" style={{ color: "#9B92F0", letterSpacing: "0.12em" }} />
           </div>
         </div>
 
         {/* Hero content */}
         <div className="relative z-10 max-w-7xl mx-auto px-6 pb-0 w-full">
-          <p className="label-tag mb-5 animate-fade-up">{cms.location}</p>
+          <Editable as="p" field="home_location" value={cms.location} className="label-tag mb-5 animate-fade-up" />
 
           <h1
             className="animate-fade-up delay-100"
@@ -129,12 +131,14 @@ export default async function HomePage({ params }: { params: { locale: string } 
             <span style={{ color: "rgba(255,255,255,0.15)" }}>.</span>
           </h1>
 
-          <p
+          <Editable
+            as="p"
+            field="home_hero_lead"
+            value={cms.heroLead}
+            multiline
             className="mt-6 mb-10 max-w-md text-base animate-fade-up delay-200"
             style={{ color: "rgba(255,255,255,0.55)", lineHeight: "1.75", whiteSpace: "pre-line" }}
-          >
-            {cms.heroLead}
-          </p>
+          />
 
           <div className="flex flex-wrap gap-3 animate-fade-up delay-300">
             <a
@@ -184,14 +188,15 @@ export default async function HomePage({ params }: { params: { locale: string } 
               className="relative min-h-[280px]"
               style={{ background: "rgba(127,119,221,0.05)" }}
             >
-              <Image
-                src={cms.tributeImage}
+              <EditableImage
+                field="home_tribute_image"
+                value={cms.tributeImage}
                 alt="Rollerland Aalst"
                 fill
                 className="object-cover"
                 style={{ opacity: 0.85 }}
               />
-              <div className="absolute inset-0" style={{ background: "linear-gradient(to right, transparent 40%, rgba(21,14,40,0.5) 100%)" }} />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to right, transparent 40%, rgba(21,14,40,0.5) 100%)", pointerEvents: "none" }} />
             </div>
 
             {/* Text */}
@@ -201,12 +206,10 @@ export default async function HomePage({ params }: { params: { locale: string } 
                 className="text-3xl md:text-4xl text-white mb-5"
                 style={{ fontWeight: 300, letterSpacing: "-0.02em", lineHeight: "1.1" }}
               >
-                {cms.tributeTitle}<br />
+                <Editable as="span" field="home_tribute_title" value={cms.tributeTitle} /><br />
                 <span style={{ color: "#9B92F0" }}>Rollerland Aalst</span>
               </h2>
-              <p className="text-sm mb-6" style={{ color: "rgba(255,255,255,0.5)", lineHeight: "1.85", whiteSpace: "pre-line" }}>
-                {cms.tributeBody}
-              </p>
+              <Editable as="p" field="home_tribute_body" value={cms.tributeBody} multiline className="text-sm mb-6" style={{ color: "rgba(255,255,255,0.5)", lineHeight: "1.85", whiteSpace: "pre-line" }} />
               <a
                 href="https://www.rollerland.be/"
                 target="_blank"
@@ -285,9 +288,7 @@ export default async function HomePage({ params }: { params: { locale: string } 
           <div className="flex items-end justify-between mb-10">
             <div>
               <p className="label-tag mb-3">{t("servicesKicker")}</p>
-              <h2 className="text-3xl md:text-4xl text-white" style={{ fontWeight: 300, letterSpacing: "-0.02em" }}>
-                {cms.servicesTitle}
-              </h2>
+              <Editable as="h2" field="home_services_title" value={cms.servicesTitle} className="text-3xl md:text-4xl text-white" style={{ fontWeight: 300, letterSpacing: "-0.02em" }} />
             </div>
             <Link href="/private-events" className="hidden md:block text-xs uppercase tracking-widest hover:text-white transition-colors" style={{ color: "rgba(127,119,221,0.6)", letterSpacing: "0.14em" }}>
               {t("seeAll")}
@@ -423,9 +424,7 @@ export default async function HomePage({ params }: { params: { locale: string } 
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <p className="label-tag mb-3 justify-center flex">{t("partnersKicker")}</p>
-            <h2 className="text-3xl md:text-4xl text-white" style={{ fontWeight: 300, letterSpacing: "-0.02em" }}>
-              {cms.partnersTitle}
-            </h2>
+            <Editable as="h2" field="home_partners_title" value={cms.partnersTitle} className="text-3xl md:text-4xl text-white" style={{ fontWeight: 300, letterSpacing: "-0.02em" }} />
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-px" style={{ background: "rgba(127,119,221,0.15)", border: "0.5px solid rgba(127,119,221,0.2)" }}>
             {partners.map((p) => (
@@ -527,12 +526,9 @@ export default async function HomePage({ params }: { params: { locale: string } 
             className="mb-6 text-white"
             style={{ fontSize: "clamp(2rem, 5vw, 4rem)", fontWeight: 300, letterSpacing: "-0.02em", lineHeight: "1.1" }}
           >
-            {cms.ctaTitle || t("ctaTitle1")}<br />
-            <span style={{ color: "#9B92F0" }}>{cms.ctaTitle ? "" : t("ctaTitle2")}</span>
+            <Editable as="span" field="home_cta_title" value={cms.ctaTitle || `${t("ctaTitle1")} ${t("ctaTitle2")}`} />
           </h2>
-          <p className="text-sm mb-10 max-w-md mx-auto" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8", whiteSpace: "pre-line" }}>
-            {cms.ctaLead}
-          </p>
+          <Editable as="p" field="home_cta_lead" value={cms.ctaLead} multiline className="text-sm mb-10 max-w-md mx-auto" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8", whiteSpace: "pre-line" }} />
           <div className="flex flex-wrap gap-4 justify-center">
             <a
               href={SITE.reservationUrl}

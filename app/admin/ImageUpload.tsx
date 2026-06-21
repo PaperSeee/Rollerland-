@@ -23,8 +23,21 @@ export default function ImageUpload({
       const fd = new FormData();
       fd.append("file", file);
       const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-      const data = await res.json();
+      // Parse defensively: a non-JSON response (e.g. an upload-size limit page)
+      // would otherwise throw a cryptic "did not match the expected pattern".
+      const raw = await res.text();
+      let data: { url?: string; error?: string } = {};
+      try {
+        data = raw ? JSON.parse(raw) : {};
+      } catch {
+        throw new Error(
+          res.status === 413
+            ? "Image trop lourde pour l'envoi."
+            : `Erreur d'envoi (${res.status}).`,
+        );
+      }
       if (!res.ok) throw new Error(data.error || "Échec de l'envoi");
+      if (!data.url) throw new Error("Réponse invalide du serveur.");
       onChange(data.url);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Échec de l'envoi");

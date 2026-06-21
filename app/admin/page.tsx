@@ -25,6 +25,10 @@ export default async function AdminHome() {
         <Link href="/admin/content" className="btn-outline">
           Content
         </Link>
+        {/* Launch on-page inline editing (English source) */}
+        <a href="/?edit=1" className="btn-primary" style={{ marginLeft: "auto" }}>
+          ✎ Edit the site
+        </a>
       </div>
 
       <div className="flex items-end justify-between mb-8">

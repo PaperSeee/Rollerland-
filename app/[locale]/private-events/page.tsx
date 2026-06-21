@@ -63,6 +63,7 @@ export default async function PrivateEventsPage({ params }: { params: { locale: 
   setRequestLocale(locale);
   const t = await getTranslations("privateEvents");
   const acf = await getRollerland();
+  const reservationUrl = pick(acf, "reservation_url") || SITE.reservationUrl;
   const cms = {
     intro: (await translate(pick(acf, "pe_intro"), locale)) || t("intro"),
     privTitle: (await translate(pick(acf, "pe_privatization_title"), locale)) || t("privatizationTitle"),
@@ -199,7 +200,7 @@ export default async function PrivateEventsPage({ params }: { params: { locale: 
         </div>
         <div className="flex gap-4 flex-shrink-0">
           <a
-            href={SITE.reservationUrl}
+            href={reservationUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-primary"

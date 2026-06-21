@@ -54,6 +54,8 @@ export default async function HomePage({ params }: { params: { locale: string } 
   const t = await getTranslations("home");
   const acf = await getRollerland();
   const heroImage = acf.hero_image || FALLBACK_HERO;
+  // Editable reservation link (admin → Global) with the configured fallback.
+  const reservationUrl = pick(acf, "reservation_url") || SITE.reservationUrl;
 
   // Editable copy: WordPress value (English, auto-translated to the locale) else
   // the i18n default. tr() = translate the WP field; "" if the field is empty.
@@ -144,7 +146,7 @@ export default async function HomePage({ params }: { params: { locale: string } 
 
           <div className="flex flex-wrap gap-3 animate-fade-up delay-300">
             <a
-              href={SITE.reservationUrl}
+              href={reservationUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-primary animate-pulse-glow"
@@ -386,7 +388,7 @@ export default async function HomePage({ params }: { params: { locale: string } 
           <div className="flex flex-col gap-3">
             <Link href="/tarifs" className="btn-outline text-center">{t("allTarifs")}</Link>
             <a
-              href={SITE.reservationUrl}
+              href={reservationUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-primary text-center"
@@ -479,7 +481,7 @@ export default async function HomePage({ params }: { params: { locale: string } 
           <Editable as="p" field="home_cta_lead" value={cms.ctaLead} multiline className="text-sm mb-10 max-w-md mx-auto" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8", whiteSpace: "pre-line" }} />
           <div className="flex flex-wrap gap-4 justify-center">
             <a
-              href={SITE.reservationUrl}
+              href={reservationUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-primary animate-pulse-glow"

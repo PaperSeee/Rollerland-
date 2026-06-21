@@ -9,7 +9,8 @@
     "lint": "next lint",
     "postinstall": "prisma generate",
     "db:seed": "tsx prisma/seed.ts",
-    "db:seed-content": "tsx prisma/seed-content.ts"
+    "db:seed-content": "tsx prisma/seed-content.ts",
+    "db:seed-images": "tsx prisma/seed-images.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

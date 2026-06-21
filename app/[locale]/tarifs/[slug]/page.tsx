@@ -65,6 +65,9 @@ export default async function FormuleDetailPage({
   // Prefer WordPress content for this slug, else the static map.
   const formule = (await formuleFromWP(params.slug, params.locale)) ?? getFormule(params.slug);
   if (!formule) notFound();
+  // Editable reservation link (admin → Global), fallback to the formule default.
+  const acf = await getRollerland();
+  const reservationUrl = rowStr(acf as unknown as Record<string, unknown>, "reservation_url") || formule.ctaHref;
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-20">
@@ -130,7 +133,7 @@ export default async function FormuleDetailPage({
             ))}
           </ul>
 
-          <a href={formule.ctaHref} target="_blank" rel="noopener noreferrer" className="btn-primary animate-pulse-glow">
+          <a href={reservationUrl} target="_blank" rel="noopener noreferrer" className="btn-primary animate-pulse-glow">
             {formule.ctaLabel}
           </a>
         </div>

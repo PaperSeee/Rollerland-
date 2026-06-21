@@ -18,6 +18,7 @@ export default async function HorairesPage({ params }: { params: { locale: strin
   setRequestLocale(locale);
   const t = await getTranslations("horaires");
   const acf = await getRollerland();
+  const reservationUrl = pick(acf, "reservation_url") || SITE.reservationUrl;
   const intro = (await translate(pick(acf, "horaires_intro"), locale)) || t("intro");
 
   const SCHEDULE = [
@@ -217,7 +218,7 @@ export default async function HorairesPage({ params }: { params: { locale: strin
           </div>
         </div>
         <a
-          href={SITE.reservationUrl}
+          href={reservationUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="btn-primary flex-shrink-0 animate-pulse-glow"

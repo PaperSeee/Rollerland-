@@ -72,6 +72,7 @@ export default async function TarifsPage({ params }: { params: { locale: string 
   const t = await getTranslations("tarifs");
   const acf = await getRollerland();
 
+  const reservationUrl = pick(acf, "reservation_url") || SITE.reservationUrl;
   const intro = (await translate(pick(acf, "tarifs_intro"), locale)) || t("intro");
   const consume1 = (await translate(pick(acf, "consume_notice_1"), locale)) || t("consume1");
   const consume2 = (await translate(pick(acf, "consume_notice_2"), locale)) || t("consume2");
@@ -205,7 +206,7 @@ export default async function TarifsPage({ params }: { params: { locale: string 
         </div>
         <div className="mt-5">
           <a
-            href={SITE.reservationUrl}
+            href={reservationUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-primary"

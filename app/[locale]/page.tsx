@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import Ticker from "@/components/Ticker";
@@ -66,6 +65,7 @@ export default async function HomePage({ params }: { params: { locale: string } 
     tributeTitle: (await tr("home_tribute_title")) || t("tributeTitle"),
     tributeBody: (await tr("home_tribute_body")) || t("tributeBody"),
     tributeImage: acf.home_tribute_image || "https://retro.brussels/wp-content/uploads/2024/10/IMG_20231112_111005-scaled.jpg",
+    discoFeatureImage: (acf.home_disco_feature_image as string) || "https://retro.brussels/wp-content/uploads/2023/10/WhatsApp-Image-2023-10-30-at-22.57.16.jpeg",
     servicesTitle: (await tr("home_services_title")) || t("servicesTitle"),
     partnersTitle: (await tr("home_partners_title")) || t("partnersTitle"),
     ctaTitle: await tr("home_cta_title"),
@@ -234,14 +234,15 @@ export default async function HomePage({ params }: { params: { locale: string } 
             style={{ border: "0.5px solid rgba(127,119,221,0.3)" }}
           >
             <div className="absolute inset-0 z-0">
-              <Image
-                src="https://retro.brussels/wp-content/uploads/2023/10/WhatsApp-Image-2023-10-30-at-22.57.16.jpeg"
+              <EditableImage
+                field="home_disco_feature_image"
+                value={cms.discoFeatureImage}
                 alt="Disco Roller"
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
                 style={{ objectPosition: "center" }}
               />
-              <div className="absolute inset-0" style={{ background: "linear-gradient(to right, rgba(21,14,40,0.97) 40%, rgba(21,14,40,0.5) 100%)" }} />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to right, rgba(21,14,40,0.97) 40%, rgba(21,14,40,0.5) 100%)", pointerEvents: "none" }} />
             </div>
             <div className="relative z-10 p-10 md:p-16 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div>

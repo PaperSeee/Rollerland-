@@ -83,7 +83,12 @@ export default function EditableImage({
       />
       <button
         type="button"
-        onClick={() => inputRef.current?.click()}
+        onClick={(e) => {
+          // Don't trigger a parent <Link> when the image sits inside one.
+          e.preventDefault();
+          e.stopPropagation();
+          inputRef.current?.click();
+        }}
         className="absolute top-2 left-2 z-10 text-xs uppercase"
         style={{ background: "#9B92F0", color: "#150E28", padding: "0.3rem 0.7rem", letterSpacing: "0.08em", borderRadius: 2 }}
       >

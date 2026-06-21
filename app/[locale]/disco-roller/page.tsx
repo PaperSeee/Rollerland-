@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import EditableImage from "@/components/edit/EditableImage";
 import { getRollerland } from "@/lib/wordpress";
 import { getDiscoEvents, type DiscoEventView } from "@/lib/disco";
 import { SITE } from "@/lib/site";
@@ -40,15 +40,15 @@ export default async function DiscoRollerPage({ params }: { params: { locale: st
       {/* ── Hero ── */}
       <section className="relative min-h-[70vh] flex flex-col justify-end overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <Image
-            src={heroImage}
+          <EditableImage
+            field="disco_hero_image"
+            value={heroImage}
             alt="Disco Roller Bruxelles"
             fill
-            priority
             className="object-cover"
             style={{ objectPosition: "center 35%" }}
           />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(21,14,40,0.95) 0%, rgba(83,74,183,0.2) 60%, rgba(21,14,40,0.9) 100%)" }} />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(21,14,40,0.95) 0%, rgba(83,74,183,0.2) 60%, rgba(21,14,40,0.9) 100%)", pointerEvents: "none" }} />
           <div className="absolute inset-0" style={{ background: "linear-gradient(to top, #150E28 0%, transparent 60%)" }} />
         </div>
 

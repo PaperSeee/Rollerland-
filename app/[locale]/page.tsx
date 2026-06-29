@@ -30,12 +30,12 @@ const SERVICES_FALLBACK = [
 // logo files into /public/partners/ and set `logo` to e.g. "/partners/be-here.svg".
 // Until then we render a styled text placeholder for each partner.
 const PARTNERS = [
-  { name: "Be Here", url: "https://www.behere.brussels/", logo: null as string | null },
-  { name: "Kinepolis", url: "https://kinepolis.be/", logo: null as string | null },
-  { name: "Brussels Airlines", url: "https://www.brusselsairlines.com/", logo: null as string | null },
-  { name: "VGC", url: "https://www.vgc.be/", logo: null as string | null },
-  { name: "Rollerland Aalst", url: "https://www.rollerland.be/", logo: null as string | null },
-  { name: "Skate Vlaanderen", url: "https://www.skate.vlaanderen/", logo: null as string | null },
+  { name: "Be Here", url: "https://www.behere.brussels/", logo: "/partners/be-here.png" as string | null },
+  { name: "Kinepolis", url: "https://kinepolis.be/", logo: "/partners/kinepolis.png" as string | null },
+  { name: "Brussels Airlines", url: "https://www.brusselsairlines.com/", logo: "/partners/brussels-airlines.png" as string | null },
+  { name: "VGC", url: "https://www.vgc.be/", logo: "/partners/vgc.png" as string | null },
+  { name: "Rollerland Aalst", url: "https://www.rollerland.be/", logo: "/partners/rollerland-aalst.png" as string | null },
+  { name: "Skate Vlaanderen", url: "https://www.skate.vlaanderen/", logo: "/partners/skate-vlaanderen.png" as string | null },
 ];
 
 

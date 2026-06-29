@@ -93,8 +93,15 @@ function PartnerCell({
   }
 
   if (!editing) {
+    // Logos sit on a white rounded "pill" so brand colours stay legible on the
+    // dark purple background and every cell looks uniform.
     return logo ? (
-      <Image src={logo} alt={name} width={180} height={64} className="object-contain opacity-70 group-hover:opacity-100 transition-opacity" style={{ maxHeight: 64, width: "auto" }} />
+      <div
+        className="flex items-center justify-center transition-transform duration-300 group-hover:scale-105"
+        style={{ background: "#fff", borderRadius: 12, padding: "1rem 1.4rem", width: 180, height: 96 }}
+      >
+        <Image src={logo} alt={name} width={160} height={64} className="object-contain" style={{ maxHeight: 64, maxWidth: "100%", width: "auto" }} />
+      </div>
     ) : (
       <span className="text-xl md:text-2xl font-light text-center" style={{ color: "rgba(255,255,255,0.55)" }}>
         {name}
@@ -106,12 +113,12 @@ function PartnerCell({
   return (
     <div className="flex flex-col items-center gap-2 w-full">
       <div
-        className="relative flex items-center justify-center w-full"
-        style={{ minHeight: 64, outline: "2px dashed rgba(155,146,240,0.9)", outlineOffset: 4 }}
+        className="relative flex items-center justify-center"
+        style={{ background: logo ? "#fff" : "transparent", borderRadius: 12, padding: logo ? "1rem 1.4rem" : 0, width: 180, height: 96, outline: "2px dashed rgba(155,146,240,0.9)", outlineOffset: 4 }}
       >
         {logo ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={logo} alt={name} style={{ maxHeight: 64, width: "auto" }} />
+          <img src={logo} alt={name} style={{ maxHeight: 64, maxWidth: "100%", width: "auto" }} />
         ) : (
           <span className="text-xs uppercase" style={{ color: "#9B92F0" }}>No logo</span>
         )}

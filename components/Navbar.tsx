@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { SITE } from "@/lib/site";
 import LocaleSwitcher from "@/components/LocaleSwitcher";
+import { useEdit } from "@/components/edit/EditProvider";
 
 // Menu order per spec: Horaires · Pratique · Tarifs · Contact · Cours ·
 // Private Events · Disco Roller (kept furthest right, highlighted).
@@ -24,6 +25,11 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const t = useTranslations("nav");
+  const { editing } = useEdit();
+
+  // While editing, keep ?edit=1 on internal links so edit mode persists as the
+  // admin browses from page to page.
+  const editHref = (href: string) => (editing ? { pathname: href, query: { edit: "1" } } : href);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -43,7 +49,7 @@ export default function Navbar() {
     >
       <nav className="max-w-7xl mx-auto px-6 flex items-center justify-between h-16">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
+        <Link href={editHref("/")} className="flex items-center gap-3 group">
           <div className="relative overflow-hidden rounded-sm" style={{ width: 32, height: 32 }}>
             <Image
               src="https://retro.brussels/wp-content/uploads/2023/10/WhatsApp-Image-2023-09-12-at-09.22.29.jpeg"
@@ -65,7 +71,7 @@ export default function Navbar() {
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
-              href={link.href}
+              href={editHref(link.href)}
               className="relative text-xs uppercase tracking-widest transition-colors group"
               style={{
                 color: pathname === link.href ? "#9B92F0" : link.hot ? "rgba(127,119,221,0.9)" : "rgba(255,255,255,0.5)",
@@ -149,7 +155,7 @@ export default function Navbar() {
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
-              href={link.href}
+              href={editHref(link.href)}
               onClick={() => setOpen(false)}
               className="text-xs uppercase tracking-widest flex items-center gap-3"
               style={{

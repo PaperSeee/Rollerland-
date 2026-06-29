@@ -40,19 +40,27 @@ export default function EditProvider({
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  // Inline editing only on the English source pages.
-  const canEditLocale = locale === "en";
-
+  // Edits always target the English source (FR/NL are auto-translated). So if an
+  // admin opens ?edit=1 on a /fr or /nl page, send them to the English version of
+  // the same page in edit mode — editing then works from anywhere on the site.
   useEffect(() => {
     if (typeof window === "undefined") return;
     const wantEdit = new URLSearchParams(window.location.search).get("edit") === "1";
-    if (!wantEdit || !canEditLocale) return;
-    // Confirm the visitor is an authenticated admin.
+    if (!wantEdit) return;
+
+    if (locale !== "en") {
+      // Strip the /fr or /nl prefix to get the English (prefix-less) path.
+      const enPath = window.location.pathname.replace(/^\/(fr|nl)(?=\/|$)/, "") || "/";
+      window.location.replace(`${enPath}?edit=1`);
+      return;
+    }
+
+    // English page: confirm the visitor is an authenticated admin.
     fetch("/api/admin/me")
       .then((r) => r.json())
       .then((d) => setEnabled(Boolean(d.admin)))
       .catch(() => setEnabled(false));
-  }, [canEditLocale]);
+  }, [locale]);
 
   const setField = useCallback((key: string, value: unknown) => {
     setChanges((prev) => ({ ...prev, [key]: value }));

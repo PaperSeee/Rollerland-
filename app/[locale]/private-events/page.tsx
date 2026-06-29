@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getRollerland, pick } from "@/lib/wordpress";
 import { translate } from "@/lib/translate";
 import Editable from "@/components/edit/Editable";
+import EditSectionLink from "@/components/edit/EditSectionLink";
 import { SITE } from "@/lib/site";
 
 export const revalidate = 60;
@@ -65,6 +66,7 @@ export default async function PrivateEventsPage({ params }: { params: { locale: 
   const acf = await getRollerland();
   const reservationUrl = pick(acf, "reservation_url") || SITE.reservationUrl;
   const cms = {
+    title: (await translate(pick(acf, "pe_title"), locale)) || t("title"),
     intro: (await translate(pick(acf, "pe_intro"), locale)) || t("intro"),
     privTitle: (await translate(pick(acf, "pe_privatization_title"), locale)) || t("privatizationTitle"),
     privText: (await translate(pick(acf, "pe_privatization_text"), locale)) || t("privatizationText"),
@@ -86,14 +88,18 @@ export default async function PrivateEventsPage({ params }: { params: { locale: 
       {/* Header */}
       <div className="mb-16">
         <p className="label-tag mb-4">{t("kicker")}</p>
-        <h1
+        <Editable
+          as="h1"
+          field="pe_title"
+          value={cms.title}
           className="text-4xl md:text-6xl text-white mb-4"
           style={{ fontWeight: 300, letterSpacing: "-0.02em" }}
-        >
-          {t("title")}
-        </h1>
+        />
         <Editable as="p" field="pe_intro" value={cms.intro} multiline className="text-sm max-w-xl" style={{ color: "rgba(255,255,255,0.45)", lineHeight: "1.8" }} />
       </div>
+
+      {/* Events list — edited as a list in the admin form */}
+      <EditSectionLink section="private-events" label="events" />
 
       {/* Events list */}
       <div className="flex flex-col gap-0" style={{ border: "0.5px solid rgba(127,119,221,0.25)" }}>
@@ -185,18 +191,21 @@ export default async function PrivateEventsPage({ params }: { params: { locale: 
       >
         <div>
           <p className="label-tag mb-2">{t("privatization")}</p>
-          <h3
+          <Editable
+            as="h3"
+            field="pe_privatization_title"
+            value={cms.privTitle}
             className="text-xl text-white"
             style={{ fontWeight: 400 }}
-          >
-            {cms.privTitle}
-          </h3>
-          <p
+          />
+          <Editable
+            as="p"
+            field="pe_privatization_text"
+            value={cms.privText}
+            multiline
             className="text-sm mt-2"
             style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.7" }}
-          >
-            {cms.privText}
-          </p>
+          />
         </div>
         <div className="flex gap-4 flex-shrink-0">
           <a

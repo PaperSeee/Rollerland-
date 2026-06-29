@@ -4,6 +4,7 @@ import ContentEditor, { type Field } from "../ContentEditor";
 export const dynamic = "force-dynamic";
 
 const FIELDS: Field[] = [
+  { name: "contact_title", label: "Page title", type: "text" },
   { name: "contact_intro", label: "Intro", type: "textarea" },
   { name: "contact_email_desc", label: "Email description", type: "textarea" },
   { name: "contact_socials_desc", label: "Socials description", type: "text" },

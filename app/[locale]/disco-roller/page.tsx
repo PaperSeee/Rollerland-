@@ -1,6 +1,9 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import EditableImage from "@/components/edit/EditableImage";
-import { getRollerland } from "@/lib/wordpress";
+import Editable from "@/components/edit/Editable";
+import EditSectionLink from "@/components/edit/EditSectionLink";
+import { getRollerland, pick } from "@/lib/wordpress";
+import { translate } from "@/lib/translate";
 import { getDiscoEvents, type DiscoEventView } from "@/lib/disco";
 import { SITE } from "@/lib/site";
 
@@ -30,6 +33,7 @@ export default async function DiscoRollerPage({ params }: { params: { locale: st
   const t = await getTranslations("disco");
   const [dbEvents, acf] = await Promise.all([getDiscoEvents(), getRollerland()]);
   const heroImage = acf.disco_hero_image || FALLBACK_HERO_DISCO;
+  const lead = (await translate(pick(acf, "disco_lead"), params.locale)) || t("lead");
 
   // Use DB events when present, otherwise the hardcoded fallback list.
   const discoEvents = dbEvents.length ? dbEvents : FALLBACK_EVENTS;
@@ -61,9 +65,14 @@ export default async function DiscoRollerPage({ params }: { params: { locale: st
             Disco<br />
             <span style={{ color: "#9B92F0" }}>Roller</span>
           </h1>
-          <p className="mt-6 text-base max-w-lg animate-fade-up delay-200" style={{ color: "rgba(255,255,255,0.5)", lineHeight: "1.75" }}>
-            {t("lead")}
-          </p>
+          <Editable
+            as="p"
+            field="disco_lead"
+            value={lead}
+            multiline
+            className="mt-6 text-base max-w-lg animate-fade-up delay-200"
+            style={{ color: "rgba(255,255,255,0.5)", lineHeight: "1.75" }}
+          />
 
           <div className="flex flex-wrap gap-4 mt-8 animate-fade-up delay-300">
             <div className="glass-card px-6 py-3 animate-pulse-glow">
@@ -87,9 +96,11 @@ export default async function DiscoRollerPage({ params }: { params: { locale: st
         <div className="max-w-7xl mx-auto">
           <div className="mb-12">
             <p className="label-tag mb-3">{t("agenda")}</p>
-            <h2 className="text-3xl md:text-4xl text-white" style={{ fontWeight: 300, letterSpacing: "-0.02em" }}>
+            <h2 className="text-3xl md:text-4xl text-white mb-4" style={{ fontWeight: 300, letterSpacing: "-0.02em" }}>
               {t("nextEvents")}
             </h2>
+            {/* Disco events are managed from the Disco Events admin screen */}
+            <EditSectionLink href="/admin" label="disco events" />
           </div>
 
           {/* Featured next event */}

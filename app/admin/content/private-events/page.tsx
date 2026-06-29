@@ -4,7 +4,20 @@ import ContentEditor, { type Field } from "../ContentEditor";
 export const dynamic = "force-dynamic";
 
 const FIELDS: Field[] = [
+  { name: "pe_title", label: "Page title", type: "text" },
   { name: "pe_intro", label: "Intro", type: "textarea" },
+  {
+    name: "services_liste",
+    label: "Events / formulas",
+    type: "repeater",
+    itemLabel: "Event",
+    fields: [
+      { name: "titre", label: "Title", type: "text" },
+      { name: "horaire", label: "Schedule", type: "text" },
+      { name: "description", label: "Description", type: "textarea" },
+      { name: "image", label: "Image", type: "image" },
+    ],
+  },
   { name: "pe_privatization_title", label: "Privatization title", type: "text" },
   { name: "pe_privatization_text", label: "Privatization text", type: "textarea" },
 ];

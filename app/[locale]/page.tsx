@@ -1,22 +1,23 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import Ticker from "@/components/Ticker";
-import { getRollerland, pick } from "@/lib/wordpress";
+import { getRollerland, pick, rowStr } from "@/lib/wordpress";
 import { translate } from "@/lib/translate";
 import { SITE } from "@/lib/site";
 import Editable from "@/components/edit/Editable";
 import EditableImage from "@/components/edit/EditableImage";
 import EditablePartners from "@/components/edit/EditablePartners";
 import EditableGallery from "@/components/edit/EditableGallery";
+import EditSectionLink from "@/components/edit/EditSectionLink";
 
-const STATS = [
+const STATS_FALLBACK = [
   { label: "Mercredi", value: "12h–20h", sub: "Cours + accès libre" },
   { label: "Vendredi", value: "17h–24h", sub: "Disco Roller" },
   { label: "Samedi", value: "12h–24h", sub: "Cours + Disco" },
   { label: "Dimanche", value: "16h–20h", sub: "Accès libre" },
 ];
 
-const SERVICES = [
+const SERVICES_FALLBACK = [
   { tag: "01", title: "Disco Roller", desc: "Vendredi & samedi — musique, lumières, piste ouverte jusqu'à minuit.", href: "/disco-roller", accent: true },
   { tag: "02", title: "Cours de Roller", desc: "Enfants & adultes, mercredi et samedi. Patins inclus.", href: "/cours", accent: false },
   { tag: "03", title: "Anniversaires", desc: "Formules Birthday Party sur mesure pour petits et grands.", href: "/private-events", accent: false },
@@ -78,6 +79,30 @@ export default async function HomePage({ params }: { params: { locale: string } 
   const partners = acf.partners?.length
     ? acf.partners.map((p) => ({ name: p.partner_name, url: p.partner_url || "#", logo: p.partner_logo || null }))
     : PARTNERS;
+
+  // Opening-hours bar: DB repeater (neutral values, label auto-translated) else fallback.
+  const stats = acf.home_stats?.length
+    ? await Promise.all(
+        acf.home_stats.map(async (s) => ({
+          label: await translate(rowStr(s, "stat_label"), locale),
+          value: rowStr(s, "stat_value"),
+          sub: await translate(rowStr(s, "stat_sub"), locale),
+        })),
+      )
+    : STATS_FALLBACK;
+
+  // Services grid: DB repeater (auto-translated) else fallback.
+  const services = acf.home_services?.length
+    ? await Promise.all(
+        acf.home_services.map(async (s, i) => ({
+          tag: String(i + 1).padStart(2, "0"),
+          title: await translate(rowStr(s, "service_title"), locale),
+          desc: await translate(rowStr(s, "service_desc"), locale),
+          href: rowStr(s, "service_href") || "/private-events",
+          accent: Boolean(s.service_accent),
+        })),
+      )
+    : SERVICES_FALLBACK;
 
   // Gallery: new editor rows ({src}) → legacy string[] → hardcoded fallback.
   const galleryRows = (acf.gallery_images_rows as Array<{ src?: string }> | undefined)
@@ -162,11 +187,11 @@ export default async function HomePage({ params }: { params: { locale: string } 
         {/* Stats bar */}
         <div className="relative z-10 mt-16 w-full" style={{ borderTop: "0.5px solid rgba(127,119,221,0.2)", background: "rgba(21,14,40,0.85)", backdropFilter: "blur(12px)" }}>
           <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4">
-            {STATS.map((s, i) => (
+            {stats.map((s, i) => (
               <div
                 key={s.label}
                 className="py-5 px-4 hover-lift"
-                style={{ borderRight: i < 3 ? "0.5px solid rgba(127,119,221,0.12)" : "none" }}
+                style={{ borderRight: i < stats.length - 1 ? "0.5px solid rgba(127,119,221,0.12)" : "none" }}
               >
                 <p className="label-tag mb-1">{s.label}</p>
                 <p className="text-white text-sm font-medium mb-0.5">{s.value}</p>
@@ -300,8 +325,11 @@ export default async function HomePage({ params }: { params: { locale: string } 
             </Link>
           </div>
 
+          {/* Services cards are edited as a list in the admin form */}
+          <EditSectionLink section="home" label="services" />
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" style={{ border: "0.5px solid rgba(127,119,221,0.2)" }}>
-            {SERVICES.map((s, i) => (
+            {services.map((s, i) => (
               <Link
                 key={s.tag}
                 href={s.href}

@@ -13,6 +13,7 @@ export default async function ContactPage({ params }: { params: { locale: string
   const t = await getTranslations("contact");
   const acf = await getRollerland();
   const cms = {
+    title: (await translate(pick(acf, "contact_title"), locale)) || t("title"),
     intro: (await translate(pick(acf, "contact_intro"), locale)) || t("intro"),
     emailDesc: (await translate(pick(acf, "contact_email_desc"), locale)) || t("emailDesc"),
     socialsDesc: (await translate(pick(acf, "contact_socials_desc"), locale)) || t("socialsDesc"),
@@ -28,9 +29,13 @@ export default async function ContactPage({ params }: { params: { locale: string
       {/* Header */}
       <div className="mb-16 animate-fade-up">
         <p className="label-tag mb-4">{t("kicker")}</p>
-        <h1 className="text-5xl md:text-7xl text-white mb-4" style={{ fontWeight: 300, letterSpacing: "-0.03em", lineHeight: "0.95" }}>
-          {t("title")}
-        </h1>
+        <Editable
+          as="h1"
+          field="contact_title"
+          value={cms.title}
+          className="text-5xl md:text-7xl text-white mb-4"
+          style={{ fontWeight: 300, letterSpacing: "-0.03em", lineHeight: "0.95" }}
+        />
         <Editable as="p" field="contact_intro" value={cms.intro} multiline className="text-sm mt-6 max-w-lg" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }} />
       </div>
 
@@ -43,9 +48,14 @@ export default async function ContactPage({ params }: { params: { locale: string
             style={{ border: "0.5px solid rgba(127,119,221,0.3)", background: "rgba(255,255,255,0.03)" }}
           >
             <p className="label-tag mb-3">{t("email")}</p>
-            <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }}>
-              {cms.emailDesc}
-            </p>
+            <Editable
+              as="p"
+              field="contact_email_desc"
+              value={cms.emailDesc}
+              multiline
+              className="text-xs mb-4"
+              style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }}
+            />
             <a
               href={`mailto:${cms.email}`}
               className="btn-primary w-full justify-center animate-pulse-glow"
@@ -81,9 +91,14 @@ export default async function ContactPage({ params }: { params: { locale: string
             style={{ border: "0.5px solid rgba(127,119,221,0.2)", background: "rgba(255,255,255,0.02)" }}
           >
             <p className="label-tag mb-3">{t("socials")}</p>
-            <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.7" }}>
-              {cms.socialsDesc}
-            </p>
+            <Editable
+              as="p"
+              field="contact_socials_desc"
+              value={cms.socialsDesc}
+              multiline
+              className="text-xs mb-4"
+              style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.7" }}
+            />
             <div className="flex flex-col gap-2.5">
               {[
                 { name: "Instagram", url: cms.instagram },
@@ -111,9 +126,14 @@ export default async function ContactPage({ params }: { params: { locale: string
             style={{ border: "0.5px solid rgba(127,119,221,0.25)", background: "rgba(127,119,221,0.05)" }}
           >
             <p className="label-tag mb-3">{t("review")}</p>
-            <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.7" }}>
-              {cms.reviewDesc}
-            </p>
+            <Editable
+              as="p"
+              field="contact_review_desc"
+              value={cms.reviewDesc}
+              multiline
+              className="text-xs mb-4"
+              style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.7" }}
+            />
             <a
               href={cms.reviewUrl}
               target="_blank"

@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getRollerland, pick } from "@/lib/wordpress";
 import { translate } from "@/lib/translate";
 import Editable from "@/components/edit/Editable";
+import EditSectionLink from "@/components/edit/EditSectionLink";
 import { SITE } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
@@ -19,6 +20,7 @@ export default async function HorairesPage({ params }: { params: { locale: strin
   const t = await getTranslations("horaires");
   const acf = await getRollerland();
   const reservationUrl = pick(acf, "reservation_url") || SITE.reservationUrl;
+  const title = (await translate(pick(acf, "horaires_title"), locale)) || t("title");
   const intro = (await translate(pick(acf, "horaires_intro"), locale)) || t("intro");
 
   const SCHEDULE = [
@@ -40,11 +42,18 @@ export default async function HorairesPage({ params }: { params: { locale: strin
       {/* Header */}
       <div className="mb-16 animate-fade-up">
         <p className="label-tag mb-4">{t("kicker")}</p>
-        <h1 className="text-5xl md:text-7xl text-white mb-4" style={{ fontWeight: 300, letterSpacing: "-0.03em", lineHeight: "0.95" }}>
-          {t("title")}
-        </h1>
+        <Editable
+          as="h1"
+          field="horaires_title"
+          value={title}
+          className="text-5xl md:text-7xl text-white mb-4"
+          style={{ fontWeight: 300, letterSpacing: "-0.03em", lineHeight: "0.95" }}
+        />
         <Editable as="p" field="horaires_intro" value={intro} multiline className="text-sm max-w-lg mt-6" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }} />
       </div>
+
+      {/* Hours and closures are edited in the admin form */}
+      <EditSectionLink section="schedule" label="schedule" />
 
       {/* Visual week grid */}
       <div className="mb-20 animate-fade-up delay-100">

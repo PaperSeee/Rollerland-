@@ -1,24 +1,33 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { getRollerland, pick } from "@/lib/wordpress";
+import { getRollerland, pick, rowStr } from "@/lib/wordpress";
 import { translate } from "@/lib/translate";
 import Editable from "@/components/edit/Editable";
+import EditSectionLink from "@/components/edit/EditSectionLink";
 import { SITE } from "@/lib/site";
 
 export const revalidate = 60;
+
+const DEFAULT_TICKET_URL = "https://www.tickettailor.com/events/retrobrusselsasbl/2140456";
 
 export default async function CoursPage({ params }: { params: { locale: string } }) {
   const { locale } = params;
   setRequestLocale(locale);
   const t = await getTranslations("cours");
   const acf = await getRollerland();
+  const ticketUrl = pick(acf, "cours_tickettailor_url") || DEFAULT_TICKET_URL;
   const cms = {
+    title: (await translate(pick(acf, "cours_title"), locale)) || t("title"),
     intro: (await translate(pick(acf, "cours_intro"), locale)) || t("intro"),
     start2rideDesc: (await translate(pick(acf, "start2ride_desc"), locale)) || t("start2rideDesc"),
     ownSkatesText: (await translate(pick(acf, "cours_own_skates_text"), locale)) || t("ownSkatesText"),
     cancellationsText: (await translate(pick(acf, "cours_cancellations_text"), locale)) || t("cancellationsText"),
+    start2rideDate: pick(acf, "start2ride_date") || "Samedi 30 mai",
+    start2rideTime: pick(acf, "start2ride_time") || "10h00 – 12h00",
+    start2ridePlace: pick(acf, "start2ride_place") || "Parc de Laeken",
+    start2rideUrl: pick(acf, "start2ride_url") || "https://www.tickettailor.com/events/retrobrusselsasbl/2211764",
   };
 
-  const COURSES = [
+  const COURSES_FALLBACK = [
     {
       tag: "01",
       audience: t("kids"),
@@ -29,7 +38,7 @@ export default async function CoursPage({ params }: { params: { locale: string }
       level: "Tous niveaux",
       age: t("kids"),
       desc: "Initiation et progression en toute sécurité. Nos moniteurs guident chaque enfant à son rythme, des premières glissades aux virages en douceur.",
-      ticketUrl: "https://www.tickettailor.com/events/retrobrusselsasbl/2140456",
+      ticketUrl,
     },
     {
       tag: "02",
@@ -41,22 +50,45 @@ export default async function CoursPage({ params }: { params: { locale: string }
       level: "Débutant – Intermédiaire",
       age: "18+",
       desc: "Technique, équilibre et plaisir. Un cours collectif dans une ambiance bienveillante — peu importe votre niveau de départ.",
-      ticketUrl: "https://www.tickettailor.com/events/retrobrusselsasbl/2140456",
+      ticketUrl,
     },
   ];
+
+  // Course cards: WP `cours_list` repeater (auto-translated) → else fallback.
+  const COURSES = acf.cours_list?.length
+    ? await Promise.all(
+        acf.cours_list.map(async (c, i) => ({
+          tag: String(i + 1).padStart(2, "0"),
+          audience: await translate(rowStr(c, "cours_audience"), locale),
+          title: await translate(rowStr(c, "cours_titre"), locale),
+          schedule: await translate(rowStr(c, "cours_jours"), locale),
+          time: rowStr(c, "cours_horaire"),
+          price: rowStr(c, "cours_prix"),
+          level: await translate(rowStr(c, "cours_niveau"), locale),
+          age: await translate(rowStr(c, "cours_age"), locale),
+          desc: await translate(rowStr(c, "cours_description"), locale),
+          ticketUrl: rowStr(c, "cours_ticket_url") || ticketUrl,
+        })),
+      )
+    : COURSES_FALLBACK;
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-20">
       {/* Header */}
       <div className="mb-16 animate-fade-up">
         <p className="label-tag mb-4">{t("kicker")}</p>
-        <h1 className="text-5xl md:text-7xl text-white mb-4" style={{ fontWeight: 300, letterSpacing: "-0.03em", lineHeight: "0.95" }}>
-          {t("title")}
-        </h1>
+        <Editable
+          as="h1"
+          field="cours_title"
+          value={cms.title}
+          className="text-5xl md:text-7xl text-white mb-4"
+          style={{ fontWeight: 300, letterSpacing: "-0.03em", lineHeight: "0.95" }}
+        />
         <Editable as="p" field="cours_intro" value={cms.intro} multiline className="text-sm mt-6 max-w-lg" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }} />
       </div>
 
-      {/* Course cards */}
+      {/* Course cards — edited as a list in the admin form */}
+      <EditSectionLink section="lessons" label="courses" />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-20 animate-fade-up delay-100">
         {COURSES.map((course) => (
           <div
@@ -132,28 +164,33 @@ export default async function CoursPage({ params }: { params: { locale: string }
             <h2 className="text-3xl md:text-4xl text-white mb-3" style={{ fontWeight: 300, letterSpacing: "-0.02em" }}>
               Start2Ride
             </h2>
-            <p className="text-sm mb-6" style={{ color: "rgba(255,255,255,0.5)", lineHeight: "1.85" }}>
-              {cms.start2rideDesc}
-            </p>
+            <Editable
+              as="p"
+              field="start2ride_desc"
+              value={cms.start2rideDesc}
+              multiline
+              className="text-sm mb-6"
+              style={{ color: "rgba(255,255,255,0.5)", lineHeight: "1.85" }}
+            />
 
             <div
               className="grid grid-cols-3 gap-4 mb-8"
               style={{ borderTop: "0.5px solid rgba(127,119,221,0.15)", paddingTop: "1.5rem" }}
             >
               {[
-                { label: t("date"), value: "Samedi 30 mai" },
-                { label: t("schedule"), value: "10h00 – 12h00" },
-                { label: t("place"), value: "Parc de Laeken" },
+                { label: t("date"), field: "start2ride_date", value: cms.start2rideDate },
+                { label: t("schedule"), field: "start2ride_time", value: cms.start2rideTime },
+                { label: t("place"), field: "start2ride_place", value: cms.start2ridePlace },
               ].map((item) => (
-                <div key={item.label}>
+                <div key={item.field}>
                   <p className="label-tag mb-1">{item.label}</p>
-                  <p className="text-sm text-white">{item.value}</p>
+                  <Editable as="p" field={item.field} value={item.value} className="text-sm text-white" />
                 </div>
               ))}
             </div>
 
             <a
-              href="https://www.tickettailor.com/events/retrobrusselsasbl/2211764"
+              href={cms.start2rideUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-primary"
@@ -171,9 +208,14 @@ export default async function CoursPage({ params }: { params: { locale: string }
           style={{ border: "0.5px solid rgba(127,119,221,0.15)", background: "rgba(255,255,255,0.02)" }}
         >
           <p className="label-tag mb-2">{t("ownSkates")}</p>
-          <p className="text-xs" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }}>
-            {cms.ownSkatesText}
-          </p>
+          <Editable
+            as="p"
+            field="cours_own_skates_text"
+            value={cms.ownSkatesText}
+            multiline
+            className="text-xs"
+            style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }}
+          />
         </div>
 
         {/* Course cancellations WhatsApp group (kept per spec) */}
@@ -182,9 +224,14 @@ export default async function CoursPage({ params }: { params: { locale: string }
           style={{ border: "0.5px solid rgba(127,119,221,0.15)", background: "rgba(255,255,255,0.02)" }}
         >
           <p className="label-tag mb-2">{t("cancellations")}</p>
-          <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }}>
-            {cms.cancellationsText}
-          </p>
+          <Editable
+            as="p"
+            field="cours_cancellations_text"
+            value={cms.cancellationsText}
+            multiline
+            className="text-xs mb-4"
+            style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }}
+          />
           {SITE.coursWhatsappGroupUrl ? (
             <a
               href={SITE.coursWhatsappGroupUrl}

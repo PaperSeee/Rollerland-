@@ -15,6 +15,29 @@ const FIELDS: Field[] = [
   { name: "home_cta_title", label: "Final CTA title", type: "text" },
   { name: "home_cta_lead", label: "Final CTA text", type: "textarea" },
   {
+    name: "home_stats",
+    label: "Opening-hours bar",
+    type: "repeater",
+    itemLabel: "Day",
+    fields: [
+      { name: "stat_label", label: "Day", type: "text" },
+      { name: "stat_value", label: "Hours", type: "text" },
+      { name: "stat_sub", label: "Activities", type: "text" },
+    ],
+  },
+  {
+    name: "home_services",
+    label: "Services cards",
+    type: "repeater",
+    itemLabel: "Service",
+    fields: [
+      { name: "service_title", label: "Title", type: "text" },
+      { name: "service_desc", label: "Description", type: "textarea" },
+      { name: "service_href", label: "Link (e.g. /cours)", type: "text" },
+      { name: "service_accent", label: "Highlight", type: "bool" },
+    ],
+  },
+  {
     name: "partners",
     label: "Partners (logos)",
     type: "repeater",

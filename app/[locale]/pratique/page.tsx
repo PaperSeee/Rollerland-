@@ -1,8 +1,9 @@
-import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getRollerland, pick, rowStr } from "@/lib/wordpress";
 import { translate, translateMany } from "@/lib/translate";
 import Editable from "@/components/edit/Editable";
+import EditableImage from "@/components/edit/EditableImage";
+import EditSectionLink from "@/components/edit/EditSectionLink";
 import { SITE } from "@/lib/site";
 
 export const revalidate = 60;
@@ -41,6 +42,7 @@ export default async function PratiquePage({ params }: { params: { locale: strin
   const acf = await getRollerland();
   const reglementImage = acf.reglement_image || FALLBACK_REGLEMENT;
   const parkingUrl = acf.parking_url || "https://go.parkbee.net/start-booking/24763";
+  const title = (await translate(pick(acf, "pratique_title"), locale)) || t("title");
   const intro = (await translate(pick(acf, "pratique_intro"), locale)) || t("intro");
   const parkingText = (await translate(pick(acf, "parking_text"), locale)) || t("parkingText");
   // Rules from WP (translated) if provided, else the hardcoded RULES list.
@@ -53,12 +55,13 @@ export default async function PratiquePage({ params }: { params: { locale: strin
       {/* Header */}
       <div className="mb-16">
         <p className="label-tag mb-4">{t("kicker")}</p>
-        <h1
+        <Editable
+          as="h1"
+          field="pratique_title"
+          value={title}
           className="text-4xl md:text-6xl text-white mb-4"
           style={{ fontWeight: 300, letterSpacing: "-0.02em" }}
-        >
-          {t("title")}
-        </h1>
+        />
         <Editable as="p" field="pratique_intro" value={intro} multiline className="text-sm" style={{ color: "rgba(255,255,255,0.45)", lineHeight: "1.8" }} />
       </div>
 
@@ -192,9 +195,14 @@ export default async function PratiquePage({ params }: { params: { locale: strin
             }}
           >
             <p className="label-tag mb-3">{t("parking")}</p>
-            <p className="text-xs mb-3" style={{ color: "rgba(255,255,255,0.5)", lineHeight: "1.8" }}>
-              {parkingText}
-            </p>
+            <Editable
+              as="p"
+              field="parking_text"
+              value={parkingText}
+              multiline
+              className="text-xs mb-3"
+              style={{ color: "rgba(255,255,255,0.5)", lineHeight: "1.8" }}
+            />
             <a
               href={parkingUrl}
               target="_blank"
@@ -207,7 +215,8 @@ export default async function PratiquePage({ params }: { params: { locale: strin
         </div>
       </div>
 
-      {/* Roller rules */}
+      {/* Roller rules — rules list + visual edited in the admin form */}
+      <EditSectionLink section="practical" label="rules" />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
         <div>
           <p className="label-tag mb-5">{t("rules")}</p>
@@ -245,8 +254,9 @@ export default async function PratiquePage({ params }: { params: { locale: strin
               height: 480,
             }}
           >
-            <Image
-              src={reglementImage}
+            <EditableImage
+              field="reglement_image"
+              value={reglementImage}
               alt="Règlement Rollerland Brussels"
               fill
               className="object-contain"

@@ -8,6 +8,7 @@ const SECTIONS = [
   { slug: "schedule", label: "Schedule" },
   { slug: "practical", label: "Practical" },
   { slug: "lessons", label: "Lessons" },
+  { slug: "disco", label: "Disco Roller" },
   { slug: "private-events", label: "Private Events" },
   { slug: "contact", label: "Contact" },
   { slug: "global", label: "Global & Footer" },

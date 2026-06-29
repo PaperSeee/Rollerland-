@@ -41,8 +41,11 @@ export interface WPAcf {
   cours_adultes_prix?: string;
   cours_adultes_horaire?: string;
   cours_tickettailor_url?: string;
+  cours_list?: Array<Record<string, unknown>>;
   start2ride_actif?: boolean;
   start2ride_date?: string;
+  start2ride_time?: string;
+  start2ride_place?: string;
   start2ride_image?: string;
   start2ride_url?: string;
   // Pratique
@@ -59,6 +62,8 @@ export interface WPAcf {
   cours_whatsapp_group_url?: string;
   // Home — structured
   home_tribute_image?: string;
+  home_stats?: Array<Record<string, unknown>>;
+  home_services?: Array<Record<string, unknown>>;
   partners?: Array<{ partner_name: string; partner_logo?: string; partner_url?: string }>;
   // Tarifs — structured repeaters
   options_supplementaires?: Array<Record<string, unknown>>;

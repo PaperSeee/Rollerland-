@@ -4,6 +4,7 @@ import ContentEditor, { type Field } from "../ContentEditor";
 export const dynamic = "force-dynamic";
 
 const FIELDS: Field[] = [
+  { name: "horaires_title", label: "Page title", type: "text" },
   { name: "horaires_intro", label: "Intro", type: "textarea" },
   { name: "horaire_mercredi", label: "Wednesday hours", type: "text" },
   { name: "horaire_vendredi", label: "Friday hours", type: "text" },

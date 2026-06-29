@@ -3,6 +3,7 @@ import { Link } from "@/i18n/navigation";
 import { getRollerland, pick, rowStr } from "@/lib/wordpress";
 import { translate } from "@/lib/translate";
 import Editable from "@/components/edit/Editable";
+import EditSectionLink from "@/components/edit/EditSectionLink";
 import { SITE } from "@/lib/site";
 import { FORMULES } from "@/lib/formules";
 
@@ -73,6 +74,7 @@ export default async function TarifsPage({ params }: { params: { locale: string 
   const acf = await getRollerland();
 
   const reservationUrl = pick(acf, "reservation_url") || SITE.reservationUrl;
+  const title = (await translate(pick(acf, "tarifs_title"), locale)) || t("title");
   const intro = (await translate(pick(acf, "tarifs_intro"), locale)) || t("intro");
   const consume1 = (await translate(pick(acf, "consume_notice_1"), locale)) || t("consume1");
   const consume2 = (await translate(pick(acf, "consume_notice_2"), locale)) || t("consume2");
@@ -121,11 +123,18 @@ export default async function TarifsPage({ params }: { params: { locale: string 
       {/* Header */}
       <div className="mb-16 animate-fade-up">
         <p className="label-tag mb-4">{t("kicker")}</p>
-        <h1 className="text-5xl md:text-7xl text-white mb-4" style={{ fontWeight: 300, letterSpacing: "-0.03em", lineHeight: "0.95" }}>
-          {t("title")}
-        </h1>
+        <Editable
+          as="h1"
+          field="tarifs_title"
+          value={title}
+          className="text-5xl md:text-7xl text-white mb-4"
+          style={{ fontWeight: 300, letterSpacing: "-0.03em", lineHeight: "0.95" }}
+        />
         <Editable as="p" field="tarifs_intro" value={intro} multiline className="text-sm mt-6 max-w-lg" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.8" }} />
       </div>
+
+      {/* Prices, options, packages and menu are edited as lists in the admin form */}
+      <EditSectionLink section="prices" label="prices & menu" />
 
       {/* Individual + options */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16 animate-fade-up delay-100">

@@ -75,9 +75,16 @@ export default async function HomePage({ params }: { params: { locale: string } 
     ctaLead: (await tr("home_cta_lead")) || t("ctaLead", { email: SITE.email }),
   };
 
-  // Partners from WP if provided, else the hardcoded fallback list.
+  // Partners from the DB if provided, else the hardcoded fallback list. When a
+  // DB partner has no logo set, fall back to the bundled logo file matched by
+  // name — so the logos show even if the DB was seeded without them.
+  const logoByName = new Map(PARTNERS.map((p) => [p.name.trim().toLowerCase(), p.logo]));
   const partners = acf.partners?.length
-    ? acf.partners.map((p) => ({ name: p.partner_name, url: p.partner_url || "#", logo: p.partner_logo || null }))
+    ? acf.partners.map((p) => ({
+        name: p.partner_name,
+        url: p.partner_url || "#",
+        logo: p.partner_logo || logoByName.get((p.partner_name ?? "").trim().toLowerCase()) || null,
+      }))
     : PARTNERS;
 
   // Opening-hours bar: DB repeater (neutral values, label auto-translated) else fallback.

@@ -30,9 +30,12 @@ const DEFAULT_CONTENT = {
   home_cta_title: "",
   home_cta_lead: "Book online or by email at info@rollerland.brussels. Quick reply guaranteed.",
   partners: [
-    { partner_name: "Be Here", partner_url: "https://www.behere.brussels/", partner_logo: "" },
-    { partner_name: "Kinepolis", partner_url: "https://kinepolis.be/", partner_logo: "" },
-    { partner_name: "Brussels Airlines", partner_url: "https://www.brusselsairlines.com/", partner_logo: "" },
+    { partner_name: "Be Here", partner_url: "https://www.behere.brussels/", partner_logo: "/partners/be-here.png" },
+    { partner_name: "Kinepolis", partner_url: "https://kinepolis.be/", partner_logo: "/partners/kinepolis.png" },
+    { partner_name: "Brussels Airlines", partner_url: "https://www.brusselsairlines.com/", partner_logo: "/partners/brussels-airlines.png" },
+    { partner_name: "VGC", partner_url: "https://www.vgc.be/", partner_logo: "/partners/vgc.png" },
+    { partner_name: "Rollerland Aalst", partner_url: "https://www.rollerland.be/", partner_logo: "/partners/rollerland-aalst.png" },
+    { partner_name: "Skate Vlaanderen", partner_url: "https://www.skate.vlaanderen/", partner_logo: "/partners/skate-vlaanderen.png" },
   ],
   // Prices
   tarifs_intro: "All prices are per person. Reservation required for groups. Skates included in all group packages.",

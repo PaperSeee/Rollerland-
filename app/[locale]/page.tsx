@@ -75,17 +75,23 @@ export default async function HomePage({ params }: { params: { locale: string } 
     ctaLead: (await tr("home_cta_lead")) || t("ctaLead", { email: SITE.email }),
   };
 
-  // Partners from the DB if provided, else the hardcoded fallback list. When a
-  // DB partner has no logo set, fall back to the bundled logo file matched by
-  // name — so the logos show even if the DB was seeded without them.
-  const logoByName = new Map(PARTNERS.map((p) => [p.name.trim().toLowerCase(), p.logo]));
-  const partners = acf.partners?.length
-    ? acf.partners.map((p) => ({
-        name: p.partner_name,
-        url: p.partner_url || "#",
-        logo: p.partner_logo || logoByName.get((p.partner_name ?? "").trim().toLowerCase()) || null,
-      }))
-    : PARTNERS;
+  // Partners: start from the full bundled list (6 partners + logos), then let
+  // the DB override matching entries by name and append any extra DB partners.
+  // A DB partner with no logo falls back to the bundled logo matched by name.
+  // This way all six always show even if the DB was seeded with only a few.
+  const norm = (s: string) => s.trim().toLowerCase();
+  const logoByName = new Map(PARTNERS.map((p) => [norm(p.name), p.logo]));
+  const dbPartners = (acf.partners ?? []).map((p) => ({
+    name: p.partner_name ?? "",
+    url: p.partner_url || "#",
+    logo: p.partner_logo || logoByName.get(norm(p.partner_name ?? "")) || null,
+  }));
+  const dbByName = new Map(dbPartners.map((p) => [norm(p.name), p]));
+  // Bundled defaults first (DB values win where names match), then DB-only extras.
+  const partners = [
+    ...PARTNERS.map((p) => dbByName.get(norm(p.name)) ?? p),
+    ...dbPartners.filter((p) => !logoByName.has(norm(p.name))),
+  ];
 
   // Opening-hours bar: DB repeater (neutral values, label auto-translated) else fallback.
   const stats = acf.home_stats?.length

@@ -65,6 +65,8 @@ export interface WPAcf {
   footer_privacy_label?: string;
   footer_privacy_url?: string;
   footer_hours?: Array<Record<string, unknown>>;
+  footer_links?: Array<Record<string, unknown>>;
+  footer_socials?: Array<Record<string, unknown>>;
   // Global settings (neutral)
   site_email?: string;
   social_instagram?: string;

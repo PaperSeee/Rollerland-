@@ -11,6 +11,7 @@ export type FooterData = {
   address: string | null;
   email: string | null;
   socials: { instagram: string | null; facebook: string | null; tiktok: string | null };
+  socialsList: { label: string; url: string }[] | null;
   links: { label: string; href: string }[] | null;
   hours: { day: string; h: string }[] | null;
   closedNote: string | null;
@@ -45,11 +46,14 @@ export default function Footer({ data }: { data?: FooterData }) {
   const subtitle = data?.subtitle || t("subtitle");
   const address = data?.address || `${SITE.address.line1} · ${SITE.address.line2}`;
   const email = data?.email || SITE.email;
-  const socials = [
-    { label: "Instagram", url: data?.socials.instagram || SITE.socials.instagram },
-    { label: "Facebook", url: data?.socials.facebook || SITE.socials.facebook },
-    { label: "TikTok", url: data?.socials.tiktok || SITE.socials.tiktok },
-  ].filter((s) => s.url);
+  // Own social list (add/remove/reorder/rename) if set, else the 3 defaults.
+  const socials = data?.socialsList?.length
+    ? data.socialsList
+    : [
+        { label: "Instagram", url: data?.socials.instagram || SITE.socials.instagram },
+        { label: "Facebook", url: data?.socials.facebook || SITE.socials.facebook },
+        { label: "TikTok", url: data?.socials.tiktok || SITE.socials.tiktok },
+      ].filter((s) => s.url);
   const links =
     data?.links?.length
       ? data.links

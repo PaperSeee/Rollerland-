@@ -85,6 +85,21 @@ export default async function LocaleLayout({
         })),
       )
     : null;
+  // Footer links: own list if set, else reuse the header menu.
+  const footerLinks = acf.footer_links?.length
+    ? await Promise.all(
+        acf.footer_links.map(async (l) => ({
+          label: await translate(rowStr(l, "nav_label"), locale),
+          href: rowStr(l, "nav_href") || "/",
+        })),
+      )
+    : navLinks;
+  // Footer socials: own list if set, else null (Footer falls back to global socials).
+  const footerSocials = acf.footer_socials?.length
+    ? acf.footer_socials
+        .map((s) => ({ label: rowStr(s, "social_label"), url: rowStr(s, "social_url") }))
+        .filter((s) => s.label && s.url)
+    : null;
   const footer = {
     brand: pick(acf, "footer_brand") || null,
     tagline: (await translate(pick(acf, "footer_tagline"), locale)) || null,
@@ -96,7 +111,8 @@ export default async function LocaleLayout({
       facebook: pick(acf, "social_facebook") || null,
       tiktok: pick(acf, "social_tiktok") || null,
     },
-    links: navLinks,
+    socialsList: footerSocials,
+    links: footerLinks,
     hours: footerHours,
     closedNote: (await translate(pick(acf, "footer_closed_note"), locale)) || null,
     rights: (await translate(pick(acf, "footer_rights"), locale)) || null,

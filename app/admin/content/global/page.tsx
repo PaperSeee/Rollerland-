@@ -38,6 +38,26 @@ const FIELDS: Field[] = [
       { name: "stat_value", label: "Hours", type: "text" },
     ],
   },
+  {
+    name: "footer_links",
+    label: "Footer menu links (leave empty to reuse the header menu)",
+    type: "repeater",
+    itemLabel: "Link",
+    fields: [
+      { name: "nav_label", label: "Label", type: "text" },
+      { name: "nav_href", label: "URL", type: "text" },
+    ],
+  },
+  {
+    name: "footer_socials",
+    label: "Footer social links (leave empty for the defaults)",
+    type: "repeater",
+    itemLabel: "Social",
+    fields: [
+      { name: "social_label", label: "Label (e.g. Instagram)", type: "text" },
+      { name: "social_url", label: "URL", type: "text" },
+    ],
+  },
 ];
 
 export default async function GlobalContentPage() {

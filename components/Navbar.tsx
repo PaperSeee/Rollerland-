@@ -20,12 +20,29 @@ const NAV_LINKS: { key: string; href: string; hot?: boolean }[] = [
   { key: "discoRoller", href: "/disco-roller", hot: true },
 ];
 
-export default function Navbar() {
+// Header config from the DB (editable in /admin/content/navigation).
+export type NavConfig = {
+  links: { label: string; href: string; hot?: boolean }[] | null;
+  logo: string | null;
+  bookLabel: string | null;
+  bookUrl: string | null;
+};
+
+export default function Navbar({ nav }: { nav?: NavConfig }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const t = useTranslations("nav");
   const { editing } = useEdit();
+
+  // Links: DB config if provided, else the built-in translated list.
+  const links =
+    nav?.links?.length
+      ? nav.links
+      : NAV_LINKS.map((l) => ({ label: t(l.key), href: l.href, hot: l.hot }));
+  const bookLabel = nav?.bookLabel || t("reserve");
+  const bookUrl = nav?.bookUrl || SITE.reservationUrl;
+  const logo = nav?.logo || "https://retro.brussels/wp-content/uploads/2023/10/WhatsApp-Image-2023-09-12-at-09.22.29.jpeg";
 
   // While editing, keep ?edit=1 on internal links so edit mode persists as the
   // admin browses from page to page.
@@ -52,7 +69,7 @@ export default function Navbar() {
         <Link href={editHref("/")} className="flex items-center gap-3 group">
           <div className="relative overflow-hidden rounded-sm" style={{ width: 32, height: 32 }}>
             <Image
-              src="https://retro.brussels/wp-content/uploads/2023/10/WhatsApp-Image-2023-09-12-at-09.22.29.jpeg"
+              src={logo}
               alt="Rollerland Brussels"
               fill
               className="object-cover transition-transform duration-300 group-hover:scale-110"
@@ -68,7 +85,7 @@ export default function Navbar() {
 
         {/* Desktop nav */}
         <div className="hidden lg:flex items-center gap-7">
-          {NAV_LINKS.map((link) => (
+          {links.map((link) => (
             <Link
               key={link.href}
               href={editHref(link.href)}
@@ -78,7 +95,7 @@ export default function Navbar() {
                 letterSpacing: "0.12em",
               }}
             >
-              {t(link.key)}
+              {link.label}
               {link.hot && (
                 <span
                   className="absolute -top-1.5 -right-2.5 w-1 h-1 rounded-full animate-pulse-glow"
@@ -98,15 +115,24 @@ export default function Navbar() {
 
         {/* CTA + locale switcher */}
         <div className="hidden lg:flex items-center gap-5">
+          {editing && (
+            <a
+              href="/admin/content/navigation"
+              className="text-xs uppercase"
+              style={{ background: "#9B92F0", color: "#150E28", padding: "0.3rem 0.7rem", borderRadius: 2, letterSpacing: "0.08em" }}
+            >
+              ✎ Edit header
+            </a>
+          )}
           <LocaleSwitcher />
           <a
-            href={SITE.reservationUrl}
+            href={bookUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex btn-primary text-xs"
             style={{ padding: "0.5rem 1.25rem" }}
           >
-            {t("reserve")}
+            {bookLabel}
           </a>
         </div>
 
@@ -152,7 +178,7 @@ export default function Navbar() {
         }}
       >
         <div className="px-6 pb-8 pt-6 flex flex-col gap-5 bg-[#150E28]">
-          {NAV_LINKS.map((link) => (
+          {links.map((link) => (
             <Link
               key={link.href}
               href={editHref(link.href)}
@@ -163,7 +189,7 @@ export default function Navbar() {
                 letterSpacing: "0.14em",
               }}
             >
-              {t(link.key)}
+              {link.label}
               {link.hot && <span className="w-1 h-1 rounded-full bg-purple-400 animate-pulse" />}
             </Link>
           ))}
@@ -171,12 +197,12 @@ export default function Navbar() {
             <LocaleSwitcher />
           </div>
           <a
-            href={SITE.reservationUrl}
+            href={bookUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-primary w-fit mt-2"
           >
-            {t("reserve")}
+            {bookLabel}
           </a>
         </div>
       </div>

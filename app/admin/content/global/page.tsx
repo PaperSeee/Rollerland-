@@ -10,7 +10,8 @@ const FIELDS: Field[] = [
   { name: "social_tiktok", label: "TikTok URL", type: "text" },
   { name: "google_review_url", label: "Google review link", type: "text" },
   { name: "cours_whatsapp_group_url", label: "Lessons WhatsApp group URL", type: "text" },
-  { name: "reservation_url", label: "Reservation form URL", type: "text" },
+  { name: "reservation_url", label: "Reservation form URL (all 'Book' buttons)", type: "text" },
+  { name: "reserve_label", label: "Main 'Book' button label", type: "text" },
   { name: "hero_image", label: "Home hero image", type: "image" },
   {
     name: "gallery_images_rows",

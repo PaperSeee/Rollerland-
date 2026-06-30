@@ -53,6 +53,11 @@ export interface WPAcf {
   parking_url?: string;
 
   // ── CMS v3 (WordPress-editable, single-language EN; site auto-translates) ──
+  // Header / navigation
+  nav_logo?: string;
+  nav_book_label?: string;
+  nav_book_url?: string;
+  nav_links?: Array<Record<string, unknown>>;
   // Global settings (neutral)
   site_email?: string;
   social_instagram?: string;

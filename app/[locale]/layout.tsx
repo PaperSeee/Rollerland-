@@ -9,6 +9,8 @@ import PromoPopup from "@/components/PromoPopup";
 import { getPopup } from "@/lib/popup";
 import { routing } from "@/i18n/routing";
 import EditProvider from "@/components/edit/EditProvider";
+import { getRollerland, pick, rowStr } from "@/lib/wordpress";
+import { translate } from "@/lib/translate";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -53,12 +55,31 @@ export default async function LocaleLayout({
 
   const popup = await getPopup();
 
+  // Header config from the DB (editable in /admin/content/navigation), with
+  // fallbacks handled inside Navbar. Custom link labels are auto-translated.
+  const acf = await getRollerland();
+  const navLinks = acf.nav_links?.length
+    ? await Promise.all(
+        acf.nav_links.map(async (l) => ({
+          label: await translate(rowStr(l, "nav_label"), locale),
+          href: rowStr(l, "nav_href") || "/",
+          hot: Boolean(l.nav_hot),
+        })),
+      )
+    : null;
+  const nav = {
+    links: navLinks,
+    logo: pick(acf, "nav_logo") || null,
+    bookLabel: (await translate(pick(acf, "nav_book_label"), locale)) || null,
+    bookUrl: pick(acf, "nav_book_url") || null,
+  };
+
   return (
     <html lang={locale} className={spaceGrotesk.variable}>
       <body className="antialiased" style={{ color: "#FFFFFF" }}>
         <NextIntlClientProvider>
           <EditProvider locale={locale}>
-            <Navbar />
+            <Navbar nav={nav} />
             <main className="pt-16">{children}</main>
             <Footer />
             {popup && <PromoPopup data={popup} />}

@@ -55,8 +55,9 @@ export default async function HomePage({ params }: { params: { locale: string } 
   const t = await getTranslations("home");
   const acf = await getRollerland();
   const heroImage = acf.hero_image || FALLBACK_HERO;
-  // Editable reservation link (admin → Global) with the configured fallback.
+  // Editable reservation link + label (admin → Global) with configured fallbacks.
   const reservationUrl = pick(acf, "reservation_url") || SITE.reservationUrl;
+  const reserveLabel = (await translate(pick(acf, "reserve_label"), locale)) || t("reserve");
 
   // Editable copy: WordPress value (English, auto-translated to the locale) else
   // the i18n default. tr() = translate the WP field; "" if the field is empty.
@@ -189,7 +190,7 @@ export default async function HomePage({ params }: { params: { locale: string } 
               rel="noopener noreferrer"
               className="btn-primary animate-pulse-glow"
             >
-              {t("reserve")}
+              {reserveLabel}
             </a>
             <Link href="/disco-roller" className="btn-outline">
               Disco Roller ↗
@@ -434,7 +435,7 @@ export default async function HomePage({ params }: { params: { locale: string } 
               rel="noopener noreferrer"
               className="btn-primary text-center"
             >
-              {t("reserve")}
+              {reserveLabel}
             </a>
           </div>
         </div>
@@ -528,7 +529,7 @@ export default async function HomePage({ params }: { params: { locale: string } 
               className="btn-primary animate-pulse-glow"
               style={{ padding: "0.9rem 2.5rem" }}
             >
-              {t("ctaReserve")}
+              {reserveLabel}
             </a>
             <a
               href={`mailto:${SITE.email}`}

@@ -1,4 +1,4 @@
-import { getContent } from "@/lib/content";
+import { getEditableContent } from "@/lib/content";
 import ContentEditor, { type Field } from "../ContentEditor";
 
 export const dynamic = "force-dynamic";
@@ -61,7 +61,7 @@ const FIELDS: Field[] = [
 ];
 
 export default async function GlobalContentPage() {
-  const content = await getContent();
+  const content = await getEditableContent();
   return (
     <ContentEditor
       title="Global & Footer"

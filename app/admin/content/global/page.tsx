@@ -66,6 +66,16 @@ export default async function GlobalContentPage() {
     <ContentEditor
       title="Global & Footer"
       description="Edit global settings (email, socials, reservation link), the home hero/gallery images and the footer. Write in English."
+      help={[
+        "Reservation form URL: this single link is used by every 'Book' button across the whole site. 'Main Book button label' changes their text.",
+        "Email & socials: these are reused on the Contact page and in the footer.",
+        "Home hero image / gallery: click an image to upload a new one. In the gallery, use '+ Add photo' / 'Remove' / ↑ ↓ to manage photos.",
+        "Footer menu links: add / remove / reorder / rename your own footer links. Leave this list empty to reuse the header menu.",
+        "Footer social links: add / remove / reorder your own social links (label + URL). Leave empty to keep the default Instagram / Facebook / TikTok.",
+        "Footer opening hours: one row per day (e.g. 'Wednesday' / '12h–20h').",
+        "Privacy link: set its label and URL. Copyright: the year is added automatically.",
+        "Click 'Save'. Changes go live immediately.",
+      ]}
       fields={FIELDS}
       initial={content as Record<string, unknown>}
     />

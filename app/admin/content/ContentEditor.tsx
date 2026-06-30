@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { saveContentSection, type SaveState } from "../contentActions";
 import ImageUpload from "../ImageUpload";
+import HelpBox from "./HelpBox";
 
 // ── Field definitions ──────────────────────────────────────────────────
 export type Field =
@@ -168,12 +169,14 @@ function Repeater({
 export default function ContentEditor({
   title,
   description,
+  help,
   fields,
   initial,
   preview,
 }: {
   title: string;
   description?: string;
+  help?: string[];
   fields: Field[];
   initial: Values;
   preview?: (values: Values) => React.ReactNode;
@@ -192,10 +195,12 @@ export default function ContentEditor({
         {title}
       </h1>
       {description && (
-        <p className="text-sm mb-10" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.7" }}>
+        <p className="text-sm mb-6" style={{ color: "rgba(255,255,255,0.4)", lineHeight: "1.7" }}>
           {description}
         </p>
       )}
+
+      {help && help.length > 0 && <HelpBox tips={help} />}
 
       <div className={`grid grid-cols-1 ${preview ? "lg:grid-cols-2" : ""} gap-10`}>
         {/* Form */}

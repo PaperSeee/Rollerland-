@@ -56,6 +56,14 @@ export default async function HomeContentPage() {
     <ContentEditor
       title="Home page"
       description="Edit the home page content. Write in English — the site auto-translates to FR/NL."
+      help={[
+        "Texts (hero, tribute, CTA, section titles): just type. They appear on the home page.",
+        "Images (tribute): click to upload a new one. The hero & gallery images are in 'Global & Footer'.",
+        "Opening-hours bar & Services cards: lists — use '+ Add', 'Remove', ↑ ↓ to manage rows.",
+        "Partners: add / remove / reorder partner rows. Each can have a name, link and logo (logo optional — a built-in logo is used if the name matches).",
+        "Tip: you can also edit most of these directly on the live page — go to /admin and click 'Edit the site'.",
+        "Click 'Save' to publish.",
+      ]}
       fields={FIELDS}
       initial={content as Record<string, unknown>}
     />

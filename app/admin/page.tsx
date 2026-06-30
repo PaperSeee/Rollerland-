@@ -25,6 +25,9 @@ export default async function AdminHome() {
         <Link href="/admin/content" className="btn-outline">
           Content
         </Link>
+        <Link href="/admin/content/guide" className="btn-outline" style={{ borderColor: "rgba(155,146,240,0.6)", color: "#9B92F0" }}>
+          📖 Guide
+        </Link>
         {/* Launch on-page inline editing (English source) */}
         <a href="/?edit=1" className="btn-primary" style={{ marginLeft: "auto" }}>
           ✎ Edit the site

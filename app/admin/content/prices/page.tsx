@@ -67,6 +67,15 @@ export default async function PricesContentPage() {
     <ContentEditor
       title="Prices & Packages"
       description="Edit prices, add-on options, packages (with their detail pages) and the bar menu. Write in English."
+      help={[
+        "Individual prices (child, adult, protection, cloakroom): just type the price, e.g. '6€'.",
+        "Each list (options, packages, drinks, food) works the same way: '+ Add' to create a row, 'Remove' to delete, ↑ ↓ to reorder.",
+        "Packages: 'Slug' is the URL of the package's detail page (e.g. 'birthday-party' → /tarifs/birthday-party). Keep it short, lowercase, no spaces.",
+        "Packages 'Included': type one item per line — each line becomes a bullet point on the package page.",
+        "Highlight: turn on to subtly emphasise a package row in the table.",
+        "Prices are shown as-is (not translated). Labels/descriptions are written in English and auto-translated to FR/NL.",
+        "Click 'Save'. Changes go live immediately.",
+      ]}
       fields={FIELDS}
       initial={content as Record<string, unknown>}
     />

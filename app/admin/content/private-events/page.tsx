@@ -28,6 +28,12 @@ export default async function PrivateEventsContentPage() {
     <ContentEditor
       title="Private Events"
       description="Edit the private events page content. Write in English."
+      help={[
+        "Events / formulas: use '+ Add event' to create a card, 'Remove' to delete, ↑ ↓ to reorder. Each one has a title, schedule, description and image.",
+        "Image: click to upload a photo for the event card (optional — without one, the card shows a number).",
+        "Page title, intro and the privatization block at the bottom are edited in their own fields.",
+        "Text is written in English and auto-translated to FR/NL. Click 'Save' to publish.",
+      ]}
       fields={FIELDS}
       initial={content as Record<string, unknown>}
     />

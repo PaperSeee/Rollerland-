@@ -3,6 +3,7 @@ import Link from "next/link";
 export const dynamic = "force-dynamic";
 
 const SECTIONS = [
+  { slug: "guide", label: "📖 Guide" },
   { slug: "navigation", label: "Header & Nav" },
   { slug: "home", label: "Home" },
   { slug: "prices", label: "Prices & Packages" },

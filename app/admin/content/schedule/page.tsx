@@ -29,6 +29,12 @@ export default async function ScheduleContentPage() {
     <ContentEditor
       title="Schedule"
       description="Edit opening hours and exceptional closures. Write in English."
+      help={[
+        "Opening hours: type each day's hours (e.g. '12h00 – 20h00'). Leave a day blank to show it as closed.",
+        "Exceptional closures: use '+ Add closure' for each special closing (period + reason), 'Remove' to delete, ↑ ↓ to reorder.",
+        "Page title and intro appear at the top of the Schedule page.",
+        "Click 'Save' to publish. Changes go live immediately.",
+      ]}
       fields={FIELDS}
       initial={content as Record<string, unknown>}
     />

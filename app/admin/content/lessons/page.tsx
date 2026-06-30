@@ -39,6 +39,13 @@ export default async function LessonsContentPage() {
     <ContentEditor
       title="Lessons"
       description="Edit the roller lessons content. Write in English."
+      help={[
+        "Courses: use '+ Add course' to create a course card, 'Remove' to delete one, ↑ ↓ to reorder. Fill in title, price, days, time, level, age and description.",
+        "Booking URL: set a default TicketTailor URL at the top; each course can override it with its own booking URL if needed.",
+        "Start2Ride: edit its description, date, time, place and booking URL in their own fields.",
+        "Page title and intro appear at the top of the Lessons page.",
+        "Text is written in English and auto-translated to FR/NL. Click 'Save' to publish.",
+      ]}
       fields={FIELDS}
       initial={content as Record<string, unknown>}
     />

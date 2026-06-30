@@ -28,7 +28,16 @@ export default async function NavigationContentPage() {
   return (
     <ContentEditor
       title="Header & Navigation"
-      description="Edit the header: logo, the menu links (add / remove / reorder), and the header button. Leave 'Menu links' empty to keep the default menu. Write in English."
+      description="Edit the header: logo, the menu links, and the header button. Write in English."
+      help={[
+        "Menu links: click '+ Add link' to add a new menu item. For each link set a Label (the text shown) and a URL.",
+        "Reorder links with the ↑ and ↓ buttons on each row. Remove a link with the 'Remove' button.",
+        "URL: use an internal path like /tarifs, /cours, /contact — or a full address like https://example.com for an external site.",
+        "Highlight: turn this on to show the small purple dot next to a link (used for Disco Roller).",
+        "Leave the 'Menu links' list completely empty to keep the built-in default menu.",
+        "Header logo: click to upload a new image. Header button: change its label (e.g. 'Book now') and the URL it points to.",
+        "Click 'Save' at the bottom. Changes go live on the site immediately.",
+      ]}
       fields={FIELDS}
       initial={content as Record<string, unknown>}
     />

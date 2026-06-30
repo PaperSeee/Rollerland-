@@ -24,6 +24,12 @@ export default async function PracticalContentPage() {
     <ContentEditor
       title="Practical info"
       description="Edit the practical info: intro, parking, rules. Write in English."
+      help={[
+        "Rules: use '+ Add rule' for each rule, 'Remove' to delete, ↑ ↓ to reorder.",
+        "Visual rules image: click to upload the rules poster shown on the page.",
+        "Parking: edit the parking text and the booking URL. Page title and intro are at the top.",
+        "Text is written in English and auto-translated to FR/NL. Click 'Save' to publish.",
+      ]}
       fields={FIELDS}
       initial={content as Record<string, unknown>}
     />

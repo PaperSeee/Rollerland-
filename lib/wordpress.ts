@@ -58,6 +58,13 @@ export interface WPAcf {
   nav_book_label?: string;
   nav_book_url?: string;
   nav_links?: Array<Record<string, unknown>>;
+  // Footer
+  footer_brand?: string;
+  footer_address?: string;
+  footer_rights?: string;
+  footer_privacy_label?: string;
+  footer_privacy_url?: string;
+  footer_hours?: Array<Record<string, unknown>>;
   // Global settings (neutral)
   site_email?: string;
   social_instagram?: string;

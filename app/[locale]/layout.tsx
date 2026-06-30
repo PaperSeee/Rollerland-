@@ -74,6 +74,36 @@ export default async function LocaleLayout({
     bookUrl: pick(acf, "nav_book_url") || null,
   };
 
+  // Footer config from the DB (editable in /admin/content/global), fully
+  // translated; Footer holds all the fallbacks. Reuses the same menu links and,
+  // when set, a dedicated footer hours list.
+  const footerHours = acf.footer_hours?.length
+    ? await Promise.all(
+        acf.footer_hours.map(async (h) => ({
+          day: await translate(rowStr(h, "stat_label"), locale),
+          h: rowStr(h, "stat_value"),
+        })),
+      )
+    : null;
+  const footer = {
+    brand: pick(acf, "footer_brand") || null,
+    tagline: (await translate(pick(acf, "footer_tagline"), locale)) || null,
+    subtitle: (await translate(pick(acf, "footer_subtitle"), locale)) || null,
+    address: (await translate(pick(acf, "footer_address"), locale)) || null,
+    email: pick(acf, "site_email") || null,
+    socials: {
+      instagram: pick(acf, "social_instagram") || null,
+      facebook: pick(acf, "social_facebook") || null,
+      tiktok: pick(acf, "social_tiktok") || null,
+    },
+    links: navLinks,
+    hours: footerHours,
+    closedNote: (await translate(pick(acf, "footer_closed_note"), locale)) || null,
+    rights: (await translate(pick(acf, "footer_rights"), locale)) || null,
+    privacyLabel: (await translate(pick(acf, "footer_privacy_label"), locale)) || null,
+    privacyUrl: pick(acf, "footer_privacy_url") || null,
+  };
+
   return (
     <html lang={locale} className={spaceGrotesk.variable}>
       <body className="antialiased" style={{ color: "#FFFFFF" }}>
@@ -81,7 +111,7 @@ export default async function LocaleLayout({
           <EditProvider locale={locale}>
             <Navbar nav={nav} />
             <main className="pt-16">{children}</main>
-            <Footer />
+            <Footer data={footer} />
             {popup && <PromoPopup data={popup} />}
           </EditProvider>
         </NextIntlClientProvider>

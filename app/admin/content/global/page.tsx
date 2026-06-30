@@ -20,9 +20,24 @@ const FIELDS: Field[] = [
     itemLabel: "Photo",
     fields: [{ name: "src", label: "Image", type: "image" }],
   },
+  { name: "footer_brand", label: "Footer brand name", type: "text" },
   { name: "footer_tagline", label: "Footer tagline", type: "text" },
   { name: "footer_subtitle", label: "Footer subtitle", type: "text" },
+  { name: "footer_address", label: "Footer address line", type: "text" },
   { name: "footer_closed_note", label: "Footer closed-days note", type: "text" },
+  { name: "footer_rights", label: "Footer copyright text", type: "text" },
+  { name: "footer_privacy_label", label: "Privacy link label", type: "text" },
+  { name: "footer_privacy_url", label: "Privacy link URL", type: "text" },
+  {
+    name: "footer_hours",
+    label: "Footer opening hours",
+    type: "repeater",
+    itemLabel: "Day",
+    fields: [
+      { name: "stat_label", label: "Day", type: "text" },
+      { name: "stat_value", label: "Hours", type: "text" },
+    ],
+  },
 ];
 
 export default async function GlobalContentPage() {

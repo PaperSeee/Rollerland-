@@ -24,7 +24,7 @@ export default function ReservationForm() {
           width="100%"
           height="720"
           style={{ border: 0, display: "block" }}
-          title="Formulaire de réservation Rollerland Brussels"
+          title="Rollerland Brussels reservation form"
         >
           Chargement…
         </iframe>

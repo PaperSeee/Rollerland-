@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { useEdit } from "./EditProvider";
+import { uploadImage } from "@/lib/prepareImage";
 
 type Partner = { name: string; url: string; logo: string | null };
 type PartnerRow = { partner_name?: string; partner_url?: string; partner_logo?: string };
@@ -82,11 +83,9 @@ function PartnerCell({
   async function upload(file: File) {
     setUploading(true);
     try {
-      const fd = new FormData();
-      fd.append("file", file);
-      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-      const data = await res.json().catch(() => ({}));
-      if (res.ok && data.url) onLogo(data.url);
+      onLogo(await uploadImage(file));
+    } catch (e) {
+      window.alert(`Image upload failed: ${e instanceof Error ? e.message : "please try again."}`);
     } finally {
       setUploading(false);
     }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { uploadImage } from "@/lib/prepareImage";
 
 // Image picker: click or drag & drop a file → uploads to Vercel Blob → calls
 // onChange with the resulting public URL. Used in the popup & event editors.
@@ -20,25 +21,7 @@ export default function ImageUpload({
     setError("");
     setUploading(true);
     try {
-      const fd = new FormData();
-      fd.append("file", file);
-      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-      // Parse defensively: a non-JSON response (e.g. an upload-size limit page)
-      // would otherwise throw a cryptic "did not match the expected pattern".
-      const raw = await res.text();
-      let data: { url?: string; error?: string } = {};
-      try {
-        data = raw ? JSON.parse(raw) : {};
-      } catch {
-        throw new Error(
-          res.status === 413
-            ? "Image too large to upload."
-            : `Upload error (${res.status}).`,
-        );
-      }
-      if (!res.ok) throw new Error(data.error || "Upload failed");
-      if (!data.url) throw new Error("Invalid server response.");
-      onChange(data.url);
+      onChange(await uploadImage(file));
     } catch (e) {
       setError(e instanceof Error ? e.message : "Upload failed");
     } finally {

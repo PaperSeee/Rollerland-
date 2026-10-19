@@ -16,6 +16,24 @@ interface EditCtx {
   dirty: boolean;
 }
 
+// Public page → the admin form holding ALL of that page's content (lists,
+// hours, prices…), for what can't be clicked/typed directly on the page.
+const FORM_FOR_PATH: Array<[RegExp, string, string]> = [
+  [/^\/horaires/, "/admin/content/schedule", "Schedule"],
+  [/^\/pratique/, "/admin/content/practical", "Practical"],
+  [/^\/tarifs/, "/admin/content/prices", "Prices"],
+  [/^\/cours/, "/admin/content/lessons", "Lessons"],
+  [/^\/private-events/, "/admin/content/private-events", "Private Events"],
+  [/^\/contact/, "/admin/content/contact", "Contact"],
+  [/^\/disco-roller/, "/admin/content/disco", "Disco Roller"],
+  [/^\/?$/, "/admin/content/home", "Home"],
+];
+
+function formFor(pathname: string): { href: string; label: string } {
+  const hit = FORM_FOR_PATH.find(([re]) => re.test(pathname));
+  return hit ? { href: hit[1], label: hit[2] } : { href: "/admin/content", label: "all content" };
+}
+
 const Ctx = createContext<EditCtx>({
   editing: false,
   setField: () => {},
@@ -117,6 +135,22 @@ export default function EditProvider({
           </span>
           <div className="flex items-center gap-4">
             {saved && <span className="text-xs" style={{ color: "#9B92F0" }}>Saved ✓</span>}
+            {(() => {
+              const f = formFor(window.location.pathname);
+              return (
+                <a
+                  href={f.href}
+                  onClick={(e) => {
+                    if (dirty && !window.confirm("You have unsaved changes on this page. Leave without saving?")) e.preventDefault();
+                  }}
+                  className="text-xs uppercase hidden sm:inline"
+                  style={{ color: "#9B92F0", letterSpacing: "0.1em" }}
+                  title="Lists, hours, prices and anything you can't edit directly on the page"
+                >
+                  ＋ Add / edit lists ({f.label}) →
+                </a>
+              );
+            })()}
             <a href={window?.location?.pathname ?? "/"} className="text-xs uppercase" style={{ color: "rgba(255,255,255,0.5)", letterSpacing: "0.1em" }}>
               Exit
             </a>

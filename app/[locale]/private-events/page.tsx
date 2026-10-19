@@ -1,63 +1,13 @@
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getRollerland, pick } from "@/lib/wordpress";
-import { translate } from "@/lib/translate";
+import { translate, translateMany } from "@/lib/translate";
+import { DEFAULT_CONTENT } from "@/lib/defaults";
 import Editable from "@/components/edit/Editable";
 import EditSectionLink from "@/components/edit/EditSectionLink";
 import { SITE } from "@/lib/site";
 
 export const revalidate = 60;
-
-const EVENTS_FALLBACK = [
-  {
-    tag: "01",
-    title: "Disco Roller",
-    schedule: "Vendredi 17h–24h · Samedi 12h–24h",
-    desc: "La soirée roller incontournable de Bruxelles. Musique, lumières colorées et ambiance festive sur la piste. Patins en location sur place. Pas de réservation nécessaire en accès individuel.",
-    image: "https://retro.brussels/wp-content/uploads/2025/01/roller-party2-scaled.jpg",
-    cta: { label: "Réserver", href: SITE.reservationUrl },
-  },
-  {
-    tag: "02",
-    title: "Anniversaires",
-    schedule: "Sur réservation · Tous jours possibles",
-    desc: "Célébrez votre anniversaire sur la piste ! Formules Birthday Party (14€/18€ par personne) et Birthday Party Plus (20€/24€). Animation, musique et gâteau optionnel. Cours d'animation privé disponible en option (75€/h).",
-    image: "https://retro.brussels/wp-content/uploads/2023/10/WhatsApp-Image-2023-09-12-at-09.22.51.jpeg",
-    cta: { label: "Réserver un anniversaire", href: SITE.reservationUrl },
-  },
-  {
-    tag: "03",
-    title: "Team Building",
-    schedule: "Sur réservation · En semaine & weekend",
-    desc: "Une activité team building originale pour renforcer la cohésion de votre équipe. Forfait à 16€ (enfants) / 23€ (adultes) par personne, patins et animation inclus. Karaoké disponible en option (50€/h).",
-    image: "https://retro.brussels/wp-content/uploads/2024/10/IMG_20231112_111005-scaled.jpg",
-    cta: { label: "Demander un devis", href: SITE.reservationUrl },
-  },
-  {
-    tag: "04",
-    title: "After Work",
-    schedule: "Sur réservation · Vendredi soir",
-    desc: "Décompressez après le travail avec vos collègues. Formule After Work à 30€ par personne, boissons incluses. La piste est privatisable pour les grands groupes.",
-    image: "https://retro.brussels/wp-content/uploads/2023/10/WhatsApp-Image-2023-09-12-at-09.22.25.jpeg",
-    cta: { label: "Organiser un After Work", href: SITE.reservationUrl },
-  },
-  {
-    tag: "05",
-    title: "Karaoké",
-    schedule: "Sur réservation · Option groupe",
-    desc: "Ajoutez une session karaoké à votre événement. Disponible en option pour tous les forfaits groupe à 50€/heure. Salle privative avec système audio professionnel.",
-    image: null,
-    cta: { label: "Réserver avec karaoké", href: SITE.reservationUrl },
-  },
-  {
-    tag: "06",
-    title: "Groupes Scolaires",
-    schedule: "Sur réservation · Lundi–Vendredi",
-    desc: "Formule School Deal à 5€ par élève (7€ pour +16 ans). Encadrement pédagogique disponible. Idéal pour les sorties scolaires, centres PMS et associations de jeunesse.",
-    image: "https://retro.brussels/wp-content/uploads/2023/10/WhatsApp-Image-2023-09-12-at-09.22.20.jpeg",
-    cta: { label: "Réserver pour une école", href: SITE.reservationUrl },
-  },
-];
 
 export default async function PrivateEventsPage({ params }: { params: { locale: string } }) {
   const { locale } = params;
@@ -72,16 +22,19 @@ export default async function PrivateEventsPage({ params }: { params: { locale: 
     privText: (await translate(pick(acf, "pe_privatization_text"), locale)) || t("privatizationText"),
   };
 
-  const EVENTS = acf.services_liste?.length
-    ? acf.services_liste.map((s, i) => ({
-        tag: String(i + 1).padStart(2, "0"),
-        title: s.titre,
-        schedule: s.horaire,
-        desc: s.description,
-        image: s.image || null,
-        cta: { label: "En savoir plus", href: "/contact" },
-      }))
-    : EVENTS_FALLBACK;
+  // Event cards: admin list, else the English defaults — all auto-translated.
+  const eventRows = acf.services_liste?.length
+    ? acf.services_liste
+    : (DEFAULT_CONTENT.services_liste as Array<{ titre: string; horaire: string; description: string; image?: string }>);
+  const evTr = await translateMany(eventRows.flatMap((e) => [e.titre ?? "", e.horaire ?? "", e.description ?? ""]), locale);
+  const EVENTS = eventRows.map((e, i) => ({
+    tag: String(i + 1).padStart(2, "0"),
+    title: evTr[3 * i] || e.titre,
+    schedule: evTr[3 * i + 1] || e.horaire,
+    desc: evTr[3 * i + 2] || e.description,
+    image: e.image || null,
+    cta: { label: t("learnMore"), href: "/contact" },
+  }));
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-20">

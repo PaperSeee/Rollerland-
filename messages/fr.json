@@ -52,7 +52,14 @@
     "ctaTitle2": "la piste vous attend.",
     "ctaLead": "Réservation en ligne ou par e-mail à {email}. Réponse rapide garantie.",
     "ctaReserve": "Réserver maintenant",
-    "ctaWrite": "Nous écrire"
+    "ctaWrite": "Nous écrire",
+    "priceKids": "Enfant (−16 ans)",
+    "priceAdult": "Adulte",
+    "priceProtection": "Protection",
+    "priceCloakroom": "Vestiaire",
+    "stib": "Bus 46, 86, 88, N18 — Arrêt André de Jongh",
+    "delijn": "R30, R41, R50, R60 — Arrêt André de Jongh",
+    "parking": "Parking sécurisé au n°160 — réservation en ligne"
   },
   "tarifs": {
     "kicker": "Tarification",
@@ -71,7 +78,10 @@
     "food": "Nourriture",
     "goodToKnow": "À savoir",
     "consume1": "Please consume locally and support Be Here.",
-    "consume2": "Refrain from bringing your own food and drinks."
+    "consume2": "Refrain from bringing your own food and drinks.",
+    "skatesIncluded": "Location de patins incluse",
+    "protectionDesc": "Genouillères, coudières, poignets",
+    "cloakroomDesc": "Casier sécurisé"
   },
   "formule": {
     "back": "← Tous les tarifs",
@@ -80,7 +90,8 @@
     "included": "Ce qui est inclus",
     "goodToKnow": "À savoir",
     "consume1": "Please consume locally and support Be Here.",
-    "consume2": "Refrain from bringing your own food and drinks."
+    "consume2": "Refrain from bringing your own food and drinks.",
+    "book": "Réserver cette formule"
   },
   "contact": {
     "kicker": "Nous écrire",
@@ -149,7 +160,8 @@
     "privatizationTitle": "Privatisez la piste pour votre événement",
     "privatizationText": "La piste est disponible à la privatisation pour les grands groupes et événements d'entreprise.",
     "requestQuote": "Demander un devis",
-    "write": "Nous écrire"
+    "write": "Nous écrire",
+    "learnMore": "En savoir plus"
   },
   "horaires": {
     "kicker": "Planning hebdomadaire",
@@ -179,6 +191,33 @@
     "ctaKicker": "Chaque vendredi & samedi · Sans réservation",
     "ctaTitle1": "Venez comme vous êtes —",
     "ctaTitle2": "la piste vous attend.",
-    "followInstagram": "Suivre sur Instagram"
+    "followInstagram": "Suivre sur Instagram",
+    "rentalSkates": "Patins quad — {adult} adulte / {kids} enfant",
+    "rentalProtection": "Protection — {price}",
+    "rentalCloakroom": "Vestiaire — {price}",
+    "onSite1": "Bar avec boissons & cocktails",
+    "onSite2": "Petite restauration disponible",
+    "onSite3": "Vestiaire & consignes",
+    "know1": "Pas de réservation obligatoire",
+    "know2": "Patins personnels autorisés",
+    "know3": "Ouvert à tous les niveaux",
+    "noEvents": "De nouvelles soirées à thème arrivent bientôt — suivez-nous sur Instagram pour le programme."
+  },
+  "ticker": {
+    "items": [
+      "Disco Roller — Vendredi & Samedi",
+      "Entrée gratuite · Ouvert à tous",
+      "Cours enfants & adultes",
+      "Anniversaires sur la piste",
+      "Team Building",
+      "After Work",
+      "Rue Dieudonné Lefèvre 4 · 1020 Bruxelles"
+    ]
+  },
+  "days": {
+    "wednesday": "Mercredi",
+    "friday": "Vendredi",
+    "saturday": "Samedi",
+    "sunday": "Dimanche"
   }
 }

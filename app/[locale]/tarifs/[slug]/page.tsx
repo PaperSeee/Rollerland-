@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
-import { FORMULES, getFormule, type Formule } from "@/lib/formules";
+import { FORMULES, getFormule, translateFormule, type Formule } from "@/lib/formules";
 import { getRollerland, rowStr } from "@/lib/wordpress";
 import { translate, translateMany } from "@/lib/translate";
 import { SITE } from "@/lib/site";
@@ -34,7 +34,7 @@ async function formuleFromWP(slug: string, locale: string): Promise<Formule | nu
     highlight: Boolean(row.formule_highlight),
     includes,
     image: rowStr(row, "formule_image") || null,
-    ctaLabel: "Réserver cette formule",
+    ctaLabel: "Book this package",
     ctaHref: SITE.reservationUrl,
   };
 }
@@ -48,9 +48,9 @@ export function generateStaticParams() {
 
 export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
   const formule = getFormule(params.slug);
-  if (!formule) return { title: "Formule introuvable — Rollerland Brussels" };
+  if (!formule) return { title: "Package not found — Rollerland Brussels" };
   return {
-    title: `${formule.name} — Tarifs Rollerland Brussels`,
+    title: `${formule.name} — Prices · Rollerland Brussels`,
     description: formule.desc,
   };
 }
@@ -63,7 +63,9 @@ export default async function FormuleDetailPage({
   setRequestLocale(params.locale);
   const t = await getTranslations("formule");
   // Prefer WordPress content for this slug, else the static map.
-  const formule = (await formuleFromWP(params.slug, params.locale)) ?? getFormule(params.slug);
+  const fallback = getFormule(params.slug);
+  const formule =
+    (await formuleFromWP(params.slug, params.locale)) ?? (fallback ? await translateFormule(fallback, params.locale) : undefined);
   if (!formule) notFound();
   // Editable reservation link (admin → Global), fallback to the formule default.
   const acf = await getRollerland();
@@ -134,7 +136,7 @@ export default async function FormuleDetailPage({
           </ul>
 
           <a href={reservationUrl} target="_blank" rel="noopener noreferrer" className="btn-primary animate-pulse-glow">
-            {formule.ctaLabel}
+            {t("book")}
           </a>
         </div>
 

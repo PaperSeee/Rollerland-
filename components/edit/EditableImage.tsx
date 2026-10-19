@@ -3,9 +3,82 @@
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { useEdit } from "./EditProvider";
+import { uploadImage } from "@/lib/prepareImage";
 
-// Inline-editable image. Normal mode: a next/image. Edit mode: hover shows a
-// "Replace" button that uploads to Vercel Blob and buffers the new URL.
+// Upload an image (shrunk first if large) and buffer its URL under `field`.
+// Shows the error instead of failing silently (storage not configured, session
+// expired, …).
+function useImageUpload(field: string) {
+  const { setField } = useEdit();
+  const [uploading, setUploading] = useState(false);
+
+  async function upload(file: File) {
+    setUploading(true);
+    try {
+      setField(field, await uploadImage(file));
+    } catch (e) {
+      window.alert(`Image upload failed: ${e instanceof Error ? e.message : "please try again."}`);
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  return { upload, uploading };
+}
+
+// The "↑ Replace" button on its own. Use it (with <EditableImage controls={false}>)
+// for BACKGROUND images that sit under text/overlays: place this button in the
+// top (text) layer so it can actually be clicked.
+export function ImageReplaceButton({
+  field,
+  label = "Replace image",
+  className,
+  style,
+}: {
+  field: string;
+  label?: string;
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  const { editing } = useEdit();
+  const { upload, uploading } = useImageUpload(field);
+  const inputRef = useRef<HTMLInputElement>(null);
+  if (!editing) return null;
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={(e) => {
+          // Don't trigger a parent <Link> when the button sits inside one.
+          e.preventDefault();
+          e.stopPropagation();
+          inputRef.current?.click();
+        }}
+        className={`relative z-20 text-xs uppercase ${className ?? ""}`}
+        style={{ background: "#9B92F0", color: "#150E28", padding: "0.4rem 0.8rem", letterSpacing: "0.08em", borderRadius: 2, ...style }}
+      >
+        {uploading ? "Uploading…" : `↑ ${label}`}
+      </button>
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onClick={(e) => e.stopPropagation()}
+        onChange={(e) => {
+          const f = e.target.files?.[0];
+          if (f) upload(f);
+          e.target.value = "";
+        }}
+      />
+    </>
+  );
+}
+
+// Inline-editable image. Normal mode: a next/image. Edit mode: dashed outline +
+// a "Replace" button that uploads to Vercel Blob and buffers the new URL.
+// controls={false}: no button here (render an <ImageReplaceButton> elsewhere).
 export default function EditableImage({
   field,
   value,
@@ -15,6 +88,7 @@ export default function EditableImage({
   height,
   className,
   style,
+  controls = true,
 }: {
   field: string;
   value: string;
@@ -24,24 +98,12 @@ export default function EditableImage({
   height?: number;
   className?: string;
   style?: React.CSSProperties;
+  controls?: boolean;
 }) {
-  const { editing, setField, getField } = useEdit();
+  const { editing, getField } = useEdit();
   const current = getField(field, value);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [uploading, setUploading] = useState(false);
-
-  async function upload(file: File) {
-    setUploading(true);
-    try {
-      const fd = new FormData();
-      fd.append("file", file);
-      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-      const data = await res.json().catch(() => ({}));
-      if (res.ok && data.url) setField(field, data.url);
-    } finally {
-      setUploading(false);
-    }
-  }
+  const { upload, uploading } = useImageUpload(field);
 
   const hasImage = Boolean(current);
   const img = !hasImage ? null : fill ? (
@@ -81,29 +143,35 @@ export default function EditableImage({
         className="absolute inset-0 z-[5] pointer-events-none"
         style={{ outline: "2px dashed rgba(155,146,240,0.9)", outlineOffset: -2 }}
       />
-      <button
-        type="button"
-        onClick={(e) => {
-          // Don't trigger a parent <Link> when the image sits inside one.
-          e.preventDefault();
-          e.stopPropagation();
-          inputRef.current?.click();
-        }}
-        className="absolute top-2 left-2 z-10 text-xs uppercase"
-        style={{ background: "#9B92F0", color: "#150E28", padding: "0.3rem 0.7rem", letterSpacing: "0.08em", borderRadius: 2 }}
-      >
-        {uploading ? "Uploading…" : hasImage ? "↑ Replace" : "↑ Add image"}
-      </button>
-      <input
-        ref={inputRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={(e) => {
-          const f = e.target.files?.[0];
-          if (f) upload(f);
-        }}
-      />
+      {controls && (
+        <>
+          <button
+            type="button"
+            onClick={(e) => {
+              // Don't trigger a parent <Link> when the image sits inside one.
+              e.preventDefault();
+              e.stopPropagation();
+              inputRef.current?.click();
+            }}
+            className="absolute top-2 left-2 z-10 text-xs uppercase"
+            style={{ background: "#9B92F0", color: "#150E28", padding: "0.3rem 0.7rem", letterSpacing: "0.08em", borderRadius: 2 }}
+          >
+            {uploading ? "Uploading…" : hasImage ? "↑ Replace" : "↑ Add image"}
+          </button>
+          <input
+            ref={inputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onClick={(e) => e.stopPropagation()}
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) upload(f);
+              e.target.value = "";
+            }}
+          />
+        </>
+      )}
     </span>
   );
 }

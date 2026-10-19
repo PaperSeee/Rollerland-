@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getRollerland, pick, rowStr } from "@/lib/wordpress";
 import { translate } from "@/lib/translate";
+import { DEFAULT_CONTENT } from "@/lib/defaults";
 import Editable from "@/components/edit/Editable";
 import EditSectionLink from "@/components/edit/EditSectionLink";
 import { SITE } from "@/lib/site";
@@ -21,43 +22,16 @@ export default async function CoursPage({ params }: { params: { locale: string }
     start2rideDesc: (await translate(pick(acf, "start2ride_desc"), locale)) || t("start2rideDesc"),
     ownSkatesText: (await translate(pick(acf, "cours_own_skates_text"), locale)) || t("ownSkatesText"),
     cancellationsText: (await translate(pick(acf, "cours_cancellations_text"), locale)) || t("cancellationsText"),
-    start2rideDate: pick(acf, "start2ride_date") || "Samedi 30 mai",
+    start2rideDate: await translate(pick(acf, "start2ride_date") || "Saturday 30 May", locale),
     start2rideTime: pick(acf, "start2ride_time") || "10h00 – 12h00",
     start2ridePlace: pick(acf, "start2ride_place") || "Parc de Laeken",
     start2rideUrl: pick(acf, "start2ride_url") || "https://www.tickettailor.com/events/retrobrusselsasbl/2211764",
   };
 
-  const COURSES_FALLBACK = [
-    {
-      tag: "01",
-      audience: t("kids"),
-      title: t("courseKids"),
-      schedule: "Mercredi & Samedi",
-      time: "16h00 – 17h00",
-      price: "10€",
-      level: "Tous niveaux",
-      age: t("kids"),
-      desc: "Initiation et progression en toute sécurité. Nos moniteurs guident chaque enfant à son rythme, des premières glissades aux virages en douceur.",
-      ticketUrl,
-    },
-    {
-      tag: "02",
-      audience: t("adults"),
-      title: t("courseAdults"),
-      schedule: "Mercredi & Samedi",
-      time: "17h30 – 19h00",
-      price: "15€",
-      level: "Débutant – Intermédiaire",
-      age: "18+",
-      desc: "Technique, équilibre et plaisir. Un cours collectif dans une ambiance bienveillante — peu importe votre niveau de départ.",
-      ticketUrl,
-    },
-  ];
-
   // Course cards: WP `cours_list` repeater (auto-translated) → else fallback.
-  const COURSES = acf.cours_list?.length
-    ? await Promise.all(
-        acf.cours_list.map(async (c, i) => ({
+  const courseRows = acf.cours_list?.length ? acf.cours_list : (DEFAULT_CONTENT.cours_list as Array<Record<string, unknown>>);
+  const COURSES = await Promise.all(
+        courseRows.map(async (c, i) => ({
           tag: String(i + 1).padStart(2, "0"),
           audience: await translate(rowStr(c, "cours_audience"), locale),
           title: await translate(rowStr(c, "cours_titre"), locale),
@@ -69,8 +43,7 @@ export default async function CoursPage({ params }: { params: { locale: string }
           desc: await translate(rowStr(c, "cours_description"), locale),
           ticketUrl: rowStr(c, "cours_ticket_url") || ticketUrl,
         })),
-      )
-    : COURSES_FALLBACK;
+      );
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-20">

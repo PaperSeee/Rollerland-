@@ -1,7 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getRollerland, pick, rowStr } from "@/lib/wordpress";
-import { translate } from "@/lib/translate";
+import { translate, translateMany } from "@/lib/translate";
 import Editable from "@/components/edit/Editable";
 import EditSectionLink from "@/components/edit/EditSectionLink";
 import { SITE } from "@/lib/site";
@@ -21,35 +21,36 @@ const GROUPS = FORMULES.map((f) => ({
   slug: f.slug,
 }));
 
+// Fallbacks (English source, auto-translated) — used only when the admin lists are empty.
 const OPTIONS_FALLBACK = [
-  { label: "Cours / animation privé(e)", price: "75€/heure" },
-  { label: "Karaoké", price: "50€/heure" },
+  { label: "Private lesson / animation", price: "75€/hour" },
+  { label: "Karaoke", price: "50€/hour" },
 ];
 
 const DRINKS_FALLBACK = [
-  { name: "Eau (bouteille)", price: "2€" },
-  { name: "Boissons chaudes", price: "2,50€" },
+  { name: "Water (bottle)", price: "2€" },
+  { name: "Hot drinks", price: "2,50€" },
   { name: "Soft drinks", price: "3€" },
   { name: "Energy drink", price: "4€" },
-  { name: "Bière (Pils, 0%)", price: "3€" },
-  { name: "IPA / Bière spéciale", price: "4€" },
-  { name: "Vin (verre)", price: "4€" },
-  { name: "Vin (25cl)", price: "6€" },
-  { name: "Vin (75cl)", price: "15€" },
-  { name: "Glühwein (hiver)", price: "4€" },
-  { name: "Cava (verre)", price: "5€" },
+  { name: "Beer (Pils, 0%)", price: "3€" },
+  { name: "IPA / Special beer", price: "4€" },
+  { name: "Wine (glass)", price: "4€" },
+  { name: "Wine (25cl)", price: "6€" },
+  { name: "Wine (75cl)", price: "15€" },
+  { name: "Glühwein (winter)", price: "4€" },
+  { name: "Cava (glass)", price: "5€" },
   { name: "Cava (75cl)", price: "22€" },
   { name: "Mocktails", price: "6€" },
   { name: "Cocktails", price: "8€" },
 ];
 
 const FOOD_FALLBACK = [
-  { name: "Mini bar de chocolat", price: "0,50€" },
-  { name: "Snacks variés", price: "2€" },
-  { name: "Gâteau au chocolat (part)", price: "3,50€" },
-  { name: "Pizza (petite)", price: "6€" },
-  { name: "Pizza (normale)", price: "10€" },
-  { name: "Saucisse (bœuf, ail, noix)", price: "6€" },
+  { name: "Mini chocolate bar", price: "0,50€" },
+  { name: "Assorted snacks", price: "2€" },
+  { name: "Chocolate cake (slice)", price: "3,50€" },
+  { name: "Pizza (small)", price: "6€" },
+  { name: "Pizza (regular)", price: "10€" },
+  { name: "Sausage (beef, garlic, walnut)", price: "6€" },
 ];
 
 function Row({ label, price, desc, last }: { label: string; price: string; desc?: string; last?: boolean }) {
@@ -79,30 +80,31 @@ export default async function TarifsPage({ params }: { params: { locale: string 
   const consume1 = (await translate(pick(acf, "consume_notice_1"), locale)) || t("consume1");
   const consume2 = (await translate(pick(acf, "consume_notice_2"), locale)) || t("consume2");
 
+  const th = await getTranslations("home");
+  const [pKids, pAdult, pProt, pCloak] = await translateMany(
+    [pick(acf, "tarif_enfant") || "6€", pick(acf, "tarif_adulte") || "8€", pick(acf, "tarif_protection") || "1€/pair", pick(acf, "tarif_vestiaire") || "1€"],
+    locale,
+  );
   const INDIVIDUAL = [
-    { label: "Enfant (−16 ans)", price: acf.tarif_enfant || "6€", desc: "Location de patins incluse" },
-    { label: "Adulte", price: acf.tarif_adulte || "8€", desc: "Location de patins incluse" },
-    { label: "Protection", price: acf.tarif_protection || "1€/paire", desc: "Genouillères, coudières, poignets" },
-    { label: "Vestiaire", price: acf.tarif_vestiaire || "1€", desc: "Casier sécurisé" },
+    { label: th("priceKids"), price: pKids, desc: t("skatesIncluded") },
+    { label: th("priceAdult"), price: pAdult, desc: t("skatesIncluded") },
+    { label: th("priceProtection"), price: pProt, desc: t("protectionDesc") },
+    { label: th("priceCloakroom"), price: pCloak, desc: t("cloakroomDesc") },
   ];
 
   // Options: WP repeater (label auto-translated + neutral price) else hardcoded.
-  const OPTIONS = acf.options_supplementaires?.length
-    ? await Promise.all(
-        acf.options_supplementaires.map(async (o) => ({
-          label: await translate(rowStr(o, "option_label"), locale),
-          price: rowStr(o, "option_price"),
-        })),
-      )
+  const optionsSrc = acf.options_supplementaires?.length
+    ? acf.options_supplementaires.map((o) => ({ label: rowStr(o, "option_label"), price: rowStr(o, "option_price") }))
     : OPTIONS_FALLBACK;
+  const optionLabels = await translateMany(optionsSrc.map((o) => o.label), locale);
+  const OPTIONS = optionsSrc.map((o, i) => ({ ...o, label: optionLabels[i] || o.label }));
 
-  const DRINKS = acf.menu_boissons?.length
-    ? acf.menu_boissons.map((d) => ({ name: d.nom, price: d.prix }))
-    : DRINKS_FALLBACK;
-
-  const FOOD = acf.menu_nourriture?.length
-    ? acf.menu_nourriture.map((f) => ({ name: f.nom, price: f.prix }))
-    : FOOD_FALLBACK;
+  // Bar & food menus (names written in English → auto-translated).
+  const drinksSrc = acf.menu_boissons?.length ? acf.menu_boissons.map((d) => ({ name: d.nom, price: d.prix })) : DRINKS_FALLBACK;
+  const foodSrc = acf.menu_nourriture?.length ? acf.menu_nourriture.map((f) => ({ name: f.nom, price: f.prix })) : FOOD_FALLBACK;
+  const menuNames = await translateMany([...drinksSrc, ...foodSrc].map((m) => m.name ?? ""), locale);
+  const DRINKS = drinksSrc.map((d, i) => ({ ...d, name: menuNames[i] || d.name }));
+  const FOOD = foodSrc.map((f, i) => ({ ...f, name: menuNames[drinksSrc.length + i] || f.name }));
 
   // Group table: WP `formules` repeater (auto-translated) → else shared FORMULES.
   const groupRows = acf.formules?.length
@@ -116,7 +118,7 @@ export default async function TarifsPage({ params }: { params: { locale: string 
           slug: rowStr(f, "formule_slug") || null,
         })),
       )
-    : GROUPS;
+    : await Promise.all(GROUPS.map(async (g) => ({ ...g, desc: (await translateMany(g.desc.split(" · "), locale)).join(" · ") })));
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-20">

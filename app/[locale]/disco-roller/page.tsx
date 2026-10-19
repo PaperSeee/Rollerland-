@@ -1,29 +1,22 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import EditableImage from "@/components/edit/EditableImage";
+import EditableImage, { ImageReplaceButton } from "@/components/edit/EditableImage";
 import Editable from "@/components/edit/Editable";
 import EditSectionLink from "@/components/edit/EditSectionLink";
 import { getRollerland, pick } from "@/lib/wordpress";
-import { translate } from "@/lib/translate";
-import { getDiscoEvents, type DiscoEventView } from "@/lib/disco";
+import { translate, translateMany } from "@/lib/translate";
+import { getSchedule } from "@/lib/schedule";
+import { getDiscoEvents } from "@/lib/disco";
 import { SITE } from "@/lib/site";
 
 // DB-backed; events are managed from /admin. Stay dynamic so admin edits show
 // immediately (Server Actions also revalidate this path).
 export const dynamic = "force-dynamic";
 
-// ── Fallback shown only when the database has no events ─────────────────
-const FALLBACK_EVENTS: DiscoEventView[] = [
-  { id: "f1", date: "2026-05-23", day: "Samedi", theme: "Soirée Classics", dj: "DJ Retro", time: "17h00 – 00h00", special: false, desc: "Les meilleurs classiques des années 80-90 sur la piste.", image: null, imagePosition: null },
-  { id: "f2", date: "2026-05-29", day: "Vendredi", theme: "Disco Night", dj: "DJ Funky", time: "17h00 – 00h00", special: true, desc: "La vraie soirée disco — tenues flashy bienvenues !", image: null, imagePosition: null },
-  { id: "f3", date: "2026-05-30", day: "Samedi", theme: "80s Party", dj: "DJ Retro", time: "17h00 – 00h00", special: false, desc: "Synthés, néons et patins — une plongée dans les années 80.", image: null, imagePosition: null },
-  { id: "f4", date: "2026-06-06", day: "Vendredi", theme: "Hip-Hop Session", dj: "DJ Fresh", time: "17h00 – 00h00", special: false, desc: "Beats urbains et grooves pour une session hip-hop.", image: null, imagePosition: null },
-  { id: "f5", date: "2026-06-07", day: "Samedi", theme: "Latin Fever", dj: "DJ Caliente", time: "17h00 – 00h00", special: true, desc: "Salsa, reggaeton et zouk — la chaleur latine sur la piste !", image: null, imagePosition: null },
-  { id: "f6", date: "2026-06-13", day: "Samedi", theme: "Summer Opening", dj: "DJ Summer", time: "17h00 – 00h00", special: true, desc: "Ouverture de la saison estivale — le plus grand événement de l'année.", image: null, imagePosition: null },
-];
+const DATE_LOCALE: Record<string, string> = { en: "en-GB", fr: "fr-BE", nl: "nl-BE" };
 
-function formatDate(dateStr: string) {
+function formatDate(dateStr: string, locale: string) {
   const d = new Date(dateStr + "T00:00:00");
-  return d.toLocaleDateString("fr-BE", { day: "numeric", month: "long", year: "numeric" });
+  return d.toLocaleDateString(DATE_LOCALE[locale] ?? "en-GB", { day: "numeric", month: "long", year: "numeric" });
 }
 
 const FALLBACK_HERO_DISCO = "https://retro.brussels/wp-content/uploads/2025/01/roller-party2-scaled.jpg";
@@ -35,9 +28,23 @@ export default async function DiscoRollerPage({ params }: { params: { locale: st
   const heroImage = acf.disco_hero_image || FALLBACK_HERO_DISCO;
   const lead = (await translate(pick(acf, "disco_lead"), params.locale)) || t("lead");
 
-  // Use DB events when present, otherwise the hardcoded fallback list.
-  const discoEvents = dbEvents.length ? dbEvents : FALLBACK_EVENTS;
+  // Events from the Disco Events admin. Past events are hidden; no event = a
+  // short "coming soon" message (never placeholder events).
+  const today = new Date().toISOString().slice(0, 10);
+  const upcoming = dbEvents.filter((e) => e.date >= today);
+  // Day + description are written in English in the admin → auto-translated.
+  const evTr = await translateMany(upcoming.flatMap((e) => [e.day, e.desc]), params.locale);
+  const discoEvents = upcoming.map((e, i) => ({ ...e, day: evTr[2 * i] || e.day, desc: evTr[2 * i + 1] || e.desc }));
   const nextEvent = discoEvents[0];
+
+  // Disco days + hours come from the Schedule (admin → Schedule).
+  const discoDays = (await getSchedule(acf, params.locale)).filter((d) => d.disco && d.hours);
+
+  // Rental prices: same values as the Prices page.
+  const [pAdult, pKids, pProt, pCloak] = await translateMany(
+    [pick(acf, "tarif_adulte") || "8€", pick(acf, "tarif_enfant") || "6€", pick(acf, "tarif_protection") || "1€/pair", pick(acf, "tarif_vestiaire") || "1€"],
+    params.locale,
+  );
 
   return (
     <>
@@ -49,6 +56,7 @@ export default async function DiscoRollerPage({ params }: { params: { locale: st
             value={heroImage}
             alt="Disco Roller Bruxelles"
             fill
+            controls={false}
             className="object-cover"
             style={{ objectPosition: "center 35%" }}
           />
@@ -57,6 +65,7 @@ export default async function DiscoRollerPage({ params }: { params: { locale: st
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 pb-16 w-full">
+          <ImageReplaceButton field="disco_hero_image" label="Replace background image" className="mb-5" />
           <p className="label-tag mb-5 animate-fade-up">{t("kicker")}</p>
           <h1
             className="text-6xl md:text-8xl text-white animate-fade-up delay-100"
@@ -75,14 +84,12 @@ export default async function DiscoRollerPage({ params }: { params: { locale: st
           />
 
           <div className="flex flex-wrap gap-4 mt-8 animate-fade-up delay-300">
-            <div className="glass-card px-6 py-3 animate-pulse-glow">
-              <p className="label-tag mb-0.5">Vendredi</p>
-              <p className="text-white text-sm font-medium">17h00 – 00h00</p>
-            </div>
-            <div className="glass-card px-6 py-3">
-              <p className="label-tag mb-0.5">Samedi</p>
-              <p className="text-white text-sm font-medium">17h00 – 00h00</p>
-            </div>
+            {discoDays.map((d, i) => (
+              <div key={`${d.day}-${i}`} className={`glass-card px-6 py-3${i === 0 ? " animate-pulse-glow" : ""}`}>
+                <p className="label-tag mb-0.5">{d.day}</p>
+                <p className="text-white text-sm font-medium">{d.hours}</p>
+              </div>
+            ))}
             <div className="glass-card px-6 py-3">
               <p className="label-tag mb-0.5">{t("entry")}</p>
               <p className="text-sm font-medium" style={{ color: "#9B92F0" }}>{t("free")}</p>
@@ -103,6 +110,15 @@ export default async function DiscoRollerPage({ params }: { params: { locale: st
             <EditSectionLink href="/admin" label="disco events" />
           </div>
 
+          {!nextEvent ? (
+            <div className="p-8 md:p-10 mb-6 text-center" style={{ border: "0.5px solid rgba(127,119,221,0.3)", background: "rgba(127,119,221,0.05)" }}>
+              <p className="text-sm mb-6" style={{ color: "rgba(255,255,255,0.55)", lineHeight: "1.7" }}>{t("noEvents")}</p>
+              <a href={SITE.socials.instagram} target="_blank" rel="noopener noreferrer" className="btn-outline">
+                {t("followInstagram")}
+              </a>
+            </div>
+          ) : (
+          <>
           {/* Featured next event */}
           <div
             className="p-8 md:p-10 mb-6 relative overflow-hidden hover-lift"
@@ -126,7 +142,7 @@ export default async function DiscoRollerPage({ params }: { params: { locale: st
                   {nextEvent.desc}
                 </p>
                 <div className="flex flex-wrap gap-4 text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>
-                  <span>{nextEvent.day} {formatDate(nextEvent.date)}</span>
+                  <span>{nextEvent.day} {formatDate(nextEvent.date, params.locale)}</span>
                   <span>·</span>
                   <span>{nextEvent.time}</span>
                   {nextEvent.dj && <><span>·</span><span>{nextEvent.dj}</span></>}
@@ -158,7 +174,7 @@ export default async function DiscoRollerPage({ params }: { params: { locale: st
                 {/* Date */}
                 <div>
                   <p className="label-tag mb-1">{event.day}</p>
-                  <p className="text-xs text-white">{formatDate(event.date)}</p>
+                  <p className="text-xs text-white">{formatDate(event.date, params.locale)}</p>
                 </div>
 
                 {/* Theme */}
@@ -183,6 +199,8 @@ export default async function DiscoRollerPage({ params }: { params: { locale: st
               </div>
             ))}
           </div>
+          </>
+          )}
 
           <p className="text-xs mt-4 text-center" style={{ color: "rgba(255,255,255,0.25)" }}>
             {t("weeklyUpdate")}
@@ -199,15 +217,15 @@ export default async function DiscoRollerPage({ params }: { params: { locale: st
           {[
             {
               title: t("skateRental"),
-              items: ["Patins quad — 8€ adulte / 6€ enfant", "Protection — 1€/paire", "Vestiaire — 1€"],
+              items: [t("rentalSkates", { adult: pAdult, kids: pKids }), t("rentalProtection", { price: pProt }), t("rentalCloakroom", { price: pCloak })],
             },
             {
               title: t("onSite"),
-              items: ["Bar avec boissons & cocktails", "Nourriture légère disponible", "Vestiaire & consignes"],
+              items: [t("onSite1"), t("onSite2"), t("onSite3")],
             },
             {
               title: t("toKnow"),
-              items: ["Pas de réservation obligatoire", "Patins personnels autorisés", "Ouvert à tous les niveaux"],
+              items: [t("know1"), t("know2"), t("know3")],
             },
           ].map((block) => (
             <div

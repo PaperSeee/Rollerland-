@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getRollerland, pick } from "@/lib/wordpress";
-import { translate } from "@/lib/translate";
+import { translateMany } from "@/lib/translate";
+import { getSchedule } from "@/lib/schedule";
 import Editable from "@/components/edit/Editable";
 import EditSectionLink from "@/components/edit/EditSectionLink";
 import { SITE } from "@/lib/site";
@@ -8,34 +9,23 @@ import { SITE } from "@/lib/site";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-const CLOSURES_FALLBACK = [
-  { period: "16 – 24 mai 2026", reason: "Brocante / Événement spécial" },
-  { period: "29 – 31 mai 2026", reason: "Fermeture exceptionnelle" },
-  { period: "13 juin 2026", reason: "Fermé avant 19h" },
-];
-
 export default async function HorairesPage({ params }: { params: { locale: string } }) {
   const { locale } = params;
   setRequestLocale(locale);
   const t = await getTranslations("horaires");
   const acf = await getRollerland();
   const reservationUrl = pick(acf, "reservation_url") || SITE.reservationUrl;
-  const title = (await translate(pick(acf, "horaires_title"), locale)) || t("title");
-  const intro = (await translate(pick(acf, "horaires_intro"), locale)) || t("intro");
+  const [title, intro] = (await translateMany([pick(acf, "horaires_title"), pick(acf, "horaires_intro")], locale)).map(
+    (s, i) => s || (i === 0 ? t("title") : t("intro")),
+  );
 
-  const SCHEDULE = [
-    { day: "Lundi", short: "LUN", hours: null as string | null, activities: [] as string[], note: "Sur réservation groupes", disco: false },
-    { day: "Mardi", short: "MAR", hours: null, activities: [], note: "Sur réservation groupes", disco: false },
-    { day: "Mercredi", short: "MER", hours: acf.horaire_mercredi || "12h00 – 20h00", activities: ["Cours enfants 16h–17h", "Cours adultes 17h30–19h", "Accès libre"], note: null, disco: false },
-    { day: "Jeudi", short: "JEU", hours: null, activities: [], note: "Sur réservation groupes", disco: false },
-    { day: "Vendredi", short: "VEN", hours: acf.horaire_vendredi || "17h00 – 00h00", activities: ["Disco Roller"], note: null, disco: true },
-    { day: "Samedi", short: "SAM", hours: acf.horaire_samedi || "12h00 – 00h00", activities: ["Cours enfants 16h–17h", "Cours adultes 17h30–19h", "Disco Roller"], note: null, disco: true },
-    { day: "Dimanche", short: "DIM", hours: acf.horaire_dimanche || "16h00 – 20h00", activities: ["Accès libre"], note: acf.horaire_note_dimanche || "Juin–Octobre : 12h–20h", disco: false },
-  ];
+  // Whole week from the editable list (admin → Schedule), auto-translated.
+  const SCHEDULE = await getSchedule(acf, locale);
 
-  const CLOSURES = acf.fermetures_exceptionnelles?.length
-    ? acf.fermetures_exceptionnelles.map((f) => ({ period: f.periode, reason: f.raison }))
-    : CLOSURES_FALLBACK;
+  // Exceptional closures (English source, auto-translated). Empty list = section hidden.
+  const closuresSrc = (acf.fermetures_exceptionnelles ?? []).filter((f) => f?.periode || f?.raison);
+  const closuresTr = await translateMany(closuresSrc.flatMap((f) => [f.periode ?? "", f.raison ?? ""]), locale);
+  const CLOSURES = closuresSrc.map((_, i) => ({ period: closuresTr[2 * i], reason: closuresTr[2 * i + 1] }));
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-20">
@@ -58,10 +48,10 @@ export default async function HorairesPage({ params }: { params: { locale: strin
       {/* Visual week grid */}
       <div className="mb-20 animate-fade-up delay-100">
         <p className="label-tag mb-6">{t("typicalWeek")}</p>
-        <div className="grid grid-cols-7 gap-0" style={{ border: "0.5px solid rgba(127,119,221,0.2)" }}>
+        <div className="grid gap-0" style={{ border: "0.5px solid rgba(127,119,221,0.2)", gridTemplateColumns: `repeat(${Math.max(SCHEDULE.length, 1)}, minmax(0, 1fr))` }}>
           {SCHEDULE.map((slot, i) => (
             <div
-              key={slot.day}
+              key={`${slot.day}-${i}`}
               className="relative flex flex-col"
               style={{
                 borderRight: i < SCHEDULE.length - 1 ? "0.5px solid rgba(127,119,221,0.15)" : "none",
@@ -98,18 +88,18 @@ export default async function HorairesPage({ params }: { params: { locale: strin
                     <div className="flex flex-col gap-1.5 mt-1">
                       {slot.activities.map((a) => (
                         <span
-                          key={a}
+                          key={a.label}
                           className="text-center px-1 py-0.5"
                           style={{
-                            background: a === "Disco Roller" ? "rgba(127,119,221,0.2)" : "rgba(255,255,255,0.04)",
+                            background: a.disco ? "rgba(127,119,221,0.2)" : "rgba(255,255,255,0.04)",
                             border: "0.5px solid rgba(127,119,221,0.2)",
-                            color: a === "Disco Roller" ? "#9B92F0" : "rgba(255,255,255,0.4)",
+                            color: a.disco ? "#9B92F0" : "rgba(255,255,255,0.4)",
                             fontSize: "0.55rem",
                             letterSpacing: "0.05em",
                             lineHeight: "1.4",
                           }}
                         >
-                          {a}
+                          {a.label}
                         </span>
                       ))}
                     </div>
@@ -136,7 +126,7 @@ export default async function HorairesPage({ params }: { params: { locale: strin
         <div style={{ border: "0.5px solid rgba(127,119,221,0.2)" }}>
           {SCHEDULE.filter((s) => s.hours).map((slot, i, arr) => (
             <div
-              key={slot.day}
+              key={`${slot.day}-${i}`}
               className="grid grid-cols-1 md:grid-cols-3 gap-6 px-6 py-6 hover-lift transition-all"
               style={{
                 borderBottom: i < arr.length - 1 ? "0.5px solid rgba(127,119,221,0.12)" : "none",
@@ -162,15 +152,15 @@ export default async function HorairesPage({ params }: { params: { locale: strin
               <div className="flex flex-wrap gap-2">
                 {slot.activities.map((a) => (
                   <span
-                    key={a}
+                    key={a.label}
                     className="text-xs px-2.5 py-1"
                     style={{
-                      border: a === "Disco Roller" ? "0.5px solid rgba(127,119,221,0.6)" : "0.5px solid rgba(127,119,221,0.25)",
-                      color: a === "Disco Roller" ? "#9B92F0" : "rgba(255,255,255,0.45)",
+                      border: a.disco ? "0.5px solid rgba(127,119,221,0.6)" : "0.5px solid rgba(127,119,221,0.25)",
+                      color: a.disco ? "#9B92F0" : "rgba(255,255,255,0.45)",
                       letterSpacing: "0.05em",
                     }}
                   >
-                    {a}
+                    {a.label}
                   </span>
                 ))}
               </div>
@@ -179,7 +169,8 @@ export default async function HorairesPage({ params }: { params: { locale: strin
         </div>
       </div>
 
-      {/* Closures */}
+      {/* Closures (hidden when the list is empty) */}
+      {CLOSURES.length > 0 && (
       <div className="mb-16 animate-fade-up delay-300">
         <p className="label-tag mb-6">{t("closures")}</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -196,6 +187,7 @@ export default async function HorairesPage({ params }: { params: { locale: strin
           ))}
         </div>
       </div>
+      )}
 
       {/* Updates + reservation CTA */}
       <div

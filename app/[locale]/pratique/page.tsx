@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getRollerland, pick, rowStr } from "@/lib/wordpress";
 import { translate, translateMany } from "@/lib/translate";
+import { DEFAULT_CONTENT } from "@/lib/defaults";
 import Editable from "@/components/edit/Editable";
 import EditableImage from "@/components/edit/EditableImage";
 import EditSectionLink from "@/components/edit/EditSectionLink";
@@ -12,7 +13,7 @@ const STIB = [
   { line: "46", stop: "André de Jongh" },
   { line: "86", stop: "André de Jongh" },
   { line: "88", stop: "André de Jongh" },
-  { line: "N18", stop: "André de Jongh (nuit)" },
+  { line: "N18 (Noctis)", stop: "André de Jongh" },
 ];
 
 const DELIJN = [
@@ -20,17 +21,6 @@ const DELIJN = [
   { line: "R41", stop: "André de Jongh" },
   { line: "R50", stop: "André de Jongh" },
   { line: "R60", stop: "André de Jongh" },
-];
-
-const RULES = [
-  "Les patins à roulettes sont obligatoires sur la piste.",
-  "Les protections (genouillères, coudières, poignets) sont fortement recommandées.",
-  "Pas de patins en ligne (rollerblades) sur la piste roller quad.",
-  "Respect des autres patineurs à tout moment.",
-  "Les enfants de moins de 8 ans doivent être accompagnés d'un adulte.",
-  "Pas de nourriture ni de boissons sur la piste.",
-  "Les objets de valeur sont sous votre responsabilité.",
-  "L'équipe se réserve le droit d'exclure tout comportement dangereux.",
 ];
 
 const FALLBACK_REGLEMENT = "https://retro.brussels/wp-content/uploads/2024/04/roller-rules-Aida-724x1024.jpeg";
@@ -46,9 +36,8 @@ export default async function PratiquePage({ params }: { params: { locale: strin
   const intro = (await translate(pick(acf, "pratique_intro"), locale)) || t("intro");
   const parkingText = (await translate(pick(acf, "parking_text"), locale)) || t("parkingText");
   // Rules from WP (translated) if provided, else the hardcoded RULES list.
-  const rules = acf.rules?.length
-    ? await translateMany(acf.rules.map((r) => rowStr(r, "rule_text")), locale)
-    : RULES;
+  const ruleRows = acf.rules?.length ? acf.rules : (DEFAULT_CONTENT.rules as Array<Record<string, unknown>>);
+  const rules = await translateMany(ruleRows.map((r) => rowStr(r, "rule_text")), locale);
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-20">
@@ -257,7 +246,7 @@ export default async function PratiquePage({ params }: { params: { locale: strin
             <EditableImage
               field="reglement_image"
               value={reglementImage}
-              alt="Règlement Rollerland Brussels"
+              alt="Rollerland Brussels rules"
               fill
               className="object-contain"
               style={{ objectPosition: "top center" }}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { saveContentSection, type SaveState } from "../contentActions";
 import ImageUpload from "../ImageUpload";
@@ -30,6 +30,58 @@ function SaveButton() {
   );
 }
 
+// ── "One per line" list input ──────────────────────────────────────────
+// Stored as [{ [lineKey]: text }]. The textarea keeps its own raw text so the
+// admin can type spaces and press Enter normally (empty lines / outer spaces
+// are only dropped from the SAVED value, never from what is being typed).
+function parseLines(text: string, key: string) {
+  return text
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean)
+    .map((l) => ({ [key]: l }));
+}
+
+function LinesInput({
+  label,
+  lineKey,
+  value,
+  onChange,
+}: {
+  label: string;
+  lineKey: string;
+  value: unknown;
+  onChange: (v: unknown) => void;
+}) {
+  const arr = Array.isArray(value) ? (value as Array<Record<string, unknown>>) : [];
+  const fromValue = arr.map((r) => (typeof r[lineKey] === "string" ? (r[lineKey] as string) : "")).join("\n");
+  const [text, setText] = useState(fromValue);
+
+  // Row moved/removed in a repeater → the value changes from outside: resync.
+  useEffect(() => {
+    if (JSON.stringify(parseLines(text, lineKey)) !== JSON.stringify(parseLines(fromValue, lineKey))) {
+      setText(fromValue);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fromValue, lineKey]);
+
+  return (
+    <label className="flex flex-col gap-2">
+      <span className="label-tag">{label} <span style={{ color: "rgba(255,255,255,0.3)" }}>(one per line)</span></span>
+      <textarea
+        value={text}
+        onChange={(e) => {
+          setText(e.target.value);
+          onChange(parseLines(e.target.value, lineKey));
+        }}
+        rows={4}
+        className="px-4 py-2.5 text-sm text-white outline-none"
+        style={FIELD}
+      />
+    </label>
+  );
+}
+
 // ── Scalar field input ─────────────────────────────────────────────────
 function ScalarInput({
   field,
@@ -45,30 +97,7 @@ function ScalarInput({
     return <ImageUpload value={str} onChange={(url) => onChange(url)} />;
   }
   if (field.type === "lines") {
-    // Edited as one item per line; stored as [{ [lineKey]: text }].
-    const key = field.lineKey ?? "item";
-    const arr = Array.isArray(value) ? (value as Array<Record<string, unknown>>) : [];
-    const text = arr.map((r) => (typeof r[key] === "string" ? r[key] : "")).join("\n");
-    return (
-      <label className="flex flex-col gap-2">
-        <span className="label-tag">{field.label} <span style={{ color: "rgba(255,255,255,0.3)" }}>(one per line)</span></span>
-        <textarea
-          value={text}
-          onChange={(e) =>
-            onChange(
-              e.target.value
-                .split("\n")
-                .map((l) => l.trim())
-                .filter(Boolean)
-                .map((l) => ({ [key]: l })),
-            )
-          }
-          rows={4}
-          className="px-4 py-2.5 text-sm text-white outline-none"
-          style={FIELD}
-        />
-      </label>
-    );
+    return <LinesInput label={field.label} lineKey={field.lineKey ?? "item"} value={value} onChange={onChange} />;
   }
   if (field.type === "bool") {
     return (

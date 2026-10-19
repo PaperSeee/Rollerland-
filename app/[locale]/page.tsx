@@ -2,29 +2,15 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import Ticker from "@/components/Ticker";
 import { getRollerland, pick, rowStr } from "@/lib/wordpress";
-import { translate } from "@/lib/translate";
+import { translate, translateMany } from "@/lib/translate";
+import { getSchedule } from "@/lib/schedule";
+import { DEFAULT_CONTENT } from "@/lib/defaults";
 import { SITE } from "@/lib/site";
 import Editable from "@/components/edit/Editable";
-import EditableImage from "@/components/edit/EditableImage";
+import EditableImage, { ImageReplaceButton } from "@/components/edit/EditableImage";
 import EditablePartners from "@/components/edit/EditablePartners";
 import EditableGallery from "@/components/edit/EditableGallery";
 import EditSectionLink from "@/components/edit/EditSectionLink";
-
-const STATS_FALLBACK = [
-  { label: "Mercredi", value: "12h–20h", sub: "Cours + accès libre" },
-  { label: "Vendredi", value: "17h–24h", sub: "Disco Roller" },
-  { label: "Samedi", value: "12h–24h", sub: "Cours + Disco" },
-  { label: "Dimanche", value: "16h–20h", sub: "Accès libre" },
-];
-
-const SERVICES_FALLBACK = [
-  { tag: "01", title: "Disco Roller", desc: "Vendredi & samedi — musique, lumières, piste ouverte jusqu'à minuit.", href: "/disco-roller", accent: true },
-  { tag: "02", title: "Cours de Roller", desc: "Enfants & adultes, mercredi et samedi. Patins inclus.", href: "/cours", accent: false },
-  { tag: "03", title: "Anniversaires", desc: "Formules Birthday Party sur mesure pour petits et grands.", href: "/private-events", accent: false },
-  { tag: "04", title: "Team Building", desc: "Activité cohésion d'équipe originale avec animation.", href: "/private-events", accent: false },
-  { tag: "05", title: "After Work", desc: "Décompressez en patins avec vos collègues le vendredi.", href: "/private-events", accent: false },
-  { tag: "06", title: "Groupes Scolaires", desc: "School Deal à 5€/élève avec accompagnement pédagogique.", href: "/private-events", accent: false },
-];
 
 // Partners shown prominently on the homepage. TODO(client): drop the real
 // logo files into /public/partners/ and set `logo` to e.g. "/partners/be-here.svg".
@@ -41,12 +27,12 @@ const PARTNERS = [
 
 const FALLBACK_HERO = "https://retro.brussels/wp-content/uploads/2025/01/roller-party2-scaled.jpg";
 const FALLBACK_GALLERY = [
-  { src: "https://retro.brussels/wp-content/uploads/2025/01/roller-party2-scaled.jpg", label: "Soirée Disco" },
-  { src: "https://retro.brussels/wp-content/uploads/2023/10/WhatsApp-Image-2023-09-12-at-09.22.51.jpeg", label: "Sur la piste" },
+  { src: "https://retro.brussels/wp-content/uploads/2025/01/roller-party2-scaled.jpg", label: "Disco night" },
+  { src: "https://retro.brussels/wp-content/uploads/2023/10/WhatsApp-Image-2023-09-12-at-09.22.51.jpeg", label: "On the rink" },
   { src: "https://retro.brussels/wp-content/uploads/2023/10/WhatsApp-Image-2023-09-12-at-09.22.29.jpeg", label: "Rollerland" },
-  { src: "https://retro.brussels/wp-content/uploads/2023/10/WhatsApp-Image-2023-09-12-at-09.22.20.jpeg", label: "Session libre" },
-  { src: "https://retro.brussels/wp-content/uploads/2024/10/IMG_20231112_111005-scaled.jpg", label: "La piste" },
-  { src: "https://retro.brussels/wp-content/uploads/2023/10/WhatsApp-Image-2023-09-12-at-09.22.25.jpeg", label: "Anniversaire" },
+  { src: "https://retro.brussels/wp-content/uploads/2023/10/WhatsApp-Image-2023-09-12-at-09.22.20.jpeg", label: "Free skating" },
+  { src: "https://retro.brussels/wp-content/uploads/2024/10/IMG_20231112_111005-scaled.jpg", label: "The rink" },
+  { src: "https://retro.brussels/wp-content/uploads/2023/10/WhatsApp-Image-2023-09-12-at-09.22.25.jpeg", label: "Birthday" },
 ];
 
 export default async function HomePage({ params }: { params: { locale: string } }) {
@@ -94,29 +80,36 @@ export default async function HomePage({ params }: { params: { locale: string } 
     ...dbPartners.filter((p) => !logoByName.has(norm(p.name))),
   ];
 
-  // Opening-hours bar: DB repeater (neutral values, label auto-translated) else fallback.
-  const stats = acf.home_stats?.length
-    ? await Promise.all(
-        acf.home_stats.map(async (s) => ({
-          label: await translate(rowStr(s, "stat_label"), locale),
-          value: rowStr(s, "stat_value"),
-          sub: await translate(rowStr(s, "stat_sub"), locale),
-        })),
-      )
-    : STATS_FALLBACK;
+  // Opening-hours bar: DB repeater, else the English defaults (labels auto-translated).
+  const statRows = acf.home_stats?.length ? acf.home_stats : (DEFAULT_CONTENT.home_stats as Array<Record<string, unknown>>);
+  const stats = await Promise.all(
+    statRows.map(async (s) => ({
+      label: await translate(rowStr(s, "stat_label"), locale),
+      value: rowStr(s, "stat_value"),
+      sub: await translate(rowStr(s, "stat_sub"), locale),
+    })),
+  );
 
-  // Services grid: DB repeater (auto-translated) else fallback.
-  const services = acf.home_services?.length
-    ? await Promise.all(
-        acf.home_services.map(async (s, i) => ({
-          tag: String(i + 1).padStart(2, "0"),
-          title: await translate(rowStr(s, "service_title"), locale),
-          desc: await translate(rowStr(s, "service_desc"), locale),
-          href: rowStr(s, "service_href") || "/private-events",
-          accent: Boolean(s.service_accent),
-        })),
-      )
-    : SERVICES_FALLBACK;
+  // Services grid: DB repeater, else the English defaults (auto-translated).
+  const serviceRows = acf.home_services?.length ? acf.home_services : (DEFAULT_CONTENT.home_services as Array<Record<string, unknown>>);
+  const services = await Promise.all(
+    serviceRows.map(async (s, i) => ({
+      tag: String(i + 1).padStart(2, "0"),
+      title: await translate(rowStr(s, "service_title"), locale),
+      desc: await translate(rowStr(s, "service_desc"), locale),
+      href: rowStr(s, "service_href") || "/private-events",
+      accent: Boolean(s.service_accent),
+    })),
+  );
+
+  // Disco block: the Disco days + hours from the Schedule (admin → Schedule).
+  const discoDays = (await getSchedule(acf, locale)).filter((d) => d.disco && d.hours);
+
+  // Prices strip: same values as the Prices page (admin → Prices).
+  const priceVals = await translateMany(
+    [pick(acf, "tarif_enfant") || "6€", pick(acf, "tarif_adulte") || "8€", pick(acf, "tarif_protection") || "1€/pair", pick(acf, "tarif_vestiaire") || "1€"],
+    locale,
+  );
 
   // Gallery: new editor rows ({src}) → legacy string[] → hardcoded fallback.
   const galleryRows = (acf.gallery_images_rows as Array<{ src?: string }> | undefined)
@@ -138,6 +131,7 @@ export default async function HomePage({ params }: { params: { locale: string } 
             value={heroImage}
             alt="Disco Roller Bruxelles"
             fill
+            controls={false}
             className="object-cover"
             style={{ objectPosition: "center 40%" }}
           />
@@ -157,6 +151,7 @@ export default async function HomePage({ params }: { params: { locale: string } 
 
         {/* Hero content */}
         <div className="relative z-10 max-w-7xl mx-auto px-6 pb-0 w-full">
+          <ImageReplaceButton field="hero_image" label="Replace background image" className="mb-5" />
           <Editable as="p" field="home_location" value={cms.location} className="label-tag mb-5 animate-fade-up" />
 
           <h1
@@ -280,6 +275,7 @@ export default async function HomePage({ params }: { params: { locale: string } 
                 value={cms.discoFeatureImage}
                 alt="Disco Roller"
                 fill
+                controls={false}
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
                 style={{ objectPosition: "center" }}
               />
@@ -287,6 +283,8 @@ export default async function HomePage({ params }: { params: { locale: string } 
             </div>
             <div className="relative z-10 p-10 md:p-16 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div>
+                {/* The image sits under this text layer: its edit button lives here. */}
+                <ImageReplaceButton field="home_disco_feature_image" label="Replace Disco image" className="mb-4" />
                 <p className="label-tag mb-4">{t("discoEvery")}</p>
                 <h2
                   className="text-4xl md:text-5xl text-white mb-4"
@@ -303,17 +301,14 @@ export default async function HomePage({ params }: { params: { locale: string } 
                 </span>
               </div>
               <div className="hidden md:flex flex-col gap-3 items-end">
-                {[
-                  { day: "Vendredi", time: "17h00 – 00h00" },
-                  { day: "Samedi", time: "12h00 – 00h00" },
-                ].map((s) => (
+                {discoDays.map((s) => (
                   <div
                     key={s.day}
                     className="glass-card px-6 py-4 text-right"
                     style={{ minWidth: 180 }}
                   >
                     <p className="label-tag mb-1">{s.day}</p>
-                    <p className="text-white text-sm font-medium">{s.time}</p>
+                    <p className="text-white text-sm font-medium">{s.hours}</p>
                   </div>
                 ))}
                 <div className="glass-card px-6 py-4 text-right animate-pulse-glow">
@@ -412,10 +407,10 @@ export default async function HomePage({ params }: { params: { locale: string } 
           </div>
           <div className="md:col-span-2 grid grid-cols-2 gap-4">
             {[
-              { label: "Enfant (−16 ans)", price: "6€" },
-              { label: "Adulte", price: "8€" },
-              { label: "Protection", price: "1€/paire" },
-              { label: "Vestiaire", price: "1€" },
+              { label: t("priceKids"), price: priceVals[0] },
+              { label: t("priceAdult"), price: priceVals[1] },
+              { label: t("priceProtection"), price: priceVals[2] },
+              { label: t("priceCloakroom"), price: priceVals[3] },
             ].map((t) => (
               <div
                 key={t.label}
@@ -462,9 +457,9 @@ export default async function HomePage({ params }: { params: { locale: string } 
             </h2>
             <div className="grid grid-cols-1 gap-4 mb-8">
               {[
-                { icon: "🚌", label: "STIB", value: "Bus 46, 86, 88, N18 — Arrêt André de Jongh" },
-                { icon: "🚍", label: "De Lijn", value: "R30, R41, R50, R60 — Arrêt André de Jongh" },
-                { icon: "🅿️", label: "Parking", value: "Parking sécurisé au n°160 — réservation en ligne" },
+                { icon: "🚌", label: "STIB", value: t("stib") },
+                { icon: "🚍", label: "De Lijn", value: t("delijn") },
+                { icon: "🅿️", label: "Parking", value: t("parking") },
               ].map((t) => (
                 <div
                   key={t.label}

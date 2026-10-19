@@ -6,6 +6,8 @@
 //
 // Keep this in sync with the fallbacks used in the page/Navbar/Footer components.
 
+import { DEFAULT_SCHEDULE } from "@/lib/schedule";
+
 export const DEFAULT_CONTENT: Record<string, unknown> = {
   // ── Header / Navigation ──
   nav_logo: "https://retro.brussels/wp-content/uploads/2023/10/WhatsApp-Image-2023-09-12-at-09.22.29.jpeg",
@@ -143,15 +145,9 @@ export const DEFAULT_CONTENT: Record<string, unknown> = {
   // ── Schedule ──
   horaires_title: "Schedule",
   horaires_intro: "Outside regular hours, the rink is available by reservation for school groups, team buildings and birthdays.",
-  horaire_mercredi: "12h00 – 20h00",
-  horaire_vendredi: "17h00 – 00h00",
-  horaire_samedi: "12h00 – 00h00",
-  horaire_dimanche: "16h00 – 20h00",
-  horaire_note_dimanche: "June–October: 12h–20h",
-  fermetures_exceptionnelles: [
-    { periode: "16 – 24 May 2026", raison: "Flea market / Special event" },
-    { periode: "29 – 31 May 2026", raison: "Exceptional closure" },
-  ],
+  // Whole week (one row per day) — see lib/schedule.ts.
+  schedule_days: DEFAULT_SCHEDULE,
+  fermetures_exceptionnelles: [],
 
   // ── Practical ──
   pratique_title: "Practical",

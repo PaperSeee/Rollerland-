@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { useEdit } from "./EditProvider";
+import { uploadImage } from "@/lib/prepareImage";
 
 type Row = { src?: string };
 
@@ -45,11 +46,9 @@ function GalleryCell({ src, editing, onReplace }: { src: string; editing: boolea
   async function upload(file: File) {
     setUploading(true);
     try {
-      const fd = new FormData();
-      fd.append("file", file);
-      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-      const data = await res.json().catch(() => ({}));
-      if (res.ok && data.url) onReplace(data.url);
+      onReplace(await uploadImage(file));
+    } catch (e) {
+      window.alert(`Image upload failed: ${e instanceof Error ? e.message : "please try again."}`);
     } finally {
       setUploading(false);
     }

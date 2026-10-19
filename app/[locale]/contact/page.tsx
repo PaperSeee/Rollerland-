@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getRollerland, pick } from "@/lib/wordpress";
 import { translate } from "@/lib/translate";
+import { getSchedule } from "@/lib/schedule";
 import Editable from "@/components/edit/Editable";
 import { SITE } from "@/lib/site";
 import ReservationForm from "@/components/ReservationForm";
@@ -24,6 +25,8 @@ export default async function ContactPage({ params }: { params: { locale: string
     tiktok: acf.social_tiktok || SITE.socials.tiktok,
     reviewUrl: acf.google_review_url || SITE.googleReviewUrl,
   };
+  // Opening days from the Schedule (admin → Schedule); Disco days highlighted.
+  const openDays = (await getSchedule(acf, locale)).filter((d) => d.hours);
   return (
     <div className="max-w-7xl mx-auto px-6 py-20">
       {/* Header */}
@@ -151,12 +154,7 @@ export default async function ContactPage({ params }: { params: { locale: string
           >
             <p className="label-tag mb-3">{t("hours")}</p>
             <div className="flex flex-col gap-2">
-              {[
-                { day: "Mercredi", h: "12h–20h" },
-                { day: "Vendredi", h: "17h–00h", hot: true },
-                { day: "Samedi", h: "12h–00h", hot: true },
-                { day: "Dimanche", h: "16h–20h" },
-              ].map((s) => (
+              {openDays.map((d) => ({ day: d.day, h: d.hours, hot: d.disco })).map((s) => (
                 <div key={s.day} className="flex justify-between items-center">
                   <p className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>{s.day}</p>
                   <p className="text-xs font-medium" style={{ color: s.hot ? "#9B92F0" : "rgba(255,255,255,0.6)" }}>{s.h}</p>

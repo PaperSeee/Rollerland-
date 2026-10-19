@@ -31,15 +31,16 @@ const DEFAULT_LINKS = [
 ];
 
 const DEFAULT_HOURS = [
-  { day: "Mercredi", h: "12h–20h" },
-  { day: "Vendredi", h: "17h–00h" },
-  { day: "Samedi", h: "12h–00h" },
-  { day: "Dimanche", h: "16h–20h" },
-];
+  { key: "wednesday", h: "12h–20h" },
+  { key: "friday", h: "17h–00h" },
+  { key: "saturday", h: "12h–00h" },
+  { key: "sunday", h: "16h–20h" },
+] as const;
 
 export default function Footer({ data }: { data?: FooterData }) {
   const t = useTranslations("footer");
   const tn = useTranslations("nav");
+  const td = useTranslations("days");
 
   const brand = data?.brand || "RollerlandBrussels";
   const tagline = data?.tagline || t("tagline");
@@ -58,7 +59,7 @@ export default function Footer({ data }: { data?: FooterData }) {
     data?.links?.length
       ? data.links
       : DEFAULT_LINKS.map((l) => ({ label: tn(l.key), href: l.href }));
-  const hours = data?.hours?.length ? data.hours : DEFAULT_HOURS;
+  const hours = data?.hours?.length ? data.hours : DEFAULT_HOURS.map((d) => ({ day: td(d.key), h: d.h }));
   const closedNote = data?.closedNote || t("closedNote");
   const rights = data?.rights || t("rights");
   const privacyLabel = data?.privacyLabel || t("privacy");

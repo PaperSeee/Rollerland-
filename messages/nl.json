@@ -52,7 +52,14 @@
     "ctaTitle2": "de baan wacht op je.",
     "ctaLead": "Reserveer online of per e-mail via {email}. Snel antwoord gegarandeerd.",
     "ctaReserve": "Nu reserveren",
-    "ctaWrite": "Schrijf ons"
+    "ctaWrite": "Schrijf ons",
+    "priceKids": "Kind (−16 jaar)",
+    "priceAdult": "Volwassene",
+    "priceProtection": "Bescherming",
+    "priceCloakroom": "Vestiaire",
+    "stib": "Bus 46, 86, 88, N18 — Halte André de Jongh",
+    "delijn": "R30, R41, R50, R60 — Halte André de Jongh",
+    "parking": "Beveiligde parking op nr. 160 — online reserveren"
   },
   "tarifs": {
     "kicker": "Tarieven",
@@ -71,7 +78,10 @@
     "food": "Eten",
     "goodToKnow": "Goed om te weten",
     "consume1": "Please consume locally and support Be Here.",
-    "consume2": "Refrain from bringing your own food and drinks."
+    "consume2": "Refrain from bringing your own food and drinks.",
+    "skatesIncluded": "Huur van schaatsen inbegrepen",
+    "protectionDesc": "Knie-, elleboog- en polsbeschermers",
+    "cloakroomDesc": "Beveiligd kluisje"
   },
   "formule": {
     "back": "← Alle tarieven",
@@ -80,7 +90,8 @@
     "included": "Wat is inbegrepen",
     "goodToKnow": "Goed om te weten",
     "consume1": "Please consume locally and support Be Here.",
-    "consume2": "Refrain from bringing your own food and drinks."
+    "consume2": "Refrain from bringing your own food and drinks.",
+    "book": "Dit pakket reserveren"
   },
   "contact": {
     "kicker": "Contacteer ons",
@@ -149,7 +160,8 @@
     "privatizationTitle": "Privatiseer de baan voor je evenement",
     "privatizationText": "De baan is beschikbaar voor privatisering voor grote groepen en bedrijfsevenementen.",
     "requestQuote": "Offerte aanvragen",
-    "write": "Schrijf ons"
+    "write": "Schrijf ons",
+    "learnMore": "Meer info"
   },
   "horaires": {
     "kicker": "Wekelijks programma",
@@ -179,6 +191,33 @@
     "ctaKicker": "Elke vrijdag & zaterdag · Geen reservering",
     "ctaTitle1": "Kom zoals je bent —",
     "ctaTitle2": "de baan wacht op je.",
-    "followInstagram": "Volg op Instagram"
+    "followInstagram": "Volg op Instagram",
+    "rentalSkates": "Quad-schaatsen — {adult} volwassene / {kids} kind",
+    "rentalProtection": "Bescherming — {price}",
+    "rentalCloakroom": "Vestiaire — {price}",
+    "onSite1": "Bar met drankjes & cocktails",
+    "onSite2": "Lichte maaltijden beschikbaar",
+    "onSite3": "Vestiaire & lockers",
+    "know1": "Geen reservatie nodig",
+    "know2": "Eigen schaatsen toegestaan",
+    "know3": "Open voor alle niveaus",
+    "noEvents": "Binnenkort nieuwe thema-avonden — volg ons op Instagram voor het programma."
+  },
+  "ticker": {
+    "items": [
+      "Disco Roller — Vrijdag & Zaterdag",
+      "Gratis toegang · Open voor iedereen",
+      "Lessen voor kinderen & volwassenen",
+      "Verjaardagen op de baan",
+      "Teambuilding",
+      "After Work",
+      "Rue Dieudonné Lefèvre 4 · 1020 Brussel"
+    ]
+  },
+  "days": {
+    "wednesday": "Woensdag",
+    "friday": "Vrijdag",
+    "saturday": "Zaterdag",
+    "sunday": "Zondag"
   }
 }

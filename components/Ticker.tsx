@@ -1,19 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-const TICKER_ITEMS = [
-  "Disco Roller — Vendredi & Samedi",
-  "Entrée Gratuite · Ouvert à tous",
-  "Cours Enfants & Adultes",
-  "Anniversaires sur la piste",
-  "Team Building",
-  "After Work",
-  "Rue Dieudonné Lefèvre 4 · 1020 Bruxelles",
-];
+import { useMessages } from "next-intl";
 
 export default function Ticker() {
   const [mounted, setMounted] = useState(false);
+  // Items per language from messages/<locale>.json → ticker.items.
+  const messages = useMessages() as { ticker?: { items?: string[] } };
+  const TICKER_ITEMS = messages.ticker?.items ?? [];
   useEffect(() => setMounted(true), []);
 
   if (!mounted) return null;

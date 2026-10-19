@@ -52,7 +52,14 @@
     "ctaTitle2": "the rink awaits.",
     "ctaLead": "Book online or by email at {email}. Quick reply guaranteed.",
     "ctaReserve": "Book now",
-    "ctaWrite": "Write to us"
+    "ctaWrite": "Write to us",
+    "priceKids": "Child (under 16)",
+    "priceAdult": "Adult",
+    "priceProtection": "Protection",
+    "priceCloakroom": "Cloakroom",
+    "stib": "Bus 46, 86, 88, N18 — André de Jongh stop",
+    "delijn": "R30, R41, R50, R60 — André de Jongh stop",
+    "parking": "Secure parking at no. 160 — book online"
   },
   "tarifs": {
     "kicker": "Pricing",
@@ -71,7 +78,10 @@
     "food": "Food",
     "goodToKnow": "Good to know",
     "consume1": "Please consume locally and support Be Here.",
-    "consume2": "Refrain from bringing your own food and drinks."
+    "consume2": "Refrain from bringing your own food and drinks.",
+    "skatesIncluded": "Skate rental included",
+    "protectionDesc": "Knee, elbow and wrist guards",
+    "cloakroomDesc": "Secure locker"
   },
   "formule": {
     "back": "← All prices",
@@ -80,7 +90,8 @@
     "included": "What's included",
     "goodToKnow": "Good to know",
     "consume1": "Please consume locally and support Be Here.",
-    "consume2": "Refrain from bringing your own food and drinks."
+    "consume2": "Refrain from bringing your own food and drinks.",
+    "book": "Book this package"
   },
   "contact": {
     "kicker": "Get in touch",
@@ -149,7 +160,8 @@
     "privatizationTitle": "Privatize the rink for your event",
     "privatizationText": "The rink is available for privatization for large groups and corporate events.",
     "requestQuote": "Request a quote",
-    "write": "Write to us"
+    "write": "Write to us",
+    "learnMore": "Learn more"
   },
   "horaires": {
     "kicker": "Weekly schedule",
@@ -179,6 +191,33 @@
     "ctaKicker": "Every Friday & Saturday · No reservation",
     "ctaTitle1": "Come as you are —",
     "ctaTitle2": "the rink awaits.",
-    "followInstagram": "Follow on Instagram"
+    "followInstagram": "Follow on Instagram",
+    "rentalSkates": "Quad skates — {adult} adult / {kids} child",
+    "rentalProtection": "Protection — {price}",
+    "rentalCloakroom": "Cloakroom — {price}",
+    "onSite1": "Bar with drinks & cocktails",
+    "onSite2": "Light food available",
+    "onSite3": "Cloakroom & lockers",
+    "know1": "No reservation needed",
+    "know2": "Own skates allowed",
+    "know3": "Open to all levels",
+    "noEvents": "New themed nights are coming soon — follow us on Instagram for the programme."
+  },
+  "ticker": {
+    "items": [
+      "Disco Roller — Friday & Saturday",
+      "Free entry · Open to all",
+      "Kids & adult lessons",
+      "Birthdays on the rink",
+      "Team Building",
+      "After Work",
+      "Rue Dieudonné Lefèvre 4 · 1020 Brussels"
+    ]
+  },
+  "days": {
+    "wednesday": "Wednesday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday"
   }
 }

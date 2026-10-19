@@ -23,11 +23,8 @@ export const metadata: Metadata = {
   description:
     "Rollerland Brussels: roller skating lessons, disco nights, birthdays, team building and more. Rue Dieudonné Lefèvre 4, B-1020 Brussels.",
   keywords: "roller, Brussels, Bruxelles, skating, disco roller, birthday, roller lessons",
-  icons: {
-    icon: "/icon.svg",
-    shortcut: "/icon.svg",
-    apple: "/apple-icon.svg",
-  },
+  // Icons come from the file conventions: app/favicon.ico, app/icon.svg,
+  // app/apple-icon.png (Next adds the <link> tags with the right sizes/types).
   openGraph: {
     title: "Rollerland Brussels",
     description: "Roller skating rink in the heart of Brussels.",

@@ -8,6 +8,8 @@ const nextConfig = {
   // Cloudflare (10/11/2026) : STATIC_EXPORT=1 → site public en fichiers (Cloudflare Pages, voir
   // cloudflare/preparer-statique.sh) ; sinon application complète avec l'admin (Worker rollerland-app).
   output: process.env.STATIC_EXPORT ? "export" : undefined,
+  // Prisma hors du bundle Next : OpenNext le rajoute avec sa version « workerd » (moteur wasm, sans fs).
+  experimental: { serverComponentsExternalPackages: ["@prisma/client", ".prisma/client"] },
   images: {
     unoptimized: true, // Cloudflare : pas d'optimiseur d'images
     remotePatterns: [

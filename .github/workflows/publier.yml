@@ -46,7 +46,7 @@ jobs:
       - name: Construire le site
         if: steps.verif.outputs.publier == 'oui'
         run: |
-          npm ci
+          npm install --no-audit --no-fund
           bash cloudflare/preparer-statique.sh
           STATIC_EXPORT=1 npx next build
           rm -f out/_headers

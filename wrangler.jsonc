@@ -4,6 +4,6 @@
   "compatibility_date": "2025-05-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
-  "kv_namespaces": [],
+  "kv_namespaces": [{ "binding": "MEDIA", "id": "a7c5eee31e924fb1ac381dc62a739255" }],
   "observability": { "enabled": true }
 }

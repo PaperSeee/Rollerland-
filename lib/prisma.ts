@@ -1,13 +1,21 @@
 import { PrismaClient } from "@prisma/client";
+import { PrismaNeon } from "@prisma/adapter-neon";
+import { Pool, neonConfig } from "@neondatabase/serverless";
 
-// Single PrismaClient instance reused across HMR (dev) and serverless
-// invocations (prod) to avoid exhausting database connections.
-const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
+// Requêtes par HTTPS (pas de WebSocket) : marche au build (Node) comme sur Cloudflare.
+neonConfig.poolQueryViaFetch = true;
 
-export const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
-  });
+// Cloudflare Workers (10/11/2026) : une connexion ne peut pas servir deux requêtes,
+// donc un client Prisma (pilote Neon) est créé à chaque utilisation.
+function nouveauClient() {
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  return new PrismaClient({ adapter: new PrismaNeon(pool), log: ["error"] });
+}
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+export const prisma = new Proxy({} as PrismaClient, {
+  get(_t, prop) {
+    const c = nouveauClient() as unknown as Record<string | symbol, unknown>;
+    const v = c[prop];
+    return typeof v === "function" ? (v as (...a: unknown[]) => unknown).bind(c) : v;
+  },
+});

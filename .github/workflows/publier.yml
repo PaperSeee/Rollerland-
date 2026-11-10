@@ -1,0 +1,57 @@
+# Republie le site public (Cloudflare Pages, projet « rollerland ») quand le contenu change dans l'admin.
+# Toutes les 10 minutes : compare l'empreinte du contenu (base Neon) à /version.txt du site en ligne ;
+# reconstruit et publie seulement si elle diffère (et une fois par jour, pour les soirées disco passées).
+name: Publier le site
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+    inputs:
+      forcer:
+        description: "Republier même sans changement"
+        type: boolean
+        default: false
+
+concurrency:
+  group: publier
+  cancel-in-progress: false
+
+jobs:
+  publier:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      DATABASE_URL_UNPOOLED: ${{ secrets.DATABASE_URL }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Faut-il republier ?
+        id: verif
+        run: |
+          NOUVELLE=$(node cloudflare/empreinte.mjs)
+          EN_LIGNE=$(curl -s --max-time 20 https://www.rollerland.brussels/version.txt || true)
+          echo "empreinte=$NOUVELLE" >> "$GITHUB_OUTPUT"
+          if [ "$NOUVELLE" != "$EN_LIGNE" ] || [ "${{ inputs.forcer }}" = "true" ]; then
+            echo "publier=oui" >> "$GITHUB_OUTPUT"; echo "Contenu modifié : $EN_LIGNE → $NOUVELLE"
+          else
+            echo "publier=non" >> "$GITHUB_OUTPUT"; echo "Rien de nouveau ($NOUVELLE)"
+          fi
+      - name: Construire le site
+        if: steps.verif.outputs.publier == 'oui'
+        run: |
+          npm ci
+          bash cloudflare/preparer-statique.sh
+          STATIC_EXPORT=1 npx next build
+          rm -f out/_headers
+          cp cloudflare/pages-worker.js out/_worker.js
+          echo -n "${{ steps.verif.outputs.empreinte }}" > out/version.txt
+      - name: Publier sur Cloudflare Pages
+        if: steps.verif.outputs.publier == 'oui'
+        run: npx wrangler pages deploy out --project-name rollerland --branch main --commit-dirty=true

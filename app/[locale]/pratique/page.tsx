@@ -9,19 +9,6 @@ import { SITE } from "@/lib/site";
 
 export const revalidate = 60;
 
-const STIB = [
-  { line: "46", stop: "André de Jongh" },
-  { line: "86", stop: "André de Jongh" },
-  { line: "88", stop: "André de Jongh" },
-  { line: "N18 (Noctis)", stop: "André de Jongh" },
-];
-
-const DELIJN = [
-  { line: "R30", stop: "André de Jongh" },
-  { line: "R41", stop: "André de Jongh" },
-  { line: "R50", stop: "André de Jongh" },
-  { line: "R60", stop: "André de Jongh" },
-];
 
 const FALLBACK_REGLEMENT = "https://retro.brussels/wp-content/uploads/2024/04/roller-rules-Aida-724x1024.jpeg";
 

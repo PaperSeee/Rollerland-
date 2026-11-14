@@ -100,8 +100,9 @@ async function deeplTranslate(texts: string[], targetLang: string): Promise<stri
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ text: texts, source_lang: "EN", target_lang: targetLang }),
-    // Translations are cached in our DB; no need to cache the HTTP call.
-    cache: "no-store",
+    // Pas de "no-store" : pendant l'export statique, un fetch no-store rend la page dynamique et Next ne l'écrit pas
+    // (/fr et /nl en 404 du 12 au 14/11/2026). La traduction est de toute façon gardée en base (table Translation).
+    cache: "force-cache",
   });
 
   if (!res.ok) throw new Error(`DeepL ${res.status}`);

@@ -5,7 +5,7 @@ const REDIRECTIONS = { "/services": "/private-events", "/fr/services": "/fr/priv
 const ADMIN = "https://rollerland-app.hqdigital.workers.dev";
 const AUTRES = /^\/(fr|nl)(\/|$|\.txt$)/;
 
-export default {
+const site = {
   async fetch(request, env) {
     const url = new URL(request.url);
     const p = url.pathname;
@@ -36,5 +36,17 @@ export default {
       return new Response(page.body, { status: 404, headers: page.headers });
     }
     return rep;
+  },
+};
+
+// Adresses techniques (<projet>.pages.dev et ses aperçus) : jamais indexables, seul www.rollerland.brussels compte (14/11/2026).
+export default {
+  async fetch(request, env) {
+    const rep = await site.fetch(request, env);
+    const h = new URL(request.url).hostname;
+    if (!h.endsWith(".pages.dev") && !h.endsWith(".workers.dev")) return rep;
+    const r = new Response(rep.body, rep);
+    r.headers.set("x-robots-tag", "noindex, nofollow");
+    return r;
   },
 };
